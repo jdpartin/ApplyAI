@@ -17,11 +17,11 @@
 ---
 
 ## **Technologies Used**
-- **Frontend**: React.js (or your chosen frontend framework), styled with Tailwind CSS.
-- **Backend**: Django/Flask for API logic and data processing.
+- **Frontend**: Basic HTML, CSS, and JavaScript. Styled with Bootstrap.
+- **Backend**: Python Django for API logic and data processing.
 - **Database**: PostgreSQL for secure and scalable data storage.
 - **AI Integration**: OpenAI API for natural language processing and content generation.
-- **Hosting**: GitHub Pages (Frontend) + [Backend Hosting Solution].
+- **Hosting**: Render.com
 
 ---
 
@@ -40,4 +40,3 @@ We’re always looking for contributors to improve ApplyAI! Feel free to fork th
 
 ---
 
-Let me know if you'd like to tweak the tone or include specific deployment instructions!
