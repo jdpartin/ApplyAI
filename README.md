@@ -31,7 +31,7 @@ Finding the right job can be time-consuming and overwhelming. ApplyAI simplifies
 ---
 
 ## **Contribute**
-We’re always looking for contributors to improve ApplyAI! Feel free to fork the repository, submit pull requests, or open issues for new ideas and bug reports.
+ApplyAI is currently a portfolio project, contributions may be welcomed in the future.
 
 ---
 
