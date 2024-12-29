@@ -3,35 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Sign Up</title>
-    <!-- Bootstrap CSS
-        Note: The 'integrity' and 'crossorigin' attributes are omitted for Bootstrap CDN links in this portfolio project.
-        In a production environment, these attributes should be included to ensure security by verifying the resource's integrity.
-    -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-    <!--
-        Because the primary goal of this app is to demonstrate the use of AI and Cybersecurity,
-        this page was generated using AI to save time and focus on the app's core functionality.
-    -->
     <div class="container mt-5">
         <h1 class="text-center text-primary mb-4">Sign Up</h1>
         <form id="signUpForm" novalidate>
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text"
-                       class="form-control"
-                       id="username"
-                       placeholder="Enter your username"
-                       required
-                       minlength="3">
-                <div class="invalid-feedback">
-                    Username must be at least 3 characters long.
-                </div>
-            </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
                 <input type="email"
@@ -73,14 +54,10 @@
             <button type="submit" class="btn btn-primary w-100">Sign Up</button>
         </form>
         <div class="text-center mt-3">
-            <p>Already have an account? <a href="sign-in.html">Sign In</a></p>
+            <p>Already have an account? <a href="/sign-in">Sign In</a></p>
         </div>
     </div>
 
-    <!-- Bootstrap JS
-        Note: The 'integrity' and 'crossorigin' attributes are omitted for Bootstrap CDN links in this portfolio project.
-        In a production environment, these attributes should be included to ensure security by verifying the resource's integrity.
-    -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Password Toggle Script -->
@@ -92,7 +69,6 @@
         const togglePassword = document.getElementById('togglePassword');
         const togglePasswordIcon = document.getElementById('togglePasswordIcon');
 
-        // Toggle password visibility
         togglePassword.addEventListener('click', () => {
             const type = password.type === 'password' ? 'text' : 'password';
             password.type = type;
@@ -101,31 +77,51 @@
             togglePasswordIcon.classList.toggle('bi-eye-slash');
         });
 
-        // Form validation
-        form.addEventListener('submit', (event) => {
-            if (password.value !== confirmPassword.value) {
-                event.preventDefault();
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const passwordValue = password.value;
+            const confirmPasswordValue = confirmPassword.value;
+
+            // Basic frontend validation for password matching
+            if (passwordValue !== confirmPasswordValue) {
                 mismatchFeedback.style.display = 'block';
                 confirmPassword.classList.add('is-invalid');
+                return;
             } else {
                 mismatchFeedback.style.display = 'none';
                 confirmPassword.classList.remove('is-invalid');
             }
 
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            try {
+                const response = await fetch('/signupform/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: passwordValue,
+                        confirmPassword: confirmPasswordValue
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.success);
+                    window.location.href = data.redirect; // Redirect to the specified URL
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('An error occurred. Please try again.');
             }
-            form.classList.add('was-validated');
         });
 
-        // Hide error feedback when user starts typing again
-        confirmPassword.addEventListener('input', () => {
-            if (password.value === confirmPassword.value) {
-                mismatchFeedback.style.display = 'none';
-                confirmPassword.classList.remove('is-invalid');
-            }
-        });
     </script>
 </body>
 </html>
