@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-qc^y*jji3w7wk0@3&pj61uk5n%f6h=d8wzgs+%oj#%5r9t_wcv
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'applyai-dev-backend.onrender.com',
+    'apply-ai-dev.onrender.com',
+    'apply-ai.onrender.com',
 ]
 
 
