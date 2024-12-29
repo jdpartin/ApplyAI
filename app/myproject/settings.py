@@ -37,6 +37,11 @@ CSRF_TRUSTED_ORIGINS = [
     'https://applyai.onrender.com',
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "https://applyai-startuppage.onrender.com",
+]
+
+
 
 # Application definition
 
@@ -48,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
