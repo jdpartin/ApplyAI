@@ -4,6 +4,8 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 import json
+from django.urls import reverse
+
 
 def home(request):
     return render(request, 'frontend/index.html')
