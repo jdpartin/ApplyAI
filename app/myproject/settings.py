@@ -29,16 +29,18 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'applyai-dev.onrender.com',
+    'applyai-app.onrender.com',
     'applyai.onrender.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://applyai-dev.onrender.com',
+    'https://applyai-app.onrender.com',
     'https://applyai.onrender.com',
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://applyai-startuppage.onrender.com",
+    "https://applyai.onrender.com",
 ]
 
 
