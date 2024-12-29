@@ -5,14 +5,46 @@ from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 import json
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
 
 
 def home(request):
     return render(request, 'frontend/index.html')
 
+
 # path in urls is sign-in
 def sign_in(request):
     return render(request, 'frontend/sign-in.html')
+
+def signinform(request):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON body
+            data = json.loads(request.body)
+            email = data.get('email')
+            password = data.get('password')
+
+            # Check if both fields are provided
+            if not email or not password:
+                return JsonResponse({'error': 'Email and password are required.'}, status=400)
+
+            # Authenticate the user
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                # Log the user in
+                login(request, user)
+                return JsonResponse({
+                    'success': 'User signed in successfully.',
+                    'redirect': reverse('home')  # Redirect to the homepage
+                }, status=200)
+            else:
+                return JsonResponse({'error': 'Invalid email or password.'}, status=401)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method. Use POST.'}, status=405)
+
 
 # path in urls is sign-up
 def sign_up(request):

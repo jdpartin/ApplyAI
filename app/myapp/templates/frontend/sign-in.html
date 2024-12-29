@@ -17,15 +17,25 @@
     -->
     <div class="container mt-5">
         <h1 class="text-center text-primary mb-4">Sign In</h1>
-        <form>
+        <!--
+            This form collects user credentials for authentication.
+            Both frontend and backend validations ensure security and proper feedback to users.
+        -->
+        <form id="signInForm">
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                <div class="invalid-feedback">Please enter a valid email address.</div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                <div class="invalid-feedback">Please enter your password.</div>
             </div>
+            <!--
+                The Sign In button triggers a JavaScript function that submits the form data via fetch
+                to the backend's /signinform/ endpoint for validation and authentication.
+            -->
             <button type="submit" class="btn btn-primary w-100">Sign In</button>
         </form>
         <div class="text-center mt-3">
@@ -38,5 +48,42 @@
         In a production environment, these attributes should be included to ensure security by verifying the resource's integrity.
     -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!--
+        This script handles the form submission for the Sign In page.
+        It ensures that user credentials are securely sent to the server for validation.
+    -->
+    <script>
+        document.getElementById('signInForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Fetch CSRF token from the meta tag for secure requests
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            try {
+                const response = await fetch('/signinform/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.success);
+                    window.location.href = data.redirect; // Redirect to the homepage on success
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('An error occurred. Please try again.');
+            }
+        });
+    </script>
 </body>
 </html>
