@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Sign In</title>
     <!-- Bootstrap CSS
         Note: The 'integrity' and 'crossorigin' attributes are omitted for Bootstrap CDN links in this portfolio project.
@@ -61,7 +62,8 @@
             const password = document.getElementById('password').value;
 
             // Fetch CSRF token from the meta tag for secure requests
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+            const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
             try {
                 const response = await fetch('/signinform/', {
