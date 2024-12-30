@@ -1,0 +1,21 @@
+{% load static %}
+
+<!-- Chat Bubble -->
+<div class="chat-bubble" id="chatBubble">
+    <i class="bi bi-chat-dots-fill"></i>
+</div>
+
+<!-- Chat Container -->
+<div class="chat-container" id="chatContainer">
+    <div class="chat-container-header">
+        <span>Chat with us</span>
+        <button class="btn btn-light btn-sm" id="fullscreenToggle">
+            <i class="bi bi-arrows-fullscreen"></i>
+        </button>
+    </div>
+    <div class="chat-container-body">
+        <p>Welcome to our chat! How can we help you?</p>
+    </div>
+</div>
+
+<script src="{% static 'js/chat.js' %}"></script>

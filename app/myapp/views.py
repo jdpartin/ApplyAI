@@ -7,6 +7,8 @@ import json
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 
 def home(request):
@@ -99,6 +101,14 @@ def signupform(request):
 
 
 @login_required
-def account_dashboard(request):
+def dashboard(request):
     user = request.user
-    return render(request, 'dashboard.html', {'username': user.username})
+    return render(request, 'frontend/dashboard.html', {'username': user.username})
+
+
+def logout_view(request):
+    """
+    Logs out the user and redirects to the home page.
+    """
+    logout(request)
+    return redirect('home')  # Replace 'home' with the name of your index route

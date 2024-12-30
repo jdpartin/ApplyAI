@@ -1,117 +1,133 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Dashboard</title>
-    <!-- Bootstrap CSS
-        Note: The 'integrity' and 'crossorigin' attributes are omitted for Bootstrap CDN links in this portfolio project.
-        In a production environment, these attributes should be included to ensure security by verifying the resource's integrity.
-    -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-</head>
-<body>
-    <!--
-        Because the primary goal of this app is to demonstrate the use of AI and Cybersecurity,
-        this page was generated using AI to save time and focus on the app's core functionality.
-    -->
-    <div class="container mt-5">
-        <h1 class="text-center text-primary mb-4">Welcome, {{ username }}</h1>
-        <p class="text-center text-muted">Manage your resume information below.</p>
+{% extends "frontend/base.html" %}
 
-        <div class="accordion" id="resumeAccordion">
-            <!-- Personal Information -->
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingPersonalInfo">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalInfo" aria-expanded="true" aria-controls="personalInfo">
-                        Personal Information
-                    </button>
-                </h2>
-                <div id="personalInfo" class="accordion-collapse collapse show" aria-labelledby="headingPersonalInfo" data-bs-parent="#resumeAccordion">
-                    <div class="accordion-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="fullName" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="fullName" placeholder="Enter your full name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="contactEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="contactEmail" placeholder="Enter your email">
-                            </div>
-                            <div class="mb-3">
-                                <label for="phoneNumber" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter your phone number">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </form>
-                    </div>
+{% block title %}
+Account Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary mb-4">Welcome, {{ username }}</h1>
+    <p class="text-center text-muted">Manage your resume information below.</p>
+
+    <div class="accordion" id="resumeAccordion">
+        <!-- Personal Information -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingPersonalInfo">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalInfo" aria-expanded="true" aria-controls="personalInfo">
+                    Personal Information
+                </button>
+            </h2>
+            <div id="personalInfo" class="accordion-collapse collapse show" aria-labelledby="headingPersonalInfo" data-bs-parent="#resumeAccordion">
+                <div class="accordion-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Full Name</td>
+                                <td>John Doe</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>johndoe@example.com</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Phone Number</td>
+                                <td>+1 555-123-4567</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
 
-            <!-- Education -->
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingEducation">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#education" aria-expanded="false" aria-controls="education">
-                        Education
-                    </button>
-                </h2>
-                <div id="education" class="accordion-collapse collapse" aria-labelledby="headingEducation" data-bs-parent="#resumeAccordion">
-                    <div class="accordion-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="schoolName" class="form-label">School Name</label>
-                                <input type="text" class="form-control" id="schoolName" placeholder="Enter your school name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="degree" class="form-label">Degree</label>
-                                <input type="text" class="form-control" id="degree" placeholder="Enter your degree">
-                            </div>
-                            <div class="mb-3">
-                                <label for="graduationYear" class="form-label">Graduation Year</label>
-                                <input type="number" class="form-control" id="graduationYear" placeholder="Enter your graduation year">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </form>
-                    </div>
+        <!-- Education -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingEducation">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#education" aria-expanded="false" aria-controls="education">
+                    Education
+                </button>
+            </h2>
+            <div id="education" class="accordion-collapse collapse" aria-labelledby="headingEducation" data-bs-parent="#resumeAccordion">
+                <div class="accordion-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>School Name</th>
+                                <th>Degree</th>
+                                <th>Graduation Year</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>University of Example</td>
+                                <td>Bachelor's in Computer Science</td>
+                                <td>2022</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-success btn-sm mt-2">Add New</button>
                 </div>
             </div>
+        </div>
 
-            <!-- Work Experience -->
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingWorkExperience">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#workExperience" aria-expanded="false" aria-controls="workExperience">
-                        Work Experience
-                    </button>
-                </h2>
-                <div id="workExperience" class="accordion-collapse collapse" aria-labelledby="headingWorkExperience" data-bs-parent="#resumeAccordion">
-                    <div class="accordion-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="jobTitle" class="form-label">Job Title</label>
-                                <input type="text" class="form-control" id="jobTitle" placeholder="Enter your job title">
-                            </div>
-                            <div class="mb-3">
-                                <label for="companyName" class="form-label">Company Name</label>
-                                <input type="text" class="form-control" id="companyName" placeholder="Enter your company name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="jobDescription" class="form-label">Job Description</label>
-                                <textarea class="form-control" id="jobDescription" rows="3" placeholder="Enter your job description"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </form>
-                    </div>
+        <!-- Work Experience -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingWorkExperience">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#workExperience" aria-expanded="false" aria-controls="workExperience">
+                    Work Experience
+                </button>
+            </h2>
+            <div id="workExperience" class="accordion-collapse collapse" aria-labelledby="headingWorkExperience" data-bs-parent="#resumeAccordion">
+                <div class="accordion-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Company Name</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Software Developer</td>
+                                <td>Example Corp</td>
+                                <td>Developed and maintained web applications.</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-success btn-sm mt-2">Add New</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Bootstrap JS
-        Note: The 'integrity' and 'crossorigin' attributes are omitted for Bootstrap CDN links in this portfolio project.
-        In a production environment, these attributes should be included to ensure security by verifying the resource's integrity.
-    -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<!-- Chat Bubble -->
+{% include "frontend/chat-bubble.html" %}
+
+{% endblock %}
