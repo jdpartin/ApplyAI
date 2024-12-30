@@ -1,89 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
-    <!-- Bootstrap CSS
-        Note: The 'integrity' and 'crossorigin' attributes are omitted for Bootstrap CDN links in this portfolio project.
-        In a production environment, these attributes should be included to ensure security by verifying the resource's integrity.
-    -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% extends "frontend/base.html" %}
+
+{% block title %}
+Sign In
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary mb-4">Sign In</h1>
     <!--
-        Because the primary goal of this app is to demonstrate the use of AI and Cybersecurity,
-        this page was generated using AI to save time and focus on the app's core functionality.
+        This form collects user credentials for authentication.
+        Both frontend and backend validations ensure security and proper feedback to users.
     -->
-    <div class="container mt-5">
-        <h1 class="text-center text-primary mb-4">Sign In</h1>
-        <!--
-            This form collects user credentials for authentication.
-            Both frontend and backend validations ensure security and proper feedback to users.
-        -->
-        <form id="signInForm">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
-                <div class="invalid-feedback">Please enter a valid email address.</div>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
-                <div class="invalid-feedback">Please enter your password.</div>
-            </div>
-            <!--
-                The Sign In button triggers a JavaScript function that submits the form data via fetch
-                to the backend's /signinform/ endpoint for validation and authentication.
-            -->
-            <button type="submit" class="btn btn-primary w-100">Sign In</button>
-        </form>
-        <div class="text-center mt-3">
-            <p>Don't have an account? <a href="/sign-up">Sign Up</a></p>
+    <form id="signInForm">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+            <div class="invalid-feedback">Please enter a valid email address.</div>
         </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+            <div class="invalid-feedback">Please enter your password.</div>
+        </div>
+        <!--
+            The Sign In button triggers a JavaScript function that submits the form data via fetch
+            to the backend's /signinform/ endpoint for validation and authentication.
+        -->
+        <button type="submit" class="btn btn-primary w-100">Sign In</button>
+    </form>
+    <div class="text-center mt-3">
+        <p>Don't have an account? <a href="/sign-up">Sign Up</a></p>
     </div>
+</div>
+{% endblock %}
 
-    <!-- Bootstrap JS
-        Note: The 'integrity' and 'crossorigin' attributes are omitted for Bootstrap CDN links in this portfolio project.
-        In a production environment, these attributes should be included to ensure security by verifying the resource's integrity.
-    -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}
+<script>
+    document.getElementById('signInForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-    <!--
-        This script handles the form submission for the Sign In page.
-        It ensures that user credentials are securely sent to the server for validation.
-    -->
-    <script>
-        document.getElementById('signInForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        // Fetch CSRF token from the meta tag for secure requests
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
-            // Fetch CSRF token from the meta tag for secure requests
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        try {
+            const response = await fetch('/signinform/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ email, password })
+            });
 
-            try {
-                const response = await fetch('/signinform/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-                if (response.ok) {
-                    alert(data.success);
-                    window.location.href = data.redirect; // Redirect to the homepage on success
-                } else {
-                    alert(data.error);
-                }
-            } catch (error) {
-                alert('An error occurred. Please try again.');
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.success);
+                window.location.href = data.redirect; // Redirect to the homepage on success
+            } else {
+                alert(data.error);
             }
-        });
-    </script>
-</body>
-</html>
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        }
+    });
+</script>
+{% endblock %}

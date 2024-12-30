@@ -1,0 +1,133 @@
+{% extends "frontend/base.html" %}
+
+{% block title %}
+Account Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary mb-4">Welcome, {{ username }}</h1>
+    <p class="text-center text-muted">Manage your resume information below.</p>
+
+    <div class="accordion" id="resumeAccordion">
+        <!-- Personal Information -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingPersonalInfo">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalInfo" aria-expanded="true" aria-controls="personalInfo">
+                    Personal Information
+                </button>
+            </h2>
+            <div id="personalInfo" class="accordion-collapse collapse show" aria-labelledby="headingPersonalInfo" data-bs-parent="#resumeAccordion">
+                <div class="accordion-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Full Name</td>
+                                <td>John Doe</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>johndoe@example.com</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Phone Number</td>
+                                <td>+1 555-123-4567</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingEducation">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#education" aria-expanded="false" aria-controls="education">
+                    Education
+                </button>
+            </h2>
+            <div id="education" class="accordion-collapse collapse" aria-labelledby="headingEducation" data-bs-parent="#resumeAccordion">
+                <div class="accordion-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>School Name</th>
+                                <th>Degree</th>
+                                <th>Graduation Year</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>University of Example</td>
+                                <td>Bachelor's in Computer Science</td>
+                                <td>2022</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-success btn-sm mt-2">Add New</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Work Experience -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingWorkExperience">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#workExperience" aria-expanded="false" aria-controls="workExperience">
+                    Work Experience
+                </button>
+            </h2>
+            <div id="workExperience" class="accordion-collapse collapse" aria-labelledby="headingWorkExperience" data-bs-parent="#resumeAccordion">
+                <div class="accordion-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Company Name</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Software Developer</td>
+                                <td>Example Corp</td>
+                                <td>Developed and maintained web applications.</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-success btn-sm mt-2">Add New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chat Bubble -->
+{% include "frontend/chat-bubble.html" %}
+
+{% endblock %}
