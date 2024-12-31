@@ -33,6 +33,10 @@
         Because the primary goal of this app is to demonstrate the use of AI and Cybersecurity,
         much of the front-end content was generated using AI to save time and focus on the app's core functionality.
     -->
+
+    <!-- Popup and overlay -->
+    {% include "frontend/modals/popup.html" %}
+
     <!-- Navigation Bar -->
     {% include "partials/navbar.html" %}
     <!--
@@ -60,6 +64,7 @@
         Custom JavaScript for project-specific functionality.
         This file includes logic for the chat bubble and other interactive elements.
     -->
+    <script src="{% static 'js/all.js' %}"></script>
     <script src="{% static 'js/chat.js' %}"></script>
 
     {% block scripts %}

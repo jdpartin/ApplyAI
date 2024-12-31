@@ -1,43 +1,36 @@
-<div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="userInfoModalLabel">Edit Personal Information</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="userInfoForm">
-                    <div class="mb-3">
-                        <label for="fullName" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="fullName" name="full_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="phoneNumber" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="phoneNumber" name="phone_number">
-                    </div>
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Address</label>
-                        <textarea class="form-control" id="address" name="address"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="linkedinUrl" class="form-label">LinkedIn URL</label>
-                        <input type="url" class="form-control" id="linkedinUrl" name="linkedin_url">
-                    </div>
-                    <div class="mb-3">
-                        <label for="githubUrl" class="form-label">GitHub URL</label>
-                        <input type="url" class="form-control" id="githubUrl" name="github_url">
-                    </div>
-                    <div class="mb-3">
-                        <label for="portfolioUrl" class="form-label">Portfolio URL</label>
-                        <input type="url" class="form-control" id="portfolioUrl" name="portfolio_url">
-                    </div>
-                    <div class="mb-3">
-                        <label for="summary" class="form-label">Summary</label>
-                        <textarea class="form-control" id="summary" name="summary"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Save</button>
-                </form>
-            </div>
-        </div>
+<form id="userInfoForm">
+    <h3>User Info Edit Form</h3>
+    <div class="mb-3">
+        <label for="fullName" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="fullName" name="full_name" value="{{ user.userinfo.full_name }}" required>
     </div>
-</div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="text" class="form-control" id="email" value="{{ user.email }}" name="email">
+    </div>
+    <div class="mb-3">
+        <label for="phoneNumber" class="form-label">Phone Number</label>
+        <input type="text" class="form-control" id="phoneNumber" value="{{ user.userinfo.phone_number }}" name="phone_number">
+    </div>
+    <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <textarea class="form-control" id="address" name="address">{{ user.userinfo.address }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="linkedinUrl" class="form-label">LinkedIn URL</label>
+        <input type="url" class="form-control" id="linkedinUrl" name="linkedin_url" value="{{ user.userinfo.linkedin_url }}">
+    </div>
+    <div class="mb-3">
+        <label for="githubUrl" class="form-label">GitHub URL</label>
+        <input type="url" class="form-control" id="githubUrl" name="github_url" value="{{ user.userinfo.github_url }}">
+    </div>
+    <div class="mb-3">
+        <label for="portfolioUrl" class="form-label">Portfolio URL</label>
+        <input type="url" class="form-control" id="portfolioUrl" name="portfolio_url" value="{{ user.userinfo.portfolio_url }}">
+    </div>
+    <div class="mb-3">
+        <label for="summary" class="form-label">Summary</label>
+        <textarea class="form-control" id="summary" name="summary">{{ user.userinfo.summary }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Save</button>
+</form>

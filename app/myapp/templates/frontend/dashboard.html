@@ -24,35 +24,30 @@ Account Dashboard
                     <table class="table table-bordered table-striped">
                         <thead class="table-light">
                             <tr>
-                                <th>Field</th>
-                                <th>Value</th>
-                                <th>Actions</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Phone Number</th>
+                                <th>Address</th>
+                                <th>LinkedIn URL</th>
+                                <th>GitHub URL</th>
+                                <th>Portfolio URL</th>
+                                <th>Summary</th>
                             </tr>
                         </thead>
                         <tbody id="personalInfoTableBody">
                             <tr>
-                                <td>Full Name</td>
                                 <td>{{ user.userinfo.full_name }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary edit-personal-info" data-field="full_name">Edit</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Email</td>
                                 <td>{{ user.email }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary edit-personal-info" data-field="email">Edit</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Phone Number</td>
                                 <td>{{ user.userinfo.phone_number }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary edit-personal-info" data-field="phone_number">Edit</button>
-                                </td>
+                                <td>{{ user.userinfo.address }}</td>
+                                <td>{{ user.userinfo.linkedin_url }}</td>
+                                <td>{{ user.userinfo.github_url }}</td>
+                                <td>{{ user.userinfo.portfolio_url }}</td>
+                                <td>{{ user.userinfo.summary }}</td>
                             </tr>
                         </tbody>
                     </table>
+                    <button class="btn btn-success btn-sm mt-2" onclick="getPage('/templates/frontend/modals/user_info_modal', popup);">Edit</button>
                 </div>
             </div>
         </div>
@@ -89,7 +84,7 @@ Account Dashboard
                             {% endfor %}
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" id="addEducation">Add New</button>
+                    <button class="btn btn-success btn-sm mt-2" id="addEducation" onclick="getPage('/templates/frontend/modals/education_modal', popup);">Add New</button>
                 </div>
             </div>
         </div>

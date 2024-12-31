@@ -1,39 +1,28 @@
-<div class="modal fade" id="educationModal" tabindex="-1" aria-labelledby="educationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="educationModalLabel">Add/Edit Education</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="educationForm">
-                    <div class="mb-3">
-                        <label for="schoolName" class="form-label">School Name</label>
-                        <input type="text" class="form-control" id="schoolName" name="school_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="degree" class="form-label">Degree</label>
-                        <input type="text" class="form-control" id="degree" name="degree" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="fieldOfStudy" class="form-label">Field of Study</label>
-                        <input type="text" class="form-control" id="fieldOfStudy" name="field_of_study">
-                    </div>
-                    <div class="mb-3">
-                        <label for="startDate" class="form-label">Start Date</label>
-                        <input type="date" class="form-control" id="startDate" name="start_date" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="endDate" class="form-label">End Date</label>
-                        <input type="date" class="form-control" id="endDate" name="end_date">
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" name="description"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Save</button>
-                </form>
-            </div>
-        </div>
+<form id="educationForm">
+    <h3>Add/Edit Education</h3>
+    <div class="mb-3">
+        <label for="schoolName" class="form-label">School Name</label>
+        <input type="text" class="form-control" id="schoolName" name="school_name" required>
     </div>
-</div>
+    <div class="mb-3">
+        <label for="degree" class="form-label">Degree</label>
+        <input type="text" class="form-control" id="degree" name="degree" required>
+    </div>
+    <div class="mb-3">
+        <label for="fieldOfStudy" class="form-label">Field of Study</label>
+        <input type="text" class="form-control" id="fieldOfStudy" name="field_of_study">
+    </div>
+    <div class="mb-3">
+        <label for="startDate" class="form-label">Start Date</label>
+        <input type="date" class="form-control" id="startDate" name="start_date" required>
+    </div>
+    <div class="mb-3">
+        <label for="endDate" class="form-label">End Date</label>
+        <input type="date" class="form-control" id="endDate" name="end_date">
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" name="description"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Save</button>
+</form>
