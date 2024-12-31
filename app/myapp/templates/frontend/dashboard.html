@@ -1,12 +1,14 @@
 {% extends "frontend/base.html" %}
 
+{% load static %}
+
 {% block title %}
 Account Dashboard
 {% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="text-center text-primary mb-4">Welcome, {{ username }}</h1>
+    <h1 class="text-center text-primary mb-4">Welcome, {{ user.username }}</h1>
     <p class="text-center text-muted">Manage your resume information below.</p>
 
     <div class="accordion" id="resumeAccordion">
@@ -27,26 +29,26 @@ Account Dashboard
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="personalInfoTableBody">
                             <tr>
                                 <td>Full Name</td>
-                                <td>John Doe</td>
+                                <td>{{ user.userinfo.full_name }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-primary edit-personal-info" data-field="full_name">Edit</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Email</td>
-                                <td>johndoe@example.com</td>
+                                <td>{{ user.email }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-primary edit-personal-info" data-field="email">Edit</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Phone Number</td>
-                                <td>+1 555-123-4567</td>
+                                <td>{{ user.userinfo.phone_number }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-primary edit-personal-info" data-field="phone_number">Edit</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -73,19 +75,21 @@ Account Dashboard
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="educationTableBody">
+                            {% for education in user.educations.all %}
                             <tr>
-                                <td>University of Example</td>
-                                <td>Bachelor's in Computer Science</td>
-                                <td>2022</td>
+                                <td>{{ education.school_name }}</td>
+                                <td>{{ education.degree }}</td>
+                                <td>{{ education.graduation_year }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary">Edit</button>
-                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                    <button class="btn btn-sm btn-primary edit-education" data-id="{{ education.id }}">Edit</button>
+                                    <button class="btn btn-sm btn-danger delete-education" data-id="{{ education.id }}">Delete</button>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2">Add New</button>
+                    <button class="btn btn-success btn-sm mt-2" id="addEducation">Add New</button>
                 </div>
             </div>
         </div>
@@ -108,22 +112,136 @@ Account Dashboard
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="workExperienceTableBody">
+                            {% for experience in user.work_experiences.all %}
                             <tr>
-                                <td>Software Developer</td>
-                                <td>Example Corp</td>
-                                <td>Developed and maintained web applications.</td>
+                                <td>{{ experience.job_title }}</td>
+                                <td>{{ experience.company_name }}</td>
+                                <td>{{ experience.job_description }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary">Edit</button>
-                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                    <button class="btn btn-sm btn-primary edit-work-experience" data-id="{{ experience.id }}">Edit</button>
+                                    <button class="btn btn-sm btn-danger delete-work-experience" data-id="{{ experience.id }}">Delete</button>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2">Add New</button>
+                    <button class="btn btn-success btn-sm mt-2" id="addWorkExperience">Add New</button>
                 </div>
             </div>
         </div>
+
+        <!-- Add Skills, Projects, and Certifications as above -->
+        <!-- Example for Skills -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSkills">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#skills" aria-expanded="false" aria-controls="skills">
+                    Skills
+                </button>
+            </h2>
+            <div id="skills" class="accordion-collapse collapse" aria-labelledby="headingSkills" data-bs-parent="#resumeAccordion">
+                <div class="accordion-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Skill</th>
+                                <th>Proficiency</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="skillsTableBody">
+                            {% for skill in user.skills.all %}
+                            <tr>
+                                <td>{{ skill.skill_name }}</td>
+                                <td>{{ skill.proficiency_level }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary edit-skill" data-id="{{ skill.id }}">Edit</button>
+                                    <button class="btn btn-sm btn-danger delete-skill" data-id="{{ skill.id }}">Delete</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button class="btn btn-success btn-sm mt-2" id="addSkill">Add New</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingProjects">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#projects" aria-expanded="false" aria-controls="projects">
+                    Projects
+                </button>
+            </h2>
+            <div id="projects" class="accordion-collapse collapse" aria-labelledby="headingProjects" data-bs-parent="#resumeAccordion">
+                <div class="accordion-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Project Title</th>
+                                <th>Description</th>
+                                <th>Technologies Used</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projectsTableBody">
+                            {% for project in user.projects.all %}
+                            <tr>
+                                <td>{{ project.project_title }}</td>
+                                <td>{{ project.description }}</td>
+                                <td>{{ project.technologies_used }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary edit-project" data-id="{{ project.id }}">Edit</button>
+                                    <button class="btn btn-sm btn-danger delete-project" data-id="{{ project.id }}">Delete</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button class="btn btn-success btn-sm mt-2" id="addProject">Add New</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certifications -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingCertifications">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#certifications" aria-expanded="false" aria-controls="certifications">
+                    Certifications
+                </button>
+            </h2>
+            <div id="certifications" class="accordion-collapse collapse" aria-labelledby="headingCertifications" data-bs-parent="#resumeAccordion">
+                <div class="accordion-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Certification Name</th>
+                                <th>Issuing Organization</th>
+                                <th>Issue Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="certificationsTableBody">
+                            {% for certification in user.certifications.all %}
+                            <tr>
+                                <td>{{ certification.certification_name }}</td>
+                                <td>{{ certification.issuing_organization }}</td>
+                                <td>{{ certification.issue_date }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary edit-certification" data-id="{{ certification.id }}">Edit</button>
+                                    <button class="btn btn-sm btn-danger delete-certification" data-id="{{ certification.id }}">Delete</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button class="btn btn-success btn-sm mt-2" id="addCertification">Add New</button>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
 
@@ -131,3 +249,9 @@ Account Dashboard
 {% include "frontend/chat-bubble.html" %}
 
 {% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
+
+
