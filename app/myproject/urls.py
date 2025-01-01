@@ -12,7 +12,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('logout/', views.logout_view, name='logout'),
 
-    # Forms
+    # Form Views
     path('templates/frontend/modals/user_info_modal/', views.user_info_modal, name='user-info-modal'),
     path('templates/frontend/modals/education_modal/', views.education_modal, name='education-modal'),
     path('templates/frontend/modals/work_experience_modal/', views.work_experience_modal, name='work-experience-modal'),
