@@ -32,14 +32,7 @@ class WorkExperienceForm(forms.ModelForm):
 class SkillForm(forms.ModelForm):
     class Meta:
         model = Skill
-        fields = ['skill_name', 'proficiency_level']
-        widgets = {
-            'proficiency_level': forms.Select(choices=[
-                ("Beginner", "Beginner"),
-                ("Intermediate", "Intermediate"),
-                ("Expert", "Expert"),
-            ]),
-        }
+        fields = ['skill_name', 'years_of_experience']
 
 class ProjectForm(forms.ModelForm):
     class Meta:

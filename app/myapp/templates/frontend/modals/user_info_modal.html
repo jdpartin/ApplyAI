@@ -1,4 +1,5 @@
-<form id="userInfoForm">
+<form method="post" action="/templates/frontend/modals/user_info_modal/" id="userInfoForm">
+    {% csrf_token %}
     <h3>User Info Edit Form</h3>
     <div class="mb-3">
         <label for="fullName" class="form-label">Full Name</label>
@@ -32,5 +33,5 @@
         <label for="summary" class="form-label">Summary</label>
         <textarea class="form-control" id="summary" name="summary">{{ user.userinfo.summary }}</textarea>
     </div>
-    <button type="submit" class="btn btn-primary w-100">Save</button>
+    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('userInfoForm');">Save</button>
 </form>

@@ -1,27 +1,12 @@
-<div class="modal fade" id="skillModal" tabindex="-1" aria-labelledby="skillModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="skillModalLabel">Add/Edit Skill</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="skillForm">
-                    <div class="mb-3">
-                        <label for="skillName" class="form-label">Skill</label>
-                        <input type="text" class="form-control" id="skillName" name="skill_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="proficiencyLevel" class="form-label">Proficiency Level</label>
-                        <select class="form-control" id="proficiencyLevel" name="proficiency_level" required>
-                            <option value="Beginner">Beginner</option>
-                            <option value="Intermediate">Intermediate</option>
-                            <option value="Expert">Expert</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Save</button>
-                </form>
-            </div>
-        </div>
+<form id="skillForm">
+    <h3>Add/Edit Skill</h3>
+    <div class="mb-3">
+        <label for="skillName" class="form-label">Skill</label>
+        <input type="text" class="form-control" id="skillName" name="skill_name" value="{{ skill.skill_name }}" required>
     </div>
-</div>
+    <div class="mb-3">
+        <label for="yearsOfExperience" class="form-label">Years of Experience</label>
+        <input type="text" class="form-control" id="yearsOfExperience" name="years_of_experience" value="{{ skill.years_of_experience }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Save</button>
+</form>

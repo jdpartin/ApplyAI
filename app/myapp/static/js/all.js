@@ -42,3 +42,45 @@ function getPage(url, callback) {
             callback(error); // Pass the error to the callback function
         });
 }
+
+function submitFormAjax(formId, successCallback = null, errorCallback = null) {
+    const form = document.getElementById(formId);
+    if (!form) {
+        console.error(`Form with id '${formId}' not found.`);
+        return;
+    }
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        const formData = new FormData(form);
+        const actionUrl = form.action; // The form's 'action' attribute
+
+        fetch(actionUrl, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Include the CSRF token
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    if (successCallback && typeof successCallback === 'function') {
+                        successCallback(data); // Call the success callback
+                    } else {
+                        console.log('Success:', data);
+                    }
+                } else {
+                    if (errorCallback && typeof errorCallback === 'function') {
+                        errorCallback(data); // Call the error callback
+                    } else {
+                        console.error('Error:', data);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('AJAX Error:', error);
+            });
+    });
+}

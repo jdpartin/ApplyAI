@@ -1,39 +1,28 @@
-<div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="projectModalLabel">Add/Edit Project</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="projectForm">
-                    <div class="mb-3">
-                        <label for="projectTitle" class="form-label">Project Title</label>
-                        <input type="text" class="form-control" id="projectTitle" name="project_title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" name="description"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="technologiesUsed" class="form-label">Technologies Used</label>
-                        <input type="text" class="form-control" id="technologiesUsed" name="technologies_used">
-                    </div>
-                    <div class="mb-3">
-                        <label for="projectUrl" class="form-label">Project URL</label>
-                        <input type="url" class="form-control" id="projectUrl" name="project_url">
-                    </div>
-                    <div class="mb-3">
-                        <label for="startDate" class="form-label">Start Date</label>
-                        <input type="date" class="form-control" id="startDate" name="start_date">
-                    </div>
-                    <div class="mb-3">
-                        <label for="endDate" class="form-label">End Date</label>
-                        <input type="date" class="form-control" id="endDate" name="end_date">
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Save</button>
-                </form>
-            </div>
-        </div>
+<form id="projectForm">
+    <h3>Add/Edit Project</h3>
+    <div class="mb-3">
+        <label for="projectTitle" class="form-label">Project Title</label>
+        <input type="text" class="form-control" id="projectTitle" name="project_title" value="{{ project.project_title }}" required>
     </div>
-</div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" name="description">{{ project.description }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="technologiesUsed" class="form-label">Technologies Used</label>
+        <input type="text" class="form-control" id="technologiesUsed" name="technologies_used" value="{{ project.technologies_used }}">
+    </div>
+    <div class="mb-3">
+        <label for="projectUrl" class="form-label">Project URL</label>
+        <input type="url" class="form-control" id="projectUrl" name="project_url" value="{{ project.project_url }}">
+    </div>
+    <div class="mb-3">
+        <label for="startDate" class="form-label">Start Date</label>
+        <input type="date" class="form-control" id="startDate" name="start_date" value="{{ project.start_date }}">
+    </div>
+    <div class="mb-3">
+        <label for="endDate" class="form-label">End Date</label>
+        <input type="date" class="form-control" id="endDate" name="end_date" value="{{ project.end_date }}">
+    </div>
+</form>
+<button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('projectForm');">Save</button>

@@ -46,13 +46,10 @@ class WorkExperience(models.Model):
 class Skill(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="skills")
     skill_name = models.CharField(max_length=255)
-    proficiency_level = models.CharField(
-        max_length=50,
-        choices=[("Beginner", "Beginner"), ("Intermediate", "Intermediate"), ("Expert", "Expert")],
-    )
+    years_of_experience = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f"{self.skill_name} ({self.proficiency_level})"
+        return f"{self.skill_name} ({self.years_of_experience} years)"
 
 
 class Project(models.Model):

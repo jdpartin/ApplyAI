@@ -104,6 +104,8 @@ Account Dashboard
                                 <th>Job Title</th>
                                 <th>Company Name</th>
                                 <th>Description</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -113,6 +115,8 @@ Account Dashboard
                                 <td>{{ experience.job_title }}</td>
                                 <td>{{ experience.company_name }}</td>
                                 <td>{{ experience.job_description }}</td>
+                                <td>{{ experience.start_date }}</td>
+                                <td>{{ experience.end_date }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary edit-work-experience" data-id="{{ experience.id }}">Edit</button>
                                     <button class="btn btn-sm btn-danger delete-work-experience" data-id="{{ experience.id }}">Delete</button>
@@ -121,7 +125,7 @@ Account Dashboard
                             {% endfor %}
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" id="addWorkExperience">Add New</button>
+                    <button class="btn btn-success btn-sm mt-2" id="addWorkExperience" onclick="getPage('/templates/frontend/modals/work_experience_modal', popup);">Add New</button>
                 </div>
             </div>
         </div>
@@ -140,7 +144,7 @@ Account Dashboard
                         <thead class="table-light">
                             <tr>
                                 <th>Skill</th>
-                                <th>Proficiency</th>
+                                <th>Years of Experience</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -148,7 +152,7 @@ Account Dashboard
                             {% for skill in user.skills.all %}
                             <tr>
                                 <td>{{ skill.skill_name }}</td>
-                                <td>{{ skill.proficiency_level }}</td>
+                                <td>{{ skill.years_of_experience }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary edit-skill" data-id="{{ skill.id }}">Edit</button>
                                     <button class="btn btn-sm btn-danger delete-skill" data-id="{{ skill.id }}">Delete</button>
@@ -157,7 +161,7 @@ Account Dashboard
                             {% endfor %}
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" id="addSkill">Add New</button>
+                    <button class="btn btn-success btn-sm mt-2" id="addSkill" onclick="getPage('/templates/frontend/modals/skill_modal', popup);">Add New</button>
                 </div>
             </div>
         </div>
@@ -177,6 +181,9 @@ Account Dashboard
                                 <th>Project Title</th>
                                 <th>Description</th>
                                 <th>Technologies Used</th>
+                                <th>Project URL</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -186,6 +193,9 @@ Account Dashboard
                                 <td>{{ project.project_title }}</td>
                                 <td>{{ project.description }}</td>
                                 <td>{{ project.technologies_used }}</td>
+                                <td>{{ project.project_url }}</td>
+                                <td>{{ project.start_date }}</td>
+                                <td>{{ project.end_date }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary edit-project" data-id="{{ project.id }}">Edit</button>
                                     <button class="btn btn-sm btn-danger delete-project" data-id="{{ project.id }}">Delete</button>
@@ -194,7 +204,7 @@ Account Dashboard
                             {% endfor %}
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" id="addProject">Add New</button>
+                    <button class="btn btn-success btn-sm mt-2" id="addProject" onclick="getPage('/templates/frontend/modals/project_modal', popup);">Add New</button>
                 </div>
             </div>
         </div>
@@ -223,6 +233,9 @@ Account Dashboard
                                 <td>{{ certification.certification_name }}</td>
                                 <td>{{ certification.issuing_organization }}</td>
                                 <td>{{ certification.issue_date }}</td>
+                                <td>{{ certification.expiration_date }}</td>
+                                <td>{{ certification.credential_id }}</td>
+                                <td>{{ certification.credential_url }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary edit-certification" data-id="{{ certification.id }}">Edit</button>
                                     <button class="btn btn-sm btn-danger delete-certification" data-id="{{ certification.id }}">Delete</button>
@@ -231,7 +244,7 @@ Account Dashboard
                             {% endfor %}
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" id="addCertification">Add New</button>
+                    <button class="btn btn-success btn-sm mt-2" id="addCertification" onclick="getPage('/templates/frontend/modals/certification_modal', popup);">Add New</button>
                 </div>
             </div>
         </div>
