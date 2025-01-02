@@ -13,10 +13,10 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
 
     # Form Views
-    path('templates/frontend/modals/user_info_modal/', views.user_info_modal, name='user-info-modal'),
-    path('templates/frontend/modals/education_modal/', views.education_modal, name='education-modal'),
-    path('templates/frontend/modals/work_experience_modal/', views.work_experience_modal, name='work-experience-modal'),
-    path('templates/frontend/modals/skill_modal/', views.skill_modal, name='skill-modal'),
-    path('templates/frontend/modals/project_modal/', views.project_modal, name='project-modal'),
-    path('templates/frontend/modals/certification_modal/', views.certification_modal, name='certification-modal'),
+    path('templates/frontend/modals/user_info_modal/', views.user_info_modal, name='user_info_modal'),
+    path('templates/frontend/modals/education_modal/', views.education_modal, name='education_modal'),
+    path('templates/frontend/modals/work_experience_modal/', views.work_experience_modal, name='work_experience_modal'),
+    path('templates/frontend/modals/skill_modal/', views.skill_modal, name='skill_modal'),
+    path('templates/frontend/modals/project_modal/', views.project_modal, name='project_modal'),
+    path('templates/frontend/modals/certification_modal/', views.certification_modal, name='certification_modal'),
 ]

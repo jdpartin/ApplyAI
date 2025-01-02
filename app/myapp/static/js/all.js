@@ -16,19 +16,21 @@ function popup(html = '') {
     // Trigger a reflow to ensure proper resizing and visibility
     modal.addEventListener('shown.bs.modal', () => {
         modal.offsetHeight; // Forces a reflow
-        console.log('Modal content loaded and resized!');
     });
 }
 
 
-
-
-// Get Page AJAX
-
-function getPage(url, callback) {
+function getPage(url, callback, showLoading = false, loadingMessage = '') {
     // Perform an AJAX request using fetch
+
+    if (showLoading) {
+        toggleLoading(true, loadingMessage);
+    }
+
     fetch(url)
         .then(response => {
+            toggleLoading(false);
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -39,11 +41,12 @@ function getPage(url, callback) {
             console.log(data);
         })
         .catch(error => {
+            toggleLoading(false);
             callback(error); // Pass the error to the callback function
         });
 }
 
-function submitFormAjax(formId, successCallback = null, errorCallback = null) {
+function submitFormAjax(formId, successCallback = null, errorCallback = null, loadingMessage = '') {
     const form = document.getElementById(formId);
 
     if (!form) {
@@ -54,6 +57,8 @@ function submitFormAjax(formId, successCallback = null, errorCallback = null) {
     const formData = new FormData(form);
     const actionUrl = form.action; // The form's 'action' attribute
 
+    toggleLoading(true, loadingMessage);
+
     fetch(actionUrl, {
         method: 'POST',
         headers: {
@@ -61,23 +66,38 @@ function submitFormAjax(formId, successCallback = null, errorCallback = null) {
         },
         body: formData
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                if (successCallback && typeof successCallback === 'function') {
-                    successCallback(data); // Call the success callback
-                } else {
-                    console.log('Success:', data);
-                }
+    .then(response => response.json())
+    .then(data => {
+        toggleLoading(false);
+
+        if (data.status === 'success') {
+            if (successCallback && typeof successCallback === 'function') {
+                successCallback(data); // Call the success callback
             } else {
-                if (errorCallback && typeof errorCallback === 'function') {
-                    errorCallback(data); // Call the error callback
-                } else {
-                    console.error('Error:', data);
-                }
+                console.log('Success:', data);
             }
-        })
-        .catch(error => {
-            console.error('AJAX Error:', error);
-        });
+        } else {
+            if (errorCallback && typeof errorCallback === 'function') {
+                errorCallback(data); // Call the error callback
+            } else {
+                console.error('Error:', data);
+            }
+        }
+    })
+    .catch(error => {
+        toggleLoading(false);
+        console.error('AJAX Error:', error);
+    });
+}
+
+// Loading Overlay
+function toggleLoading(show, text = '') {
+    const overlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
+    if (show) {
+        loadingText.textContent = text;
+        overlay.classList.add('active');
+    } else {
+        overlay.classList.remove('active');
+    }
 }

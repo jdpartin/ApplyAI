@@ -91,6 +91,8 @@ Sign Up
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         try {
+            toggleLoading(true, "Signing up please wait...");
+
             const response = await fetch('/signupform/', {
                 method: 'POST',
                 headers: {
@@ -109,11 +111,15 @@ Sign Up
                 alert(data.success);
                 window.location.href = data.redirect; // Redirect to the specified URL
             } else {
+                toggleLoading(false);
                 alert(data.error);
             }
         } catch (error) {
+            toggleLoading(false);
             alert('An error occurred. Please try again.');
         }
+
+        toggleLoading(false);
     });
 
 </script>

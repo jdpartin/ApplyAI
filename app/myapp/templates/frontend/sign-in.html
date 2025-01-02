@@ -47,6 +47,8 @@ Sign In
         const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
         try {
+            toggleLoading(true, "Signing in please wait...");
+
             const response = await fetch('/signinform/', {
                 method: 'POST',
                 headers: {
@@ -58,14 +60,17 @@ Sign In
 
             const data = await response.json();
             if (response.ok) {
-                alert(data.success);
                 window.location.href = data.redirect; // Redirect to the homepage on success
             } else {
+                toggleLoading(false);
                 alert(data.error);
             }
         } catch (error) {
+            toggleLoading(false);
             alert('An error occurred. Please try again.');
         }
+
+        toggleLoading(false);
     });
 </script>
 {% endblock %}
