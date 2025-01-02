@@ -19,6 +19,16 @@ function popup(html = '') {
     });
 }
 
+function closeCurrentModal() {
+    const modal = document.querySelector('.modal.show'); // Get the currently visible modal
+    if (modal) {
+        const modalInstance = bootstrap.Modal.getInstance(modal); // Get the modal instance
+        if (modalInstance) {
+            modalInstance.hide(); // Close the modal
+        }
+    }
+}
+
 
 function getPage(url, callback, showLoading = false, loadingMessage = '') {
     // Perform an AJAX request using fetch
@@ -38,7 +48,6 @@ function getPage(url, callback, showLoading = false, loadingMessage = '') {
         })
         .then(data => {
             callback(data); // Pass the data to the callback function
-            console.log(data);
         })
         .catch(error => {
             toggleLoading(false);
@@ -73,8 +82,6 @@ function submitFormAjax(formId, successCallback = null, errorCallback = null, lo
         if (data.status === 'success') {
             if (successCallback && typeof successCallback === 'function') {
                 successCallback(data); // Call the success callback
-            } else {
-                console.log('Success:', data);
             }
         } else {
             if (errorCallback && typeof errorCallback === 'function') {
