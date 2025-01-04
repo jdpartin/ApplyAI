@@ -39,11 +39,15 @@ def home(request):
 
 def sign_in(request):
     """Renders the sign-in page."""
+    if request.user.is_authenticated:
+        return redirect('dashboard')
     return render(request, 'frontend/sign-in.html')
 
 
 def sign_up(request):
     """Renders the sign-up page."""
+    if request.user.is_authenticated:
+        return redirect('dashboard')
     return render(request, 'frontend/sign-up.html')
 
 
