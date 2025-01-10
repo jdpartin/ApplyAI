@@ -11,6 +11,9 @@ import json
 from .models import UserInfo, Education, WorkExperience, Skill, Project, Certification
 from .forms import UserInfoForm, EducationForm, WorkExperienceForm, SkillForm, ProjectForm, CertificationForm
 from django.http import HttpResponse
+from django.db import DatabaseError
+import logging
+
 
 from .forms import (
     EducationForm,
@@ -139,18 +142,46 @@ def logout_view(request):
 
 # Form Views
 
+logger = logging.getLogger(__name__)
+
 @login_required
 def user_info_modal(request):
     if request.method == 'POST':
         user_info, created = UserInfo.objects.get_or_create(user=request.user)
         form = UserInfoForm(request.POST, instance=user_info)
         if form.is_valid():
-            form.save()
-            return JsonResponse({"message": "User info saved successfully!", "status": "success"}, status=200)
+            try:
+                user_info = form.save()
+                if not user_info.pk:  # Check if the primary key exists
+                    raise ValueError("Failed to save user info; primary key is missing.")
+                
+                # Return the saved data back in the response
+                return JsonResponse({
+                    "message": "User info saved successfully!",
+                    "status": "success",
+                    "data": form.cleaned_data,  # Include the submitted form data
+                }, status=200)
+            except DatabaseError as e:
+                logger.error(f"Database error during save: {e}")
+                return JsonResponse({
+                    "message": "An error occurred while saving user info.",
+                    "status": "error"
+                }, status=500)
+            except Exception as e:
+                logger.error(f"General error during save: {e}")
+                return JsonResponse({
+                    "message": "An unexpected error occurred.",
+                    "status": "error"
+                }, status=500)
         else:
-            return JsonResponse({"errors": form.errors, "status": "error"}, status=400)
+            return JsonResponse({
+                "errors": form.errors,  # Return form validation errors
+                "status": "error"
+            }, status=400)
     else:  # GET request
         return render(request, 'frontend/modals/user_info_modal.html')
+
+
 
 
 @login_required

@@ -19,8 +19,13 @@ function popup(html = '') {
     });
 }
 
-function closeCurrentModal() {
+function closeCurrentModal(txt = '') {
+    if (txt != '') {
+        console.log(txt);
+    }
+
     const modal = document.querySelector('.modal.show'); // Get the currently visible modal
+
     if (modal) {
         const modalInstance = bootstrap.Modal.getInstance(modal); // Get the modal instance
         if (modalInstance) {
@@ -51,6 +56,7 @@ function getPage(url, callback, showLoading = false, loadingMessage = '') {
         })
         .catch(error => {
             toggleLoading(false);
+            console.log(error);
             callback(error); // Pass the error to the callback function
         });
 }
@@ -66,6 +72,12 @@ function submitFormAjax(formId, successCallback = null, errorCallback = null, lo
     const formData = new FormData(form);
     const actionUrl = form.action; // The form's 'action' attribute
 
+    // Log all key-value pairs in the FormData
+    console.log('FormData Contents:');
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
+
     toggleLoading(true, loadingMessage);
 
     fetch(actionUrl, {
@@ -75,27 +87,28 @@ function submitFormAjax(formId, successCallback = null, errorCallback = null, lo
         },
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        toggleLoading(false);
+        .then(response => response.json())
+        .then(data => {
+            toggleLoading(false);
 
-        if (data.status === 'success') {
-            if (successCallback && typeof successCallback === 'function') {
-                successCallback(data); // Call the success callback
-            }
-        } else {
-            if (errorCallback && typeof errorCallback === 'function') {
-                errorCallback(data); // Call the error callback
+            if (data.status === 'success') {
+                if (successCallback && typeof successCallback === 'function') {
+                    successCallback(data); // Call the success callback
+                }
             } else {
-                console.error('Error:', data);
+                if (errorCallback && typeof errorCallback === 'function') {
+                    errorCallback(data); // Call the error callback
+                } else {
+                    console.error('Error:', data);
+                }
             }
-        }
-    })
-    .catch(error => {
-        toggleLoading(false);
-        console.error('AJAX Error:', error);
-    });
+        })
+        .catch(error => {
+            toggleLoading(false);
+            console.error('AJAX Error:', error);
+        });
 }
+
 
 // Loading Overlay
 function toggleLoading(show, text = '') {
