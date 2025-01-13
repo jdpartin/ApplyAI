@@ -5,8 +5,12 @@
     <h3>User Info Edit Form</h3>
 
     <div class="mb-3">
-        <label for="fullName" class="form-label">Full Name</label>
-        <input type="text" class="form-control" id="fullName" name="full_name" value="{{ user.userinfo.full_name }}" required>
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="firstName" name="first_name" value="{{ user.first_name }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="lastName" name="last_name" value="{{ user.last_name }}" required>
     </div>
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
@@ -14,28 +18,29 @@
     </div>
     <div class="mb-3">
         <label for="phoneNumber" class="form-label">Phone Number</label>
-        <input type="text" class="form-control" id="phoneNumber" value="{{ user.userinfo.phone_number }}" name="phone_number">
+        <input type="text" class="form-control" id="phoneNumber" value="{{ user.user_info.phone_number }}" name="phone_number">
     </div>
     <div class="mb-3">
         <label for="address" class="form-label">Address</label>
-        <textarea class="form-control" id="address" name="address">{{ user.userinfo.address }}</textarea>
+        <textarea class="form-control" id="address" name="address">{{ user.user_info.address }}</textarea>
     </div>
     <div class="mb-3">
         <label for="linkedinUrl" class="form-label">LinkedIn URL</label>
-        <input type="url" class="form-control" id="linkedinUrl" name="linkedin_url" value="{{ user.userinfo.linkedin_url }}">
+        <input type="url" class="form-control" id="linkedinUrl" name="linkedin_url" value="{{ user.user_info.linkedin_url }}">
     </div>
     <div class="mb-3">
         <label for="githubUrl" class="form-label">GitHub URL</label>
-        <input type="url" class="form-control" id="githubUrl" name="github_url" value="{{ user.userinfo.github_url }}">
+        <input type="url" class="form-control" id="githubUrl" name="github_url" value="{{ user.user_info.github_url }}">
     </div>
     <div class="mb-3">
         <label for="portfolioUrl" class="form-label">Portfolio URL</label>
-        <input type="url" class="form-control" id="portfolioUrl" name="portfolio_url" value="{{ user.userinfo.portfolio_url }}">
+        <input type="url" class="form-control" id="portfolioUrl" name="portfolio_url" value="{{ user.user_info.portfolio_url }}">
     </div>
     <div class="mb-3">
         <label for="summary" class="form-label">Summary</label>
-        <textarea class="form-control" id="summary" name="summary">{{ user.userinfo.summary }}</textarea>
+        <textarea class="form-control" id="summary" name="summary">{{ user.user_info.summary }}</textarea>
     </div>
 
     <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('userInfoForm', closeCurrentModal);">Save</button>
+
 </form>

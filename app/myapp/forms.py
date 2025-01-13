@@ -9,6 +9,11 @@ class UserInfoForm(forms.ModelForm):
             'summary': forms.Textarea(attrs={'rows': 3}),
         }
 
+    # Ensure optional URL fields
+    linkedin_url = forms.URLField(required=False)
+    github_url = forms.URLField(required=False)
+    portfolio_url = forms.URLField(required=False)
+
 class EducationForm(forms.ModelForm):
     class Meta:
         model = Education

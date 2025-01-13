@@ -1,28 +1,34 @@
-<form id="educationForm">
+<form method="post" action="{% url 'education_modal' %}" id="educationForm">
+
+    {% csrf_token %}
+
     <h3>Add/Edit Education</h3>
+
     <div class="mb-3">
         <label for="schoolName" class="form-label">School Name</label>
-        <input type="text" class="form-control" id="schoolName" name="school_name" required>
+        <input type="text" class="form-control" id="schoolName" name="school_name" value="{{ education.school_name }}">
     </div>
     <div class="mb-3">
         <label for="degree" class="form-label">Degree</label>
-        <input type="text" class="form-control" id="degree" name="degree" required>
+        <input type="text" class="form-control" id="degree" name="degree" value="{{ education.degree }}">
     </div>
     <div class="mb-3">
         <label for="fieldOfStudy" class="form-label">Field of Study</label>
-        <input type="text" class="form-control" id="fieldOfStudy" name="field_of_study">
+        <input type="text" class="form-control" id="fieldOfStudy" name="field_of_study" value="{{ education.field_of_study }}">
     </div>
     <div class="mb-3">
         <label for="startDate" class="form-label">Start Date</label>
-        <input type="date" class="form-control" id="startDate" name="start_date" required>
+        <input type="date" class="form-control" id="startDate" name="start_date" value="{{ education.start_date }}">
     </div>
     <div class="mb-3">
         <label for="endDate" class="form-label">End Date</label>
-        <input type="date" class="form-control" id="endDate" name="end_date">
+        <input type="date" class="form-control" id="endDate" name="end_date" value="{{ education.end_date }}">
     </div>
     <div class="mb-3">
         <label for="description" class="form-label">Description</label>
-        <textarea class="form-control" id="description" name="description"></textarea>
+        <textarea class="form-control" id="description" name="description">{{ education.description }}</textarea>
     </div>
-    <button type="submit" class="btn btn-primary w-100">Save</button>
+
+    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('educationForm', closeCurrentModal);">Save</button>
+
 </form>

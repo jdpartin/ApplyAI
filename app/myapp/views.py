@@ -1,18 +1,17 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
+from .models import UserInfo, Education, WorkExperience, Skill, Project, Certification
+from .forms import UserInfoForm, EducationForm, WorkExperienceForm, SkillForm, ProjectForm, CertificationForm
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
-from django.http import JsonResponse
-from django.urls import reverse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-import json
-from .models import UserInfo, Education, WorkExperience, Skill, Project, Certification
-from .forms import UserInfoForm, EducationForm, WorkExperienceForm, SkillForm, ProjectForm, CertificationForm
-from django.http import HttpResponse
+from django.core.exceptions import ValidationError
+from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.models import User
 from django.db import DatabaseError
+from django.urls import reverse
 import logging
+import json
 
 
 from .forms import (
@@ -149,54 +148,71 @@ def user_info_modal(request):
     if request.method == 'POST':
         user_info, created = UserInfo.objects.get_or_create(user=request.user)
         form = UserInfoForm(request.POST, instance=user_info)
+
         if form.is_valid():
-            try:
-                user_info = form.save()
-                if not user_info.pk:  # Check if the primary key exists
-                    raise ValueError("Failed to save user info; primary key is missing.")
-                
-                # Return the saved data back in the response
-                return JsonResponse({
-                    "message": "User info saved successfully!",
-                    "status": "success",
-                    "data": form.cleaned_data,  # Include the submitted form data
-                }, status=200)
-            except DatabaseError as e:
-                logger.error(f"Database error during save: {e}")
-                return JsonResponse({
-                    "message": "An error occurred while saving user info.",
-                    "status": "error"
-                }, status=500)
-            except Exception as e:
-                logger.error(f"General error during save: {e}")
-                return JsonResponse({
-                    "message": "An unexpected error occurred.",
-                    "status": "error"
-                }, status=500)
-        else:
+            # Save the UserInfo model
+            user_info = form.save()
+
+            # Update the User model fields
+            email = request.POST.get('email')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+
+            if email:
+                request.user.email = email
+            if first_name:
+                request.user.first_name = first_name
+            if last_name:
+                request.user.last_name = last_name
+            request.user.save()
+
+            # Return success response
             return JsonResponse({
-                "errors": form.errors,  # Return form validation errors
-                "status": "error"
-            }, status=400)
-    else:  # GET request
-        return render(request, 'frontend/modals/user_info_modal.html')
+                "message": "User info saved successfully!",
+                "status": "success",
+                "data": {
+                    **form.cleaned_data,
+                    "email": request.user.email,
+                    "first_name": request.user.first_name,
+                    "last_name": request.user.last_name,
+                }
+            }, status=200)
 
+        # Return validation errors
+        return JsonResponse({
+            "errors": form.errors,
+            "status": "error"
+        }, status=400)
 
+    # Handle GET requests
+    return render(request, 'frontend/modals/user_info_modal.html')
 
 
 @login_required
 def education_modal(request):
+    # Extract `id` from query parameters
+    education_id = request.GET.get('id') if request.method == 'GET' else request.POST.get('id')
+
+    # Fetch the Education instance if `id` is provided
+    education = None
+    if education_id:
+        education = get_object_or_404(Education, id=education_id, user=request.user)
+
     if request.method == 'POST':
-        form = EducationForm(request.POST)
+        # Bind the form to the data and the instance (if any)
+        form = EducationForm(request.POST, instance=education)
         if form.is_valid():
             education = form.save(commit=False)
-            education.user = request.user
+            education.user = request.user  # Ensure the user is set
             education.save()
             return JsonResponse({"message": "Education saved successfully!", "status": "success"}, status=200)
         else:
             return JsonResponse({"errors": form.errors, "status": "error"}, status=400)
+
     else:  # GET request
-        return render(request, 'frontend/modals/education_modal.html')
+        # Render the form, prefilled if editing
+        return render(request, 'frontend/modals/education_modal.html', {'education': education})
+
 
 
 @login_required

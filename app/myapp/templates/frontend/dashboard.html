@@ -8,7 +8,7 @@ Account Dashboard
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="text-center text-primary mb-4">Welcome, {{ user.username }}</h1>
+    <h1 class="text-center text-primary mb-4">Welcome, {{ user.first_name|default:user.username }}</h1>
     <p class="text-center text-muted">Manage your resume information below.</p>
 
     <div class="accordion" id="resumeAccordion">
@@ -24,7 +24,7 @@ Account Dashboard
                     <table class="table table-bordered table-striped">
                         <thead class="table-light">
                             <tr>
-                                <th>Full Name</th>
+                                <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
                                 <th>Address</th>
@@ -36,14 +36,14 @@ Account Dashboard
                         </thead>
                         <tbody id="personalInfoTableBody">
                             <tr>
-                                <td>{{ user.userinfo.full_name }}</td>
+                                <td>{{ user.first_name }} {{ user.last_name}}</td>
                                 <td>{{ user.email }}</td>
-                                <td>{{ user.userinfo.phone_number }}</td>
-                                <td>{{ user.userinfo.address }}</td>
-                                <td>{{ user.userinfo.linkedin_url }}</td>
-                                <td>{{ user.userinfo.github_url }}</td>
-                                <td>{{ user.userinfo.portfolio_url }}</td>
-                                <td>{{ user.userinfo.summary }}</td>
+                                <td>{{ user.user_info.phone_number }}</td>
+                                <td>{{ user.user_info.address }}</td>
+                                <td>{{ user.user_info.linkedin_url }}</td>
+                                <td>{{ user.user_info.github_url }}</td>
+                                <td>{{ user.user_info.portfolio_url }}</td>
+                                <td>{{ user.user_info.summary }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -77,7 +77,7 @@ Account Dashboard
                                 <td>{{ education.degree }}</td>
                                 <td>{{ education.graduation_year }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary edit-education" data-id="{{ education.id }}">Edit</button>
+                                    <button class="btn btn-sm btn-primary edit-education" onclick="getPage('/templates/frontend/modals/education_modal?id={{ education.id }}', popup);">Edit</button>
                                     <button class="btn btn-sm btn-danger delete-education" data-id="{{ education.id }}">Delete</button>
                                 </td>
                             </tr>

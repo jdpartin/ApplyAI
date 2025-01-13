@@ -1,12 +1,16 @@
-<form id="certificationForm">
+<form method="post" action="{% url 'certification_modal' %}" id="certificationForm">
+
+    {% csrf_token %}
+
     <h3>Add/Edit Certification</h3>
+
     <div class="mb-3">
         <label for="certificationName" class="form-label">Certification Name</label>
         <input type="text" class="form-control" id="certificationName" name="certification_name" value="{{ certification.certification_name }}" required>
     </div>
     <div class="mb-3">
         <label for="issuingOrganization" class="form-label">Issuing Organization</label>
-        <input type="text" class="form-control" id="issuingOrganization" name="issuing_organization"  value="{{ certification.issuing_organization }}" required>
+        <input type="text" class="form-control" id="issuingOrganization" name="issuing_organization" value="{{ certification.issuing_organization }}" required>
     </div>
     <div class="mb-3">
         <label for="issueDate" class="form-label">Issue Date</label>
@@ -24,5 +28,7 @@
         <label for="credentialUrl" class="form-label">Credential URL</label>
         <input type="url" class="form-control" id="credentialUrl" name="credential_url" value="{{ certification.credential_url }}">
     </div>
-    <button type="submit" class="btn btn-primary w-100">Save</button>
+
+    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('certificationForm', closeCurrentModal);">Save</button>
+
 </form>

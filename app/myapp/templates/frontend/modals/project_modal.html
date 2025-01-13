@@ -1,5 +1,9 @@
-<form id="projectForm">
+<form method="post" action="{% url 'project_modal' %}" id="projectForm">
+
+    {% csrf_token %}
+
     <h3>Add/Edit Project</h3>
+
     <div class="mb-3">
         <label for="projectTitle" class="form-label">Project Title</label>
         <input type="text" class="form-control" id="projectTitle" name="project_title" value="{{ project.project_title }}" required>
@@ -24,5 +28,7 @@
         <label for="endDate" class="form-label">End Date</label>
         <input type="date" class="form-control" id="endDate" name="end_date" value="{{ project.end_date }}">
     </div>
+
+    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('projectForm', closeCurrentModal);">Save</button>
+
 </form>
-<button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('projectForm');">Save</button>
