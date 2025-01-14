@@ -35,19 +35,10 @@ Account Dashboard
                             </tr>
                         </thead>
                         <tbody id="personalInfoTableBody">
-                            <tr>
-                                <td>{{ user.first_name }} {{ user.last_name}}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.user_info.phone_number }}</td>
-                                <td>{{ user.user_info.address }}</td>
-                                <td>{{ user.user_info.linkedin_url }}</td>
-                                <td>{{ user.user_info.github_url }}</td>
-                                <td>{{ user.user_info.portfolio_url }}</td>
-                                <td>{{ user.user_info.summary }}</td>
-                            </tr>
+                            <!-- Data will be populated here via AJAX -->
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" onclick="getPage('/templates/frontend/modals/user_info_modal', popup);">Edit</button>
+                    <button class="btn btn-sm btn-primary" onclick="editUserInfo()">Edit</button>
                 </div>
             </div>
         </div>
@@ -67,24 +58,12 @@ Account Dashboard
                                 <th>School Name</th>
                                 <th>Degree</th>
                                 <th>Graduation Year</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="educationTableBody">
-                            {% for education in user.educations.all %}
-                            <tr>
-                                <td>{{ education.school_name }}</td>
-                                <td>{{ education.degree }}</td>
-                                <td>{{ education.graduation_year }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary edit-education" onclick="getPage('/templates/frontend/modals/education_modal?id={{ education.id }}', popup);">Edit</button>
-                                    <button class="btn btn-sm btn-danger delete-education" data-id="{{ education.id }}">Delete</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                            <!-- Data will be populated here via AJAX -->
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" id="addEducation" onclick="getPage('/templates/frontend/modals/education_modal', popup);">Add New</button>
                 </div>
             </div>
         </div>
@@ -106,32 +85,17 @@ Account Dashboard
                                 <th>Description</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="workExperienceTableBody">
-                            {% for experience in user.work_experiences.all %}
-                            <tr>
-                                <td>{{ experience.job_title }}</td>
-                                <td>{{ experience.company_name }}</td>
-                                <td>{{ experience.job_description }}</td>
-                                <td>{{ experience.start_date }}</td>
-                                <td>{{ experience.end_date }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary edit-work-experience" data-id="{{ experience.id }}">Edit</button>
-                                    <button class="btn btn-sm btn-danger delete-work-experience" data-id="{{ experience.id }}">Delete</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                            <!-- Data will be populated here via AJAX -->
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" id="addWorkExperience" onclick="getPage('/templates/frontend/modals/work_experience_modal', popup);">Add New</button>
                 </div>
             </div>
         </div>
 
-        <!-- Add Skills, Projects, and Certifications as above -->
-        <!-- Example for Skills -->
+        <!-- Skills -->
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingSkills">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#skills" aria-expanded="false" aria-controls="skills">
@@ -145,23 +109,12 @@ Account Dashboard
                             <tr>
                                 <th>Skill</th>
                                 <th>Years of Experience</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="skillsTableBody">
-                            {% for skill in user.skills.all %}
-                            <tr>
-                                <td>{{ skill.skill_name }}</td>
-                                <td>{{ skill.years_of_experience }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary edit-skill" data-id="{{ skill.id }}">Edit</button>
-                                    <button class="btn btn-sm btn-danger delete-skill" data-id="{{ skill.id }}">Delete</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                            <!-- Data will be populated here via AJAX -->
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" id="addSkill" onclick="getPage('/templates/frontend/modals/skill_modal', popup);">Add New</button>
                 </div>
             </div>
         </div>
@@ -182,29 +135,12 @@ Account Dashboard
                                 <th>Description</th>
                                 <th>Technologies Used</th>
                                 <th>Project URL</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="projectsTableBody">
-                            {% for project in user.projects.all %}
-                            <tr>
-                                <td>{{ project.project_title }}</td>
-                                <td>{{ project.description }}</td>
-                                <td>{{ project.technologies_used }}</td>
-                                <td>{{ project.project_url }}</td>
-                                <td>{{ project.start_date }}</td>
-                                <td>{{ project.end_date }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary edit-project" data-id="{{ project.id }}">Edit</button>
-                                    <button class="btn btn-sm btn-danger delete-project" data-id="{{ project.id }}">Delete</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                            <!-- Data will be populated here via AJAX -->
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" id="addProject" onclick="getPage('/templates/frontend/modals/project_modal', popup);">Add New</button>
                 </div>
             </div>
         </div>
@@ -224,42 +160,28 @@ Account Dashboard
                                 <th>Certification Name</th>
                                 <th>Issuing Organization</th>
                                 <th>Issue Date</th>
-                                <th>Actions</th>
+                                <th>Expiration Date</th>
                             </tr>
                         </thead>
                         <tbody id="certificationsTableBody">
-                            {% for certification in user.certifications.all %}
-                            <tr>
-                                <td>{{ certification.certification_name }}</td>
-                                <td>{{ certification.issuing_organization }}</td>
-                                <td>{{ certification.issue_date }}</td>
-                                <td>{{ certification.expiration_date }}</td>
-                                <td>{{ certification.credential_id }}</td>
-                                <td>{{ certification.credential_url }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary edit-certification" data-id="{{ certification.id }}">Edit</button>
-                                    <button class="btn btn-sm btn-danger delete-certification" data-id="{{ certification.id }}">Delete</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                            <!-- Data will be populated here via AJAX -->
                         </tbody>
                     </table>
-                    <button class="btn btn-success btn-sm mt-2" id="addCertification" onclick="getPage('/templates/frontend/modals/certification_modal', popup);">Add New</button>
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 
-<!-- Chat Bubble -->
-{% include "frontend/chat-bubble.html" %}
+{% include "./chat-bubble.html" %}
 
 {% endblock %}
 
 {% block scripts %}
 <script src="{% static 'js/dashboard.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchAllData();
+    });
+</script>
 {% endblock %}
-
-

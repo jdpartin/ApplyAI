@@ -1,21 +1,121 @@
-{% load static %}
+<div id="chat-bubble-container" class="position-fixed bottom-0 end-0 m-3" style="z-index:999;">
+    <!-- Chat Bubble -->
+    <div id="chat-bubble" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; cursor: pointer;">
+        <i class="bi bi-chat-dots fs-3"></i>
+    </div>
 
-<!-- Chat Bubble -->
-<div class="chat-bubble" id="chatBubble">
-    <i class="bi bi-chat-dots-fill"></i>
+    <!-- Chat Popup -->
+    <div id="chat-popup" class="card shadow-lg" style="display: none; position: fixed; bottom: 80px; right: 20px; width: 350px; max-height: 500px; z-index: 1050;">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <span>Chat</span>
+            <div>
+                <button id="expand-fullscreen" class="btn btn-sm btn-light me-2" title="Expand"><i class="bi bi-arrows-fullscreen"></i></button>
+                <button id="close-chat" class="btn btn-sm btn-light" title="Close"><i class="bi bi-x"></i></button>
+            </div>
+        </div>
+        <div class="card-body overflow-auto" style="max-height: 400px;">
+            <div id="chat-content" class="mb-3">
+                <!-- Chat messages will go here -->
+            </div>
+            <div class="input-group">
+                <input type="text" id="chat-input" class="form-control" placeholder="Type a message...">
+                <button id="send-message" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Chat Container -->
-<div class="chat-container" id="chatContainer">
-    <div class="chat-container-header">
-        <span>Chat with us</span>
-        <button class="btn btn-light btn-sm" id="fullscreenToggle">
-            <i class="bi bi-arrows-fullscreen"></i>
-        </button>
-    </div>
-    <div class="chat-container-body">
-        <p>Welcome to our chat! How can we help you?</p>
-    </div>
-</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chatBubble = document.getElementById('chat-bubble');
+        const chatPopup = document.getElementById('chat-popup');
+        const closeChat = document.getElementById('close-chat');
+        const expandFullscreen = document.getElementById('expand-fullscreen');
+        const chatInput = document.getElementById('chat-input');
+        const sendMessage = document.getElementById('send-message');
+        const chatContent = document.getElementById('chat-content');
 
-<script src="{% static 'js/chat.js' %}"></script>
+        console.log("Chat script initialized");
+
+        chatBubble.addEventListener('click', () => {
+            console.log("Chat bubble clicked");
+            chatPopup.style.display = 'block';
+        });
+
+        closeChat.addEventListener('click', () => {
+            console.log("Close button clicked");
+            chatPopup.style.display = 'none';
+        });
+
+        expandFullscreen.addEventListener('click', () => {
+            console.log("Fullscreen button clicked");
+            chatPopup.classList.toggle('fullscreen');
+        });
+
+        sendMessage.addEventListener('click', async () => {
+            const userMessage = chatInput.value.trim();
+            console.log("Send button clicked. User message:", userMessage);
+
+            if (!userMessage) {
+                console.warn("User message is empty, aborting send");
+                return;
+            }
+
+            // Display user's message in the chat
+            const userMessageElement = document.createElement('div');
+            userMessageElement.className = 'text-end text-primary mb-2';
+            userMessageElement.innerText = userMessage;
+            chatContent.appendChild(userMessageElement);
+
+            // Clear the input field
+            chatInput.value = '';
+
+            try {
+                // Log the request payload
+                console.log("Sending message to backend:", { message: userMessage });
+
+                const response = await fetch('/chat-bubble/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: userMessage }),
+                });
+
+                // Check the response status
+                console.log("Response status:", response.status);
+
+                if (!response.ok) {
+                    console.error("Failed to communicate with the chat server. Status:", response.status);
+                    throw new Error('Failed to communicate with the chat server.');
+                }
+
+                const data = await response.json();
+                console.log("Response received from backend:", data);
+
+                // Display AI's response in the chat
+                const aiMessageElement = document.createElement('div');
+                aiMessageElement.className = 'text-start text-secondary mb-2';
+
+                // Safeguard against missing or malformed data
+                const lastMessage = data.chat_history[data.chat_history.length - 1]?.content || 'No response available.';
+                aiMessageElement.innerText = lastMessage;
+
+                chatContent.appendChild(aiMessageElement);
+
+                // Scroll to the bottom of the chat content
+                chatContent.scrollTop = chatContent.scrollHeight;
+                console.log("AI response displayed in chat");
+            } catch (error) {
+                console.error("Error occurred while sending the message:", error);
+
+                // Display an error message
+                const errorMessageElement = document.createElement('div');
+                errorMessageElement.className = 'text-danger text-center mb-2';
+                errorMessageElement.innerText = 'An error occurred while sending your message.';
+                chatContent.appendChild(errorMessageElement);
+            }
+        });
+    });
+</script>
+
