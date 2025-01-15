@@ -35,26 +35,20 @@
         const sendMessage = document.getElementById('send-message');
         const chatContent = document.getElementById('chat-content');
 
-        console.log("Chat script initialized");
-
         chatBubble.addEventListener('click', () => {
-            console.log("Chat bubble clicked");
             chatPopup.style.display = 'block';
         });
 
         closeChat.addEventListener('click', () => {
-            console.log("Close button clicked");
             chatPopup.style.display = 'none';
         });
 
         expandFullscreen.addEventListener('click', () => {
-            console.log("Fullscreen button clicked");
             chatPopup.classList.toggle('fullscreen');
         });
 
         sendMessage.addEventListener('click', async () => {
             const userMessage = chatInput.value.trim();
-            console.log("Send button clicked. User message:", userMessage);
 
             if (!userMessage) {
                 console.warn("User message is empty, aborting send");
@@ -67,13 +61,9 @@
             userMessageElement.innerText = userMessage;
             chatContent.appendChild(userMessageElement);
 
-            // Clear the input field
             chatInput.value = '';
 
             try {
-                // Log the request payload
-                console.log("Sending message to backend:", { message: userMessage });
-
                 const response = await fetch('/chat-bubble/', {
                     method: 'POST',
                     headers: {
@@ -82,34 +72,24 @@
                     body: JSON.stringify({ message: userMessage }),
                 });
 
-                // Check the response status
-                console.log("Response status:", response.status);
-
                 if (!response.ok) {
                     console.error("Failed to communicate with the chat server. Status:", response.status);
                     throw new Error('Failed to communicate with the chat server.');
                 }
 
                 const data = await response.json();
-                console.log("Response received from backend:", data);
 
-                // Display AI's response in the chat
                 const aiMessageElement = document.createElement('div');
                 aiMessageElement.className = 'text-start text-secondary mb-2';
 
-                // Safeguard against missing or malformed data
-                const lastMessage = data.chat_history[data.chat_history.length - 1]?.content || 'No response available.';
-                aiMessageElement.innerText = lastMessage;
+                aiMessageElement.innerText = data.response;
 
                 chatContent.appendChild(aiMessageElement);
 
-                // Scroll to the bottom of the chat content
                 chatContent.scrollTop = chatContent.scrollHeight;
-                console.log("AI response displayed in chat");
             } catch (error) {
                 console.error("Error occurred while sending the message:", error);
 
-                // Display an error message
                 const errorMessageElement = document.createElement('div');
                 errorMessageElement.className = 'text-danger text-center mb-2';
                 errorMessageElement.innerText = 'An error occurred while sending your message.';

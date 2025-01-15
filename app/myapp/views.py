@@ -1,3 +1,4 @@
+from telnetlib import DO
 from .models import UserInfo, Education, WorkExperience, Skill, Project, Certification
 from .forms import UserInfoForm, EducationForm, WorkExperienceForm, SkillForm, ProjectForm, CertificationForm
 from django.contrib.auth.password_validation import validate_password
@@ -10,68 +11,80 @@ from django.core.exceptions import ValidationError
 from myapp.classes.gemini_manager import GeminiManager
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+import google.generativeai as genai
 from django.urls import reverse
+import requests
 import logging
+import inspect
 import json
 
 
 logger = logging.getLogger(__name__)
 
 GEMINI_API_KEY = "AIzaSyB2TP2FCbiYgH-wSJcjvRuoiV8GwVWkFiM"
-BACKEND_BASE_URL = "http://localhost:8000"
 
+
+# AI Chat Bubble View
 
 @csrf_exempt
 @login_required
 def chat_bubble_view(request):
-    """
-    Handle requests for the chat bubble.
-    Maintain chat history in the session and use it to interact with GeminiManager.
-    """
     if request.method == 'POST':
-        logger.info("Received POST request to chat-bubble endpoint.")
-
-        # Get chat history from session or initialize it
-        chat_history = request.session.get('chat_history', [])
-
-        # Parse user input
         try:
             body = json.loads(request.body)
             user_message = body.get('message', '')
-            logger.debug(f"User message received: {user_message}")
-        except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse JSON payload: {e}")
-            return JsonResponse({"error": "Invalid JSON payload."}, status=400)
 
-        if not user_message:
-            logger.warning("Empty user message received.")
-            return JsonResponse({"error": "Message content is required."}, status=400)
+            ai_tools = [
+                get_user_data
+            ]
 
-        # Initialize GeminiManager
-        gemini_manager = GeminiManager(api_key=GEMINI_API_KEY, backend_base_url=BACKEND_BASE_URL)
+            genai.configure(api_key=GEMINI_API_KEY)
+            model = genai.GenerativeModel(model_name='gemini-1.5-flash', tools=ai_tools)
+            chat = model.start_chat(enable_automatic_function_calling=False)
 
-        # Process user message
-        try:
-            ai_responses = gemini_manager.send_message(user_message)  # Updated to handle a list of responses
-            logger.debug(f"AI responses from GeminiManager: {ai_responses}")
+            response = chat.send_message(user_message)
 
-            # Update chat history
-            chat_history.append({"role": "user", "content": user_message})
-            for response in ai_responses:
-                chat_history.append({"role": "assistant", "content": response})
-            
-            request.session['chat_history'] = chat_history
-            logger.debug(f"Updated chat history: {chat_history}")
+            while True:
+                function_call = getattr(response.parts[0], "function_call", None)
+
+                if function_call:
+                    function_result = execute_ai_function_call(function_call, request)
+                    response = chat.send_message(function_result.content.decode('utf-8'))
+
+                else:
+                    break
+
+            return JsonResponse({"response": response.text}, status=200)
+
         except Exception as e:
-            logger.error(f"Error while communicating with GeminiManager: {e}")
+            print(f"Error: {e}")
             return JsonResponse({"error": "Failed to get a response from the AI."}, status=500)
 
-        # Return the updated chat history
-        return JsonResponse({"chat_history": chat_history})
-
-    logger.warning("Invalid request method received.")
     return JsonResponse({"error": "Invalid request method. Use POST."}, status=405)
 
+
+def execute_ai_function_call(function_call, request):
+    function_name = function_call.name
+    args = function_call.args
+
+    if function_name == "get_user_data":
+        return user_info_data(request)
+
+    
+
+# AI False Functions
+# The library being used requires each parameter in the function be given a strict type
+# Since this is a web app we need to pass the request to maintain session info
+# The AI cant pass back session info for security reasons
+# This is a workaround to maintain session info when the AI makes requests
+
+def get_user_data():
+    """
+    Get information about the user in JSON format
+    Args: None
+    Returns: Name, Email, Phone, Address, LinkedIn URL, GitHub URL, PortfolioURL, and Summary
+    """
+    return JsonResponse({"mockresponse": "this is a mock response"})
 
 
 # ------------------ General Views ------------------
@@ -180,7 +193,11 @@ def logout_view(request):
 
 @login_required
 def user_info_data(request):
-    """Returns user info data in JSON format."""
+    """
+    Get information about the user
+    Args: None
+    Returns Name, Email, Phone, Address, LinkedIn URL, GitHub URL, PortfolioURL, and Summary in JSON format
+    """
     user_info = UserInfo.objects.filter(user=request.user).first()
     if user_info:
         data = {
