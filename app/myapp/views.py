@@ -1,4 +1,3 @@
-from telnetlib import DO
 from .models import UserInfo, Education, WorkExperience, Skill, Project, Certification
 from .forms import UserInfoForm, EducationForm, WorkExperienceForm, SkillForm, ProjectForm, CertificationForm
 from django.contrib.auth.password_validation import validate_password
@@ -8,11 +7,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
-from myapp.classes.gemini_manager import GeminiManager
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 import google.generativeai as genai
 from django.urls import reverse
+from telnetlib import DO
 import requests
 import logging
 import inspect
