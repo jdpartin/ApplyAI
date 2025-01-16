@@ -81,12 +81,40 @@
 
                 const aiMessageElement = document.createElement('div');
                 aiMessageElement.className = 'text-start text-secondary mb-2';
-
                 aiMessageElement.innerText = data.response;
-
                 chatContent.appendChild(aiMessageElement);
 
                 chatContent.scrollTop = chatContent.scrollHeight;
+
+                console.log(data);
+
+                // Refresh tables if necessary
+                if (data.tables_to_update && Array.isArray(data.tables_to_update)) {
+                    data.tables_to_update.forEach((table) => {
+                        switch (table) {
+                            case 'user_info_table':
+                                fetchUserInfo();
+                                break;
+                            case 'education_table':
+                                fetchEducationData();
+                                break;
+                            case 'work_experience_table':
+                                fetchWorkExperienceData();
+                                break;
+                            case 'skills_table':
+                                fetchSkillData();
+                                break;
+                            case 'projects_table':
+                                fetchProjectData();
+                                break;
+                            case 'certifications_table':
+                                fetchCertificationData();
+                                break;
+                            default:
+                                console.warn(`Unknown table: ${table}`);
+                        }
+                    });
+                }
             } catch (error) {
                 console.error("Error occurred while sending the message:", error);
 
@@ -98,4 +126,3 @@
         });
     });
 </script>
-
