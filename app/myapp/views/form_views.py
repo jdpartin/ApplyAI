@@ -21,6 +21,10 @@ import json
 
 
 @login_required
+def resume_modal(request):
+    return render(request, 'frontend/modals/resume_modal.html')
+
+@login_required
 def user_info_modal(request):
     """Handles User Info modal form submission and rendering."""
     if request.method == 'POST':

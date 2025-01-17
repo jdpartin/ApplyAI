@@ -20,7 +20,7 @@ function fetchUserInfo() {
                 <td>${data.linkedin_url}</td>
                 <td>${data.github_url}</td>
                 <td>${data.portfolio_url}</td>
-                <td>${data.summary}</td>
+                <!--<td>${data.summary}</td>-->
             </tr>`;
             tbody.innerHTML = row;
         });

@@ -36,10 +36,10 @@
         <label for="portfolioUrl" class="form-label">Portfolio URL</label>
         <input type="url" class="form-control" id="portfolioUrl" name="portfolio_url" value="{{ user.user_info.portfolio_url }}">
     </div>
-    <div class="mb-3">
+    <!--<div class="mb-3">
         <label for="summary" class="form-label">Summary</label>
         <textarea class="form-control" id="summary" name="summary">{{ user.user_info.summary }}</textarea>
-    </div>
+    </div>-->
 
     <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('userInfoForm', closeCurrentModal);">Save</button>
 

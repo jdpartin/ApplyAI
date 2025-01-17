@@ -29,7 +29,6 @@ def user_info_data(request):
             "linkedin_url": user_info.linkedin_url,
             "github_url": user_info.github_url,
             "portfolio_url": user_info.portfolio_url,
-            "summary": user_info.summary,
         }
     else:
         data = {}

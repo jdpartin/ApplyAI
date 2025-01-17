@@ -31,7 +31,6 @@ Account Dashboard
                                 <th>LinkedIn URL</th>
                                 <th>GitHub URL</th>
                                 <th>Portfolio URL</th>
-                                <th>Summary</th>
                             </tr>
                         </thead>
                         <tbody id="personalInfoTableBody">
@@ -58,6 +57,9 @@ Account Dashboard
                                 <th>School Name</th>
                                 <th>Degree</th>
                                 <th>Graduation Year</th>
+                                <th>
+                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/education_modal', popup);">Add</button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="educationTableBody">
@@ -85,6 +87,9 @@ Account Dashboard
                                 <th>Description</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
+                                <th>
+                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/work_experience_modal', popup);">Add</button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="workExperienceTableBody">
@@ -109,6 +114,9 @@ Account Dashboard
                             <tr>
                                 <th>Skill</th>
                                 <th>Years of Experience</th>
+                                <th>
+                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/skill_modal', popup);">Add</button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="skillsTableBody">
@@ -135,6 +143,9 @@ Account Dashboard
                                 <th>Description</th>
                                 <th>Technologies Used</th>
                                 <th>Project URL</th>
+                                <th>
+                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/project_modal', popup);">Add</button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="projectsTableBody">
@@ -161,6 +172,9 @@ Account Dashboard
                                 <th>Issuing Organization</th>
                                 <th>Issue Date</th>
                                 <th>Expiration Date</th>
+                                <th>
+                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/certification_modal', popup);">Add</button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="certificationsTableBody">
@@ -170,6 +184,35 @@ Account Dashboard
                 </div>
             </div>
         </div>
+
+        <!-- Resumes -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingResumes">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#resumes" aria-expanded="false" aria-controls="resumes">
+                    Resumes
+                </button>
+            </h2>
+            <div id="resumes" class="accordion-collapse collapse" aria-labelledby="headingResumes" data-bs-parent="#resumeAccordion">
+                <div class="accordion-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Resume Name</th>
+                                <th>Created Date</th>
+                                <th>Purpose</th>
+                                <th>
+                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/resume_modal', popup);">Add</button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="resumesTableBody">
+                            <!-- Data will be populated here via AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

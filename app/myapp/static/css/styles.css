@@ -43,3 +43,26 @@ footer p {
 .loading-overlay.active {
     display: flex;
 }
+
+
+/* Resume Popup */
+#resumePopupContainer {
+    font-family: Arial, sans-serif;
+}
+
+.resume-section {
+    margin-bottom: 20px;
+}
+
+.resume-header {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.resume-content {
+    padding: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
