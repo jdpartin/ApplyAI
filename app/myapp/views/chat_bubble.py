@@ -1,5 +1,5 @@
-from ..models import UserInfo, Education, WorkExperience, Skill, Project, Certification
-from ..forms import UserInfoForm, EducationForm, WorkExperienceForm, SkillForm, ProjectForm, CertificationForm
+from myapp.models import UserInfo, Education, WorkExperience, Skill, Project, Certification
+from myapp.forms import UserInfoForm, EducationForm, WorkExperienceForm, SkillForm, ProjectForm, CertificationForm
 from django.contrib.auth.password_validation import validate_password
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.sessions.backends.db import SessionStore

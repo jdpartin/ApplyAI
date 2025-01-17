@@ -1,15 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from ..models import UserInfo, Education, WorkExperience, Skill, Project, Certification
-
-# The modules in this file are imported in the __init__.py file (the one in the same folder)
-# That is what makes these views available to the Django app
-# Currently we are using * to import all modules which simplifies setup, but risks namespace pollution
-
-# This file should contain simple views that render a page the user will navigate to
-# Form views should be put in the form_views.py file
-# More complex views should be put in their own file, dont forget to add a reference in __init__.py
+from myapp.models import UserInfo, Education, WorkExperience, Skill, Project, Certification
 
 
 def home(request):

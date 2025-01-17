@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from ..forms import UserInfoForm, EducationForm, WorkExperienceForm, SkillForm, ProjectForm, CertificationForm
-from ..models import UserInfo, Education, WorkExperience, Skill, Project, Certification
+from myapp.forms import UserInfoForm, EducationForm, WorkExperienceForm, SkillForm, ProjectForm, CertificationForm
+from myapp.models import UserInfo, Education, WorkExperience, Skill, Project, Certification
 from django.http import JsonResponse # For returning error messages
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -11,18 +11,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 import json
 
-# The modules in this file are imported in the __init__.py file (the one in the same folder)
-# That is what makes these views available to the Django app
-# Currently we are using * to import all modules which simplifies setup, but risks namespace pollution
-
-# This file should contain simple views that render a FORM the user will NOT navigate to
-# Views that render pages the user will navigate to should be put in the page_views.py file
-# More complex views should be put in their own file, dont forget to add a reference in __init__.py
-
-
-@login_required
-def resume_modal(request):
-    return render(request, 'frontend/modals/resume_modal.html')
 
 @login_required
 def user_info_modal(request):
@@ -53,6 +41,10 @@ def user_info_modal(request):
         return JsonResponse({"errors": form.errors, "status": "error"}, status=400)
 
     return render(request, 'frontend/modals/user_info_modal.html')
+
+@login_required
+def resume_modal(request):
+    return render(request, 'frontend/modals/resume_modal.html')
 
 @login_required
 def education_modal(request):

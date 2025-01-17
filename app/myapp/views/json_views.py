@@ -1,14 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from ..models import UserInfo, Education, WorkExperience, Skill, Project, Certification
+from myapp.models import UserInfo, Education, WorkExperience, Skill, Project, Certification
 from django.shortcuts import get_object_or_404
-
-# The modules in this file are imported in the __init__.py file (the one in the same folder)
-# That is what makes these views available to the Django app
-# Currently we are using * to import all modules which simplifies setup, but risks namespace pollution
-
-# This file should contain simple views that return a JsonResponse
-# Any views that render a page or form should not be put here
 
 
 @login_required
