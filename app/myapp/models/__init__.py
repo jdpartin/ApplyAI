@@ -1,2 +1,2 @@
 from .main_models import *
-from .resume_builder import *
+from .resume_models import *

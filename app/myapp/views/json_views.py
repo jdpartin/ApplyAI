@@ -122,5 +122,5 @@ def resume_info(request):
     """
     Returns resume info: name, purpose, and created_date for the logged-in user.
     """
-    resumes = Resume.objects.filter(user=request.user).values('name', 'purpose', 'created_date')
+    resumes = Resume.objects.filter(user=request.user).values('id', 'name', 'purpose', 'created_date')
     return JsonResponse(list(resumes), safe=False)

@@ -6,16 +6,23 @@ import json
 
 
 @login_required
-def resume_modal(request):
-    context = {
-        'user': request.user
-    }
-    return render(request, 'frontend/modals/resume_modal.html', context)
-
-
-@login_required
 def ai_add_resume_modal(request):
     return render(request, 'frontend/modals/ai_add_resume_modal.html')
+
+@login_required
+def resume_modal(request):
+    resume = None
+    resume_id = request.GET.get('id')
+
+    if resume_id:
+        print(resume_id)
+        resume = get_object_or_404(request.user.resumes, id=resume_id)
+
+    context = {
+        'user': request.user,
+        'resume': resume
+    }
+    return render(request, 'frontend/modals/resume_modal.html', context)
 
 
 @login_required
