@@ -47,6 +47,10 @@ def resume_modal(request):
     return render(request, 'frontend/modals/resume_modal.html')
 
 @login_required
+def ai_add_resume_modal(request):
+    return render(request, 'frontend/modals/ai_add_resume_modal.html')
+
+@login_required
 def education_modal(request):
     """Handles Education modal form submission and rendering."""
     education_id = request.GET.get('id') if request.method == 'GET' else request.POST.get('id')

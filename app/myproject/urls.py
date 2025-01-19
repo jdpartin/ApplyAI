@@ -22,6 +22,8 @@ urlpatterns = [
     path('templates/frontend/modals/project_modal/', views.project_modal, name='project_modal'),
     path('templates/frontend/modals/certification_modal/', views.certification_modal, name='certification_modal'),
     path('templates/frontend/modals/resume_modal/', views.resume_modal, name='resume_modal'),
+    path('templates/frontend/modals/ai_add_resume_modal/', views.ai_add_resume_modal, name='ai_add_resume_modal'),
+    path('templates/frontend/modals/add_resume_modal/', views.add_resume_modal, name='add_resume_modal'),
 
     # Delete Views
     path('education-delete/', views.education_delete, name='education_delete'),
@@ -37,6 +39,7 @@ urlpatterns = [
     path('skill-json/', views.skill_data, name='skill_json'),
     path('project-json/', views.project_data, name='project_json'),
     path('certification-json/', views.certification_data, name='certification_json'),
+    path('resume-json/', views.resume_info, name='resume_json'),
 
     # Chat bubble
     path('chat-bubble/', views.chat_bubble_view, name='chat_bubble'),

@@ -198,14 +198,14 @@ Account Dashboard
                         <thead class="table-light">
                             <tr>
                                 <th>Resume Name</th>
-                                <th>Created Date</th>
                                 <th>Purpose</th>
+                                <th>Created Date</th>
                                 <th>
-                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/resume_modal', popup);">Add</button>
+                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_add_resume_modal', popup);">Add</button>
                                 </th>
                             </tr>
                         </thead>
-                        <tbody id="resumesTableBody">
+                        <tbody id="resumeTableBody">
                             <!-- Data will be populated here via AJAX -->
                         </tbody>
                     </table>
@@ -222,6 +222,7 @@ Account Dashboard
 
 {% block scripts %}
 <script src="{% static 'js/dashboard.js' %}"></script>
+<script src="{% static 'js/resume_form.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         fetchAllData();

@@ -5,6 +5,7 @@ function fetchAllData() {
     fetchSkillData();
     fetchProjectData();
     fetchCertificationData();
+    fetchResumeInfo();
 }
 
 function fetchUserInfo() {
@@ -219,6 +220,53 @@ function deleteCertification(id) {
                 } else {
                     alert('Failed to delete certification.');
                 }
+            });
+    }
+}
+
+
+function fetchResumeInfo() {
+    fetch('/resume-json/') // Replace with the actual endpoint for fetching resume info
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('resumeTableBody'); // Replace with your table body ID
+            tbody.innerHTML = data.map(resume => `
+                <tr>
+                    <td>${resume.name}</td>
+                    <td>${resume.purpose || 'No purpose provided'}</td>
+                    <td>${resume.created_date}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editResume(${resume.id})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteResume(${resume.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        })
+        .catch(error => {
+            console.error('Error fetching resume info:', error);
+        });
+}
+
+
+function editResume(id) {
+    getPage(`/templates/frontend/modals/resume_modal?id=${id}`, popup);
+}
+
+
+function deleteResume(id) {
+    if (confirm('Are you sure you want to delete this resume?')) {
+        fetch(`/resume-delete/?id=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    fetchResumeInfo(); // Refresh the resume info after deletion
+                } else {
+                    alert('Failed to delete resume.');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting resume:', error);
             });
     }
 }

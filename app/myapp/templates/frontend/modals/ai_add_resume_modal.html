@@ -1,0 +1,20 @@
+<form method="post" class="p-4 rounded shadow-sm bg-white">
+
+    {% csrf_token %}
+
+    <h3 class="text-center mb-4">Create a Tailored Resume</h3>
+
+    <p class="text-muted text-center mb-4">
+        Provide the job description and our AI can create the tailored resume for you
+    </p>
+
+    <button type="button" class="btn btn-primary btn-sm w-auto mb-4 d-block mx-auto" onclick="getPage('/templates/frontend/modals/resume_modal', popup);">Let me do it myself</button>
+
+    <div class="mb-4">
+        <label for="jobDescription" class="form-label fw-bold">Job Description</label>
+        <textarea name="jobDescription" id="jobDescription" class="form-control" rows="5" placeholder="Paste the job description here..."></textarea>
+    </div>
+
+    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('ai_add_resume_modal', redirectToAdvertisement);">Submit</button>
+
+</form>

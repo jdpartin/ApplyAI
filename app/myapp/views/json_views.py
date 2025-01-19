@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from myapp.models import UserInfo, Education, WorkExperience, Skill, Project, Certification
+from myapp.models import UserInfo, Education, WorkExperience, Skill, Project, Certification, Resume
 from django.shortcuts import get_object_or_404
 
 
@@ -27,7 +27,6 @@ def user_info_data(request):
         data = {}
     return JsonResponse(data, safe=False)
 
-
 @login_required
 def education_data(request):
     """Returns education data in JSON format."""
@@ -45,7 +44,6 @@ def education_delete(request):
         return JsonResponse({"message": "Education deleted successfully!", "status": "success"}, status=200)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
-
 
 @login_required
 def work_experience_data(request):
@@ -65,7 +63,6 @@ def work_experience_delete(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
-
 @login_required
 def skill_data(request):
     """Returns skill data in JSON format."""
@@ -83,7 +80,6 @@ def skill_delete(request):
         return JsonResponse({"message": "Skill deleted successfully!", "status": "success"}, status=200)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
-
 
 @login_required
 def project_data(request):
@@ -103,7 +99,6 @@ def project_delete(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
-
 @login_required
 def certification_data(request):
     """Returns certification data in JSON format."""
@@ -121,3 +116,11 @@ def certification_delete(request):
         return JsonResponse({"message": "Certification deleted successfully!", "status": "success"}, status=200)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
+@login_required
+def resume_info(request):
+    """
+    Returns resume info: name, purpose, and created_date for the logged-in user.
+    """
+    resumes = Resume.objects.filter(user=request.user).values('name', 'purpose', 'created_date')
+    return JsonResponse(list(resumes), safe=False)

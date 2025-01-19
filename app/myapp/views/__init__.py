@@ -9,3 +9,4 @@ from .page_views import *
 from .form_views import *
 from .json_views import *
 from .chat_bubble import chat_bubble_view
+from .resume_views import *
