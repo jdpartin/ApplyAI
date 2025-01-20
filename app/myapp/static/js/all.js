@@ -78,7 +78,7 @@ function getPage(url, callback, showLoading = false, loadingMessage = '') {
         });
 }
 
-function submitFormAjax(formId, successCallback = null, errorCallback = null, loadingMessage = '') {
+function submitFormAjax(formId, successCallback = null, errorCallback = null, loadingMessage = '', minLoadTime = 0) {
     const form = document.getElementById(formId);
 
     if (!form) {
@@ -95,7 +95,7 @@ function submitFormAjax(formId, successCallback = null, errorCallback = null, lo
         console.log(`${key}: ${value}`);
     }
 
-    toggleLoading(true, loadingMessage);
+    toggleLoading(true, loadingMessage, minLoadTime);
 
     fetch(actionUrl, {
         method: 'POST',
@@ -127,14 +127,104 @@ function submitFormAjax(formId, successCallback = null, errorCallback = null, lo
 }
 
 
-// Loading Overlay
-function toggleLoading(show, text = '') {
+// Loading 
+
+// Global variables
+let loadingStartTime = null;
+let minLoadingEndTime = null;
+let adRefreshTime = null;     // Tracks the last ad load time
+let closeRequested = false;
+let closing = false;
+let adRefreshInterval = null; // Interval for refreshing ads
+let closeLoadingOverlayRequested = false;
+
+function toggleLoading(show, text = '', minLoadTime = 0) {
     const overlay = document.getElementById('loadingOverlay');
     const loadingText = document.getElementById('loadingText');
+    const adContainer = document.getElementById('adContainer');
+    const minLoadingDuration = minLoadTime * 1000; // convert seconds to ms
+
     if (show) {
-        loadingText.textContent = text;
+        // ----- Showing the overlay -----
+        closeRequested = false;
+        closeLoadingOverlayRequested = false;
+
+        loadingStartTime = Date.now();
+        minLoadingEndTime = loadingStartTime + minLoadingDuration;
+
+        adRefreshTime = Date.now(); // record the ad load time
+
+        if (loadingText)
+            loadingText.textContent = text;
+
         overlay.classList.add('active');
+
+        // Start ad-refresh logic if it's not running
+        if (!adRefreshInterval) {
+            adRefreshInterval = setInterval(() => {
+                // Only refresh ads if we haven't requested to close
+                if (!closeRequested) {
+                    loadMockAds();
+                    adRefreshTime = Date.now(); // reset the 3-sec clock
+                }
+            }, 5000); // refresh every 5 seconds
+        }
+
+        setTimeout(() => {
+            if (closeRequested == true) {
+                toggleLoading(false);
+            }
+        }, minLoadingEndTime - Date.now());
+
+        // Load first batch of ads immediately
+        loadMockAds();
+
     } else {
-        overlay.classList.remove('active');
+        // ----- Requesting to hide the overlay -----
+
+        function close() {
+            clearInterval(adRefreshInterval);
+            adRefreshInterval = null;
+            overlay.classList.remove('active');
+
+            if (adContainer) {
+                adContainer.innerHTML = '';
+            }
+        }
+
+        closeRequested = true;
+
+        if (Date.now() >= minLoadingEndTime) {
+            if (Date.now() - adRefreshTime >= 3000) {
+                // At least 3 seconds have passed since the last ad refresh
+                close();
+            } else if (!closing) {
+                // Ensure we wait until 3 seconds have elapsed since the last ad refresh
+                closing = true;
+
+                const remainingTime = 3000 - (Date.now() - adRefreshTime); // Time left to reach 3 seconds
+                setTimeout(() => {
+                    close();
+                }, remainingTime);
+            }
+        }
+    }
+}
+
+// Mock function to simulate loading ads
+function loadMockAds() {
+    const adContainer = document.getElementById('adContainer');
+    if (!adContainer) {
+        console.error('Ad container not found.');
+        return;
+    }
+
+    adContainer.innerHTML = ''; // Clear old ads
+
+    for (let i = 0; i < 3; i++) {
+        const ad = document.createElement('div');
+        ad.className = 'mock-ad';
+        ad.textContent = `Ad Slot ${i + 1}`;
+        adContainer.appendChild(ad);
     }
 }

@@ -8,207 +8,239 @@ Account Dashboard
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="text-center text-primary mb-4">Welcome, {{ user.first_name|default:user.username }}</h1>
-    <p class="text-center text-muted">Manage your resume information below.</p>
+    <div class="row">
 
-    <div class="accordion" id="resumeAccordion">
-        <!-- Personal Information -->
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingPersonalInfo">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalInfo" aria-expanded="true" aria-controls="personalInfo">
-                    Personal Information
-                </button>
-            </h2>
-            <div id="personalInfo" class="accordion-collapse collapse show" aria-labelledby="headingPersonalInfo" data-bs-parent="#resumeAccordion">
-                <div class="accordion-body">
-                    <table class="table table-bordered table-striped">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone Number</th>
-                                <th>Address</th>
-                                <th>LinkedIn URL</th>
-                                <th>GitHub URL</th>
-                                <th>Portfolio URL</th>
-                            </tr>
-                        </thead>
-                        <tbody id="personalInfoTableBody">
-                            <!-- Data will be populated here via AJAX -->
-                        </tbody>
-                    </table>
-                    <button class="btn btn-sm btn-primary" onclick="editUserInfo()">Edit</button>
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <h1 class="text-center text-primary mb-4">Welcome, {{ user.first_name|default:user.username }}</h1>
+            <p class="text-center text-muted">Manage your resume information below.</p>
+
+            <div class="accordion" id="resumeAccordion">
+                <!-- Personal Information -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingPersonalInfo">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalInfo" aria-expanded="true" aria-controls="personalInfo">
+                            Personal Information
+                        </button>
+                    </h2>
+                    <div id="personalInfo" class="accordion-collapse collapse show" aria-labelledby="headingPersonalInfo" data-bs-parent="#resumeAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>Address</th>
+                                        <th>LinkedIn URL</th>
+                                        <th>GitHub URL</th>
+                                        <th>Portfolio URL</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="personalInfoTableBody">
+                                    <!-- Data will be populated here via AJAX -->
+                                </tbody>
+                            </table>
+                            <button class="btn btn-sm btn-primary" onclick="editUserInfo()">Edit</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingEducation">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#education" aria-expanded="false" aria-controls="education">
+                            Education
+                        </button>
+                    </h2>
+                    <div id="education" class="accordion-collapse collapse" aria-labelledby="headingEducation" data-bs-parent="#resumeAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>School Name</th>
+                                        <th>Degree</th>
+                                        <th>Graduation Year</th>
+                                        <th>
+                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/education_modal', popup);">Add</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="educationTableBody">
+                                    <!-- Data will be populated here via AJAX -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Experience -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingWorkExperience">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#workExperience" aria-expanded="false" aria-controls="workExperience">
+                            Work Experience
+                        </button>
+                    </h2>
+                    <div id="workExperience" class="accordion-collapse collapse" aria-labelledby="headingWorkExperience" data-bs-parent="#resumeAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Job Title</th>
+                                        <th>Company Name</th>
+                                        <th>Description</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>
+                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/work_experience_modal', popup);">Add</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="workExperienceTableBody">
+                                    <!-- Data will be populated here via AJAX -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingSkills">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#skills" aria-expanded="false" aria-controls="skills">
+                            Skills
+                        </button>
+                    </h2>
+                    <div id="skills" class="accordion-collapse collapse" aria-labelledby="headingSkills" data-bs-parent="#resumeAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Skill</th>
+                                        <th>Years of Experience</th>
+                                        <th>
+                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/skill_modal', popup);">Add</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="skillsTableBody">
+                                    <!-- Data will be populated here via AJAX -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingProjects">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#projects" aria-expanded="false" aria-controls="projects">
+                            Projects
+                        </button>
+                    </h2>
+                    <div id="projects" class="accordion-collapse collapse" aria-labelledby="headingProjects" data-bs-parent="#resumeAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Project Title</th>
+                                        <th>Description</th>
+                                        <th>Technologies Used</th>
+                                        <th>Project URL</th>
+                                        <th>
+                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/project_modal', popup);">Add</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="projectsTableBody">
+                                    <!-- Data will be populated here via AJAX -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingCertifications">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#certifications" aria-expanded="false" aria-controls="certifications">
+                            Certifications
+                        </button>
+                    </h2>
+                    <div id="certifications" class="accordion-collapse collapse" aria-labelledby="headingCertifications" data-bs-parent="#resumeAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Certification Name</th>
+                                        <th>Issuing Organization</th>
+                                        <th>Issue Date</th>
+                                        <th>Expiration Date</th>
+                                        <th>
+                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/certification_modal', popup);">Add</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="certificationsTableBody">
+                                    <!-- Data will be populated here via AJAX -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumes -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingResumes">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#resumes" aria-expanded="false" aria-controls="resumes">
+                            Resumes
+                        </button>
+                    </h2>
+                    <div id="resumes" class="accordion-collapse collapse" aria-labelledby="headingResumes" data-bs-parent="#resumeAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Resume Name</th>
+                                        <th>Purpose</th>
+                                        <th>Created Date</th>
+                                        <th>
+                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_add_resume_modal', popup);">Add</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resumeTableBody">
+                                    <!-- Data will be populated here via AJAX -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Education -->
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingEducation">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#education" aria-expanded="false" aria-controls="education">
-                    Education
-                </button>
-            </h2>
-            <div id="education" class="accordion-collapse collapse" aria-labelledby="headingEducation" data-bs-parent="#resumeAccordion">
-                <div class="accordion-body">
-                    <table class="table table-bordered table-striped">
-                        <thead class="table-light">
-                            <tr>
-                                <th>School Name</th>
-                                <th>Degree</th>
-                                <th>Graduation Year</th>
-                                <th>
-                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/education_modal', popup);">Add</button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="educationTableBody">
-                            <!-- Data will be populated here via AJAX -->
-                        </tbody>
-                    </table>
+        <!-- Ad Section -->
+        <div class="col-lg-3">
+            <div class="sticky-top">
+                <h5 class="text-center text-muted">Sponsored</h5>
+                <p class="text-center text-muted">These ads help keep our service free</p>
+                <div class="card mb-3">
+                    <img src="{% static 'images/ad-placeholder-1.jpg' %}" class="card-img-top" alt="Ad Image">
+                    <div class="card-body">
+                        <p class="card-text text-center">Advertisement #1</p>
+                    </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Work Experience -->
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingWorkExperience">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#workExperience" aria-expanded="false" aria-controls="workExperience">
-                    Work Experience
-                </button>
-            </h2>
-            <div id="workExperience" class="accordion-collapse collapse" aria-labelledby="headingWorkExperience" data-bs-parent="#resumeAccordion">
-                <div class="accordion-body">
-                    <table class="table table-bordered table-striped">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Job Title</th>
-                                <th>Company Name</th>
-                                <th>Description</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>
-                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/work_experience_modal', popup);">Add</button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="workExperienceTableBody">
-                            <!-- Data will be populated here via AJAX -->
-                        </tbody>
-                    </table>
+                <div class="card mb-3">
+                    <img src="{% static 'images/ad-placeholder-2.jpg' %}" class="card-img-top" alt="Ad Image">
+                    <div class="card-body">
+                        <p class="card-text text-center">Advertisement #2</p>
+                    </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Skills -->
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingSkills">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#skills" aria-expanded="false" aria-controls="skills">
-                    Skills
-                </button>
-            </h2>
-            <div id="skills" class="accordion-collapse collapse" aria-labelledby="headingSkills" data-bs-parent="#resumeAccordion">
-                <div class="accordion-body">
-                    <table class="table table-bordered table-striped">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Skill</th>
-                                <th>Years of Experience</th>
-                                <th>
-                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/skill_modal', popup);">Add</button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="skillsTableBody">
-                            <!-- Data will be populated here via AJAX -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Projects -->
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingProjects">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#projects" aria-expanded="false" aria-controls="projects">
-                    Projects
-                </button>
-            </h2>
-            <div id="projects" class="accordion-collapse collapse" aria-labelledby="headingProjects" data-bs-parent="#resumeAccordion">
-                <div class="accordion-body">
-                    <table class="table table-bordered table-striped">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Project Title</th>
-                                <th>Description</th>
-                                <th>Technologies Used</th>
-                                <th>Project URL</th>
-                                <th>
-                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/project_modal', popup);">Add</button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="projectsTableBody">
-                            <!-- Data will be populated here via AJAX -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Certifications -->
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingCertifications">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#certifications" aria-expanded="false" aria-controls="certifications">
-                    Certifications
-                </button>
-            </h2>
-            <div id="certifications" class="accordion-collapse collapse" aria-labelledby="headingCertifications" data-bs-parent="#resumeAccordion">
-                <div class="accordion-body">
-                    <table class="table table-bordered table-striped">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Certification Name</th>
-                                <th>Issuing Organization</th>
-                                <th>Issue Date</th>
-                                <th>Expiration Date</th>
-                                <th>
-                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/certification_modal', popup);">Add</button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="certificationsTableBody">
-                            <!-- Data will be populated here via AJAX -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Resumes -->
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingResumes">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#resumes" aria-expanded="false" aria-controls="resumes">
-                    Resumes
-                </button>
-            </h2>
-            <div id="resumes" class="accordion-collapse collapse" aria-labelledby="headingResumes" data-bs-parent="#resumeAccordion">
-                <div class="accordion-body">
-                    <table class="table table-bordered table-striped">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Resume Name</th>
-                                <th>Purpose</th>
-                                <th>Created Date</th>
-                                <th>
-                                    <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_add_resume_modal', popup);">Add</button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="resumeTableBody">
-                            <!-- Data will be populated here via AJAX -->
-                        </tbody>
-                    </table>
+                <div class="card mb-3">
+                    <img src="{% static 'images/ad-placeholder-3.jpg' %}" class="card-img-top" alt="Ad Image">
+                    <div class="card-body">
+                        <p class="card-text text-center">Advertisement #3</p>
+                    </div>
                 </div>
             </div>
         </div>

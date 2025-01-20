@@ -37,6 +37,21 @@ async function submitCreateResumeForm() {
 }
 
 
+function submit_ai_add_resume_form() {
+    function success(resp) {
+        popup(false);
+        fetchResumeInfo();
+    }
+
+    function failure(resp) {
+        fetchResumeInfo();
+    }
+
+    submitFormAjax('ai_add_resume_modal', success, failure, "Creating your resume with AI...", minLoadTime = 30);
+}
+
+
+
 function collectResumeData() {
     const modal = document.getElementById('popupModal'); // Limit scope to the modal
     const resumeData = {};
