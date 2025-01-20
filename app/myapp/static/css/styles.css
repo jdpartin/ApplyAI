@@ -7,11 +7,21 @@
     max-height: none;
 }
 
+/* Set up flexbox for the entire page */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+    margin: 0; /* Remove default margin */
+}
+
+/* Main content area */
+main {
+    flex: 1; /* Allows the main content to grow and push the footer to the bottom */
+}
+
 /* Footer Styles */
 footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
     background-color: #343a40;
     color: white;
     text-align: center;
@@ -19,10 +29,11 @@ footer {
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
 }
 
-footer p {
-    margin: 0;
-    font-size: 0.9rem;
-}
+    /* Footer text */
+    footer p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
 
 
 /* Loading Overlay */

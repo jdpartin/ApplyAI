@@ -2,6 +2,22 @@
 function popup(html = '') {
     const modal = document.getElementById('popupModal'); // Ensure the correct modal ID is used
 
+    // Check if the modal is already visible
+    const isModalVisible = modal.classList.contains('show');
+
+    if (html == false) {
+        closeCurrentModal();
+        return;
+    }
+
+    // If modal is already shown, just update the HTML
+    if (isModalVisible) {
+        if (html !== '') {
+            modal.querySelector('.modal-body').innerHTML = html;
+        }
+        return; // Exit as the modal is already visible
+    }
+
     // Update the modal body content if HTML is provided
     if (html !== '') {
         modal.querySelector('.modal-body').innerHTML = html;
@@ -18,6 +34,7 @@ function popup(html = '') {
         modal.offsetHeight; // Forces a reflow
     });
 }
+
 
 function closeCurrentModal(txt = '') {
     if (txt != '') {

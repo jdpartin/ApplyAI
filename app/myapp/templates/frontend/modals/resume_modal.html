@@ -1,197 +1,174 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Builder</title>
-    <!-- Include your CSS/Bootstrap links -->
-</head>
-<body>
-    <div class="container">
-        {% csrf_token %}
+{% load custom_filters %}
 
-        <div class="text-center mb-4">
-            <h1>Resume Builder</h1>
-            <p>Customize your resume by selecting the information to include.</p>
-        </div>
+<div class="container">
+    {% csrf_token %}
 
-        <!-- Resume Info -->
-        <div class="resume-section">
-            <div class="resume-header">
-                <h3>Resume Details</h3>
-            </div>
-            <div class="resume-content">
-                <div class="mb-3">
-                    <label for="resumeName" class="form-label">Resume Name</label>
-                    <input type="text" class="form-control" id="resumeName" placeholder="Enter a name for this resume"
-                           value="{{ resume.name|default:'' }}">
-                </div>
-                <div class="mb-3">
-                    <label for="resumePurpose" class="form-label">Purpose</label>
-                    <textarea class="form-control" id="resumePurpose" rows="3" placeholder="Describe the purpose of this resume">{{ resume.purpose|default:'' }}</textarea>
-                </div>
-            </div>
-        </div>
-
-        <!-- Personal Information -->
-        <div class="resume-section">
-            <div class="resume-header">
-                <h3>Personal Information</h3>
-            </div>
-            <div class="resume-content">
-                <p>Choose what personal info to include:</p>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="includePhone"
-                           {% if resume and resume.showPhone %}checked{% elif not resume %}checked{% endif %}>
-                    <label class="form-check-label" for="includePhone">Phone</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="includeEmail"
-                           {% if resume and resume.showEmail %}checked{% elif not resume %}checked{% endif %}>
-                    <label class="form-check-label" for="includeEmail">Email</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="includeAddress"
-                           {% if resume and resume.showAddress %}checked{% elif not resume %}checked{% endif %}>
-                    <label class="form-check-label" for="includeAddress">Address</label>
-                </div>
-                <div class="mt-3">
-                    <label for="personalSummary" class="form-label">Resume Summary</label>
-                    <textarea class="form-control" id="personalSummary" rows="3" placeholder="Add a summary for this resume">
-                        {{ resume.tailoredSummary|default:user.user_info.summary }}
-                    </textarea>
-                </div>
-            </div>
-        </div>
-
-        <!-- Education -->
-        <div class="resume-section">
-            <div class="resume-header">
-                <h3>Education</h3>
-            </div>
-            <div class="resume-content">
-                {% if user.educations.exists %}
-                {% for education in user.educations.all %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="includeEducation{{ education.id }}"
-                           {% if resume and education in resume.educations.all %}checked{% endif %}>
-                    <label class="form-check-label" for="includeEducation{{ education.id }}">
-                        {{ education.degree }} at {{ education.school_name }}
-                    </label>
-                </div>
-                {% endfor %}
-                {% else %}
-                <p>No education on file</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Work Experience -->
-        <div class="resume-section">
-            <div class="resume-header">
-                <h3>Work Experience</h3>
-            </div>
-            <div class="resume-content">
-                {% if user.work_experiences.exists %}
-                {% for work_experience in user.work_experiences.all %}
-                <div class="work-entry p-3 mb-3 border rounded">
-                    <div class="d-flex align-items-center mb-2">
-                        <input class="form-check-input me-2" type="checkbox" id="includeWorkExperience{{ work_experience.id }}"
-                               {% if resume and work_experience in resume.workExperiences.all %}checked{% endif %}>
-                        <label class="form-check-label fw-bold" for="includeWorkExperience{{ work_experience.id }}">
-                            {{ work_experience.job_title }} at {{ work_experience.company_name }}
-                        </label>
-                    </div>
-                    <textarea class="form-control" id="workExperienceSummary{{ work_experience.id }}" rows="3" placeholder="Tailor the job description for this resume">
-                            {% if resume %}
-                                {{ resume.resumeworkexperience_set.get(workExperience=work_experience).tailoredDescription|default:'' }}
-                            {% else %}
-                                {{ work_experience.job_description }}
-                            {% endif %}
-                        </textarea>
-                </div>
-                {% endfor %}
-                {% else %}
-                <p>No work experience on file</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Skills -->
-        <div class="resume-section">
-            <div class="resume-header">
-                <h3>Skills</h3>
-            </div>
-            <div class="resume-content">
-                {% if user.skills.exists %}
-                {% for skill in user.skills.all %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="includeSkill{{ skill.id }}"
-                           {% if resume and skill in resume.skills.all %}checked{% endif %}>
-                    <label class="form-check-label" for="includeSkill{{ skill.id }}">{{ skill.skill_name }}</label>
-                </div>
-                {% endfor %}
-                {% else %}
-                <p>No skills on file</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Projects -->
-        <div class="resume-section">
-            <div class="resume-header">
-                <h3>Projects</h3>
-            </div>
-            <div class="resume-content">
-                {% if user.projects.exists %}
-                {% for project in user.projects.all %}
-                <div class="work-entry p-3 mb-3 border rounded">
-                    <div class="d-flex align-items-center mb-2">
-                        <input class="form-check-input me-2" type="checkbox" id="includeProject{{ project.id }}"
-                               {% if resume and project in resume.projects.all %}checked{% endif %}>
-                        <label class="form-check-label fw-bold" for="includeProject{{ project.id }}">
-                            {{ project.project_title }}
-                        </label>
-                    </div>
-                    <textarea class="form-control" id="includeProjectSummary{{ project.id }}" rows="3" placeholder="Tailor the project description for this resume">
-                            {% if resume %}
-                                {{ resume.resumeproject_set.get(project=project).tailoredDescription|default:'' }}
-                            {% else %}
-                                {{ project.description }}
-                            {% endif %}
-                        </textarea>
-                </div>
-                {% endfor %}
-                {% else %}
-                <p>No projects on file</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Certifications -->
-        <div class="resume-section">
-            <div class="resume-header">
-                <h3>Certifications</h3>
-            </div>
-            <div class="resume-content">
-                {% if user.certifications.exists %}
-                {% for certification in user.certifications.all %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="includeCertification{{ certification.id }}"
-                           {% if resume and certification in resume.certifications.all %}checked{% endif %}>
-                    <label class="form-check-label" for="includeCertification{{ certification.id }}">
-                        {{ certification.certification_name }} from {{ certification.issuing_organization }}
-                    </label>
-                </div>
-                {% endfor %}
-                {% else %}
-                <p>No certifications on file</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Submit Button -->
-        <button class="btn btn-primary w-100" type="button" onclick="submitCreateResumeForm();">Submit</button>
+    <div class="text-center mb-4">
+        <h1>Resume Builder</h1>
+        <p>Customize your resume by selecting the information to include.</p>
     </div>
-</body>
-</html>
+
+    <!-- Resume Info -->
+    <div class="resume-section">
+        <div class="resume-header">
+            <h3>Resume Details</h3>
+        </div>
+        <div class="resume-content">
+            <div class="mb-3">
+                <label for="resumeName" class="form-label">Resume Name</label>
+                <input type="text" class="form-control" id="resumeName" placeholder="Enter a name for this resume"
+                       value="{{ resume.name|default:'' }}">
+            </div>
+            <div class="mb-3">
+                <label for="resumePurpose" class="form-label">Purpose</label>
+                <textarea class="form-control" id="resumePurpose" rows="3" placeholder="Describe the purpose of this resume">{% if resume %}{{ resume.purpose|default:'' }}{% else %}{{ '' }}{% endif %}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="resume-section">
+        <div class="resume-header">
+            <h3>Personal Information</h3>
+        </div>
+        <div class="resume-content">
+            <p>Choose what personal info to include:</p>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="includePhone"
+                       {% if not resume or resume.showPhone %}checked{% endif %}>
+                <label class="form-check-label" for="includePhone">Phone</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="includeEmail"
+                       {% if not resume or resume.showEmail %}checked{% endif %}>
+                <label class="form-check-label" for="includeEmail">Email</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="includeAddress"
+                       {% if not resume or resume.showAddress %}checked{% endif %}>
+                <label class="form-check-label" for="includeAddress">Address</label>
+            </div>
+            <div class="mt-3">
+                <label for="personalSummary" class="form-label">Resume Summary</label>
+                <textarea class="form-control" id="personalSummary" rows="3" placeholder="Add a summary for this resume">{% if resume %}{{ resume.tailoredSummary|default:'' }}{% else %}{{ user.user_info.summary|default:'' }}{% endif %}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Education -->
+    <div class="resume-section">
+        <div class="resume-header">
+            <h3>Education</h3>
+        </div>
+        <div class="resume-content">
+            {% if user.educations.exists %}
+            {% for education in user.educations.all %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="includeEducation{{ education.id }}"
+                       {% if not resume or education in resume.educations.all %}checked{% endif %}>
+                <label class="form-check-label" for="includeEducation{{ education.id }}">
+                    {{ education.degree }} at {{ education.school_name }}
+                </label>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No education on file</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Work Experience -->
+    <div class="resume-section">
+        <div class="resume-header">
+            <h3>Work Experience</h3>
+        </div>
+        <div class="resume-content">
+            {% if user.work_experiences.exists %}
+            {% for work_experience in user.work_experiences.all %}
+            <div class="work-entry p-3 mb-3 border rounded">
+                <div class="d-flex align-items-center mb-2">
+                    <input class="form-check-input me-2" type="checkbox" id="includeWorkExperience{{ work_experience.id }}"
+                           {% if not resume or work_experience in resume.workExperiences.all %}checked{% endif %}>
+                    <label class="form-check-label fw-bold" for="includeWorkExperience{{ work_experience.id }}">
+                        {{ work_experience.job_title }} at {{ work_experience.company_name }}
+                    </label>
+                </div>
+                <textarea class="form-control" id="workExperienceSummary{{ work_experience.id }}" rows="3" placeholder="Tailor the job description for this resume">{% if resume and work_experience_data and work_experience.id in work_experience_data %}{{ work_experience_data|get_dict_item:work_experience.id }}{% else %}{{ '' }}{% endif %}</textarea>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No work experience on file</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="resume-section">
+        <div class="resume-header">
+            <h3>Skills</h3>
+        </div>
+        <div class="resume-content">
+            {% if user.skills.exists %}
+            {% for skill in user.skills.all %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="includeSkill{{ skill.id }}"
+                       {% if not resume or skill in resume.skills.all %}checked{% endif %}>
+                <label class="form-check-label" for="includeSkill{{ skill.id }}">{{ skill.skill_name }}</label>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No skills on file</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Projects -->
+    <div class="resume-section">
+        <div class="resume-header">
+            <h3>Projects</h3>
+        </div>
+        <div class="resume-content">
+            {% if user.projects.exists %}
+            {% for project in user.projects.all %}
+            <div class="work-entry p-3 mb-3 border rounded">
+                <div class="d-flex align-items-center mb-2">
+                    <input class="form-check-input me-2" type="checkbox" id="includeProject{{ project.id }}"
+                           {% if not resume or project in resume.projects.all %}checked{% endif %}>
+                    <label class="form-check-label fw-bold" for="includeProject{{ project.id }}">
+                        {{ project.project_title }}
+                    </label>
+                </div>
+                <textarea class="form-control" id="includeProjectSummary{{ project.id }}" rows="3" placeholder="Tailor the project description for this resume">{% if resume and project_data and project.id in project_data %}{{ project_data|get_dict_item:project.id }}{% else %}{{ '' }}{% endif %}</textarea>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No projects on file</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Certifications -->
+    <div class="resume-section">
+        <div class="resume-header">
+            <h3>Certifications</h3>
+        </div>
+        <div class="resume-content">
+            {% if user.certifications.exists %}
+            {% for certification in user.certifications.all %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="includeCertification{{ certification.id }}"
+                       {% if not resume or certification in resume.certifications.all %}checked{% endif %}>
+                <label class="form-check-label" for="includeCertification{{ certification.id }}">
+                    {{ certification.certification_name }} from {{ certification.issuing_organization }}
+                </label>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No certifications on file</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button class="btn btn-primary w-100" type="button" onclick="submitCreateResumeForm();">Submit</button>
+</div>

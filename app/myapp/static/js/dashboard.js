@@ -263,10 +263,12 @@ function deleteResume(id) {
                     fetchResumeInfo(); // Refresh the resume info after deletion
                 } else {
                     alert('Failed to delete resume.');
+                    fetchResumeInfo();
                 }
             })
             .catch(error => {
                 console.error('Error deleting resume:', error);
+                fetchResumeInfo();
             });
     }
 }

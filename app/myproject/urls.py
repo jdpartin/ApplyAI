@@ -31,6 +31,7 @@ urlpatterns = [
     path('skill-delete/', views.skill_delete, name='skill_delete'),
     path('project-delete/', views.project_delete, name='project_delete'),
     path('certification-delete/', views.certification_delete, name='certification_delete'),
+    path('resume-delete/', views.resume_delete, name='resume_delete'),
 
     # JSON Data Views
     path('user-info-json/', views.user_info_data, name='user_info_json'),
