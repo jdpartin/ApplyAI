@@ -11,6 +11,7 @@ from .json_views import *
 
 
 GEMINI_API_KEY = "AIzaSyB2TP2FCbiYgH-wSJcjvRuoiV8GwVWkFiM"
+GEMINI_MODEL = "gemini-1.5-flash-8b"
 CURRENT_REQUEST = None
 
 RESUME_INFO = {
@@ -61,7 +62,7 @@ def ai_add_resume_modal(request):
 
     # Initalize the AI chat
     genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel(model_name='gemini-1.5-flash', tools=ai_tools)
+    model = genai.GenerativeModel(model_name=GEMINI_MODEL, tools=ai_tools)
     chat = model.start_chat(enable_automatic_function_calling=True)
 
     print("AI chat initialized")
@@ -143,14 +144,22 @@ def ai_add_resume_modal(request):
     next_command = "Make a list of work experience ids that you believe should be included in this resume, keeping in mind the purpose they described earlier. Do not call a function."
     response = chat.send_message(next_command)
 
-    next_command = "For each of the work experience ids you just listed, call the 'add_resume_work_experience' function to add it to this resume and give it a description, keeping in mind the purpose they described earlier."
+    print("Resume work experiences selected")
+
+    next_command = "If you did not choose any work experiences just reply 'OK'. If you did choose any work experiences, for each of the work experience ids you just listed, call the 'add_resume_work_experience' function one at a time to add it to this resume and give it a description, keeping in mind the purpose they described earlier."
     response = chat.send_message(next_command)
+
+    print("Resume work experiences set")
 
     next_command = "Make a list of project ids that you believe should be included in this resume, keeping in mind the purpose they described earlier. Do not call a function."
     response = chat.send_message(next_command)
 
-    next_command = "For each of the project ids you just listed, call the 'add_resume_project' function to add it to this resume and give it a description, keeping in mind the purpose they described earlier."
+    print("Resume projects selected")
+
+    next_command = "If you did not choose any projects just reply 'OK'. If you did choose any projects, for each of the project ids you just listed, call the 'add_resume_project' function one at a time to add it to this resume and give it a description, keeping in mind the purpose they described earlier."
     response = chat.send_message(next_command)
+
+    print("Resume projects set")
 
     return ai_add_resume_modal_create_resume(request)
 
@@ -322,9 +331,11 @@ def add_resume_modal(request):
 
     return add_resume(request)
 
+@login_required
 def ai_add_resume_modal_create_resume(request):
     return add_resume(request, RESUME_INFO)
 
+@login_required
 def add_resume(request, data=None):
     try:
         # Parse JSON body

@@ -24,6 +24,8 @@ urlpatterns = [
     path('templates/frontend/modals/resume_modal/', views.resume_modal, name='resume_modal'),
     path('templates/frontend/modals/ai_add_resume_modal/', views.ai_add_resume_modal, name='ai_add_resume_modal'),
     path('templates/frontend/modals/add_resume_modal/', views.add_resume_modal, name='add_resume_modal'),
+    path('templates/frontend/modals/ai_add_cover_letter_modal/', views.ai_add_cover_letter_modal, name='ai_add_cover_letter_modal'),
+    path('templates/frontend/modals/cover_letter_modal/', views.cover_letter_modal, name='cover_letter_modal'),
 
     # Delete Views
     path('education-delete/', views.education_delete, name='education_delete'),

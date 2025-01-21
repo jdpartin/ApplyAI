@@ -1,0 +1,17 @@
+<div class="container">
+    {% csrf_token %}
+
+    <div class="text-center mb-4">
+        <h1>Cover Letter Editor</h1>
+        <p>Create or edit your cover letter below</p>
+    </div>
+
+    <!-- Textarea for Cover Letter -->
+    <div class="mb-4">
+        <!--<label for="coverLetterText" class="form-label">Your Cover Letter</label>-->
+        <textarea id="coverLetterText" class="form-control" rows="10" placeholder="Write your cover letter here...">{{ coverletter.text }}</textarea>
+    </div>
+
+    <!-- Submit Button -->
+    <button class="btn btn-primary w-100" type="button" onclick="submitCreateCoverLetterForm();">Submit</button>
+</div>

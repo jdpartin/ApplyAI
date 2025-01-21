@@ -216,6 +216,35 @@ Account Dashboard
                         </div>
                     </div>
                 </div>
+
+                <!-- Cover Letters -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingCoverLetters">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#coverLetters" aria-expanded="false" aria-controls="coverLetters">
+                            Cover Letters
+                        </button>
+                    </h2>
+                    <div id="coverLetters" class="accordion-collapse collapse" aria-labelledby="headingCoverLetters" data-bs-parent="#resumeAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Cover Letter Name</th>
+                                        <th>Purpose</th>
+                                        <th>Created Date</th>
+                                        <th>
+                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_add_cover_letter_modal', popup);">Add</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="coverLetterTableBody">
+                                    <!-- Data will be populated here via AJAX -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 

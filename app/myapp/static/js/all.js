@@ -135,24 +135,32 @@ let minLoadingEndTime = null;
 let adRefreshTime = null;     // Tracks the last ad load time
 let closeRequested = false;
 let closing = false;
-let adRefreshInterval = null; // Interval for refreshing ads
-let closeLoadingOverlayRequested = false;
+let adsRefreshing = null; // Interval for refreshing ads
 
-function toggleLoading(show, text = '', minLoadTime = 0) {
+// Settings for different account tiers
+let eliminateFalseLoadingDelay = false;
+let removeAds = false;
+
+async function toggleLoading(show, text = '', minLoadTime = 0) {
+
+    const adRefreshInterval = 5000;
+    const minAdDisplayTime = 3000;
+
     const overlay = document.getElementById('loadingOverlay');
     const loadingText = document.getElementById('loadingText');
     const adContainer = document.getElementById('adContainer');
-    const minLoadingDuration = minLoadTime * 1000; // convert seconds to ms
+    const minLoadingDuration = minLoadTime * 1000;
+
+    if (eliminateFalseLoadingDelay) {
+        minLoadingDuration = 0;
+    }
 
     if (show) {
         // ----- Showing the overlay -----
         closeRequested = false;
-        closeLoadingOverlayRequested = false;
 
         loadingStartTime = Date.now();
         minLoadingEndTime = loadingStartTime + minLoadingDuration;
-
-        adRefreshTime = Date.now(); // record the ad load time
 
         if (loadingText)
             loadingText.textContent = text;
@@ -160,14 +168,17 @@ function toggleLoading(show, text = '', minLoadTime = 0) {
         overlay.classList.add('active');
 
         // Start ad-refresh logic if it's not running
-        if (!adRefreshInterval) {
-            adRefreshInterval = setInterval(() => {
-                // Only refresh ads if we haven't requested to close
-                if (!closeRequested) {
-                    loadMockAds();
-                    adRefreshTime = Date.now(); // reset the 3-sec clock
-                }
-            }, 5000); // refresh every 5 seconds
+        if (removeAds) {
+            adRefreshTime = Date.now() - minAdDisplayTime;
+        } else {
+            if (!adsRefreshing) {
+                adsRefreshing = setInterval(() => {
+                    // Only refresh ads if we haven't requested to close
+                    if (!closeRequested) {
+                        refreshLoadingAds();
+                    }
+                }, adRefreshInterval);
+            }
         }
 
         setTimeout(() => {
@@ -176,15 +187,14 @@ function toggleLoading(show, text = '', minLoadTime = 0) {
             }
         }, minLoadingEndTime - Date.now());
 
-        // Load first batch of ads immediately
-        loadMockAds();
+        refreshLoadingAds();
 
     } else {
         // ----- Requesting to hide the overlay -----
 
         function close() {
-            clearInterval(adRefreshInterval);
-            adRefreshInterval = null;
+            clearInterval(adsRefreshing);
+            adsRefreshing = null;
             overlay.classList.remove('active');
 
             if (adContainer) {
@@ -194,15 +204,22 @@ function toggleLoading(show, text = '', minLoadTime = 0) {
 
         closeRequested = true;
 
+        // If the ads havent been loaded yet check again in 1 second
+        if (adRefreshTime == null) {
+            setTimeout(() => {
+                toggleLoading(false);
+            }, 1000);
+            return;
+        }
+
         if (Date.now() >= minLoadingEndTime) {
-            if (Date.now() - adRefreshTime >= 3000) {
-                // At least 3 seconds have passed since the last ad refresh
+            if (Date.now() - adRefreshTime >= minAdDisplayTime) {
                 close();
             } else if (!closing) {
                 // Ensure we wait until 3 seconds have elapsed since the last ad refresh
                 closing = true;
 
-                const remainingTime = 3000 - (Date.now() - adRefreshTime); // Time left to reach 3 seconds
+                const remainingTime = minAdDisplayTime - (Date.now() - adRefreshTime);
                 setTimeout(() => {
                     close();
                 }, remainingTime);
@@ -211,8 +228,13 @@ function toggleLoading(show, text = '', minLoadTime = 0) {
     }
 }
 
+async function refreshLoadingAds() {
+    await loadMockAds();
+    adRefreshTime = Date.now();
+}
+
 // Mock function to simulate loading ads
-function loadMockAds() {
+async function loadMockAds() {
     const adContainer = document.getElementById('adContainer');
     if (!adContainer) {
         console.error('Ad container not found.');

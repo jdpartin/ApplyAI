@@ -1,0 +1,20 @@
+<form method="post" class="p-4 rounded shadow-sm bg-white" id="ai_add_cover_letter_modal" action="/templates/frontend/modals/ai_add_cover_letter_modal/">
+
+    {% csrf_token %}
+
+    <h3 class="text-center mb-4">Create a Tailored Cover Letter</h3>
+
+    <p class="text-muted text-center mb-4">
+        Provide a cover letter or job description and use AI to create the tailored cover letter for you
+    </p>
+
+    <button type="button" class="btn btn-primary btn-sm w-auto mb-4 d-block mx-auto" onclick="getPage('/templates/frontend/modals/cover_letter_modal', popup);">Let me write it myself</button>
+
+    <div class="mb-4">
+        <label for="coverLetterDescription" class="form-label fw-bold">Cover Letter or Job Description</label>
+        <textarea id="coverLetterDescription" class="form-control" rows="5" placeholder="Describe the cover letter's purpose or paste a job description here..." name="cover_letter_description"></textarea>
+    </div>
+
+    <button type="button" class="btn btn-primary w-100" onclick="submit_ai_add_cover_letter_form();">Submit</button>
+
+</form>

@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 # Normally an API key should never be in the code and checked into version control
 # This is a free API and the key is here for dev simplicity
 GEMINI_API_KEY = "AIzaSyB2TP2FCbiYgH-wSJcjvRuoiV8GwVWkFiM"
+GEMINI_MODEL = "gemini-1.5-flash"
 
 CURRENT_REQUEST = None
 UI_TABLES_TO_REFRESH = []
@@ -49,7 +50,7 @@ def chat_bubble_view(request):
             ]
 
             genai.configure(api_key=GEMINI_API_KEY)
-            model = genai.GenerativeModel(model_name='gemini-1.5-flash', tools=ai_tools)
+            model = genai.GenerativeModel(model_name=GEMINI_MODEL, tools=ai_tools)
 
             if 'chat_history' not in request.session:
                 request.session['chat_history'] = []
