@@ -24,7 +24,7 @@ urlpatterns = [
     path('templates/frontend/modals/resume_modal/', views.resume_modal, name='resume_modal'),
     path('templates/frontend/modals/ai_add_resume_modal/', views.ai_add_resume_modal, name='ai_add_resume_modal'),
     path('templates/frontend/modals/add_resume_modal/', views.add_resume_modal, name='add_resume_modal'),
-    path('templates/frontend/modals/ai_add_cover_letter_modal/', views.ai_add_cover_letter_modal, name='ai_add_cover_letter_modal'),
+    path('templates/frontend/modals/ai_cover_letter_modal/', views.ai_cover_letter_modal, name='ai_cover_letter_modal'),
     path('templates/frontend/modals/cover_letter_modal/', views.cover_letter_modal, name='cover_letter_modal'),
 
     # Delete Views
@@ -34,6 +34,7 @@ urlpatterns = [
     path('project-delete/', views.project_delete, name='project_delete'),
     path('certification-delete/', views.certification_delete, name='certification_delete'),
     path('resume-delete/', views.resume_delete, name='resume_delete'),
+    path('cover-letter-delete/', views.cover_letter_delete, name='cover_letter_delete'),
 
     # JSON Data Views
     path('user-info-json/', views.user_info_data, name='user_info_json'),
@@ -43,6 +44,7 @@ urlpatterns = [
     path('project-json/', views.project_data, name='project_json'),
     path('certification-json/', views.certification_data, name='certification_json'),
     path('resume-json/', views.resume_info, name='resume_json'),
+    path('cover-letter-json/', views.cover_letter_info, name='cover-letter_json'),
 
     # Chat bubble
     path('chat-bubble/', views.chat_bubble_view, name='chat_bubble'),

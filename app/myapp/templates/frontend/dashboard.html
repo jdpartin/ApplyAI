@@ -13,17 +13,40 @@ Account Dashboard
         <!-- Main Content -->
         <div class="col-lg-9">
             <h1 class="text-center text-primary mb-4">Welcome, {{ user.first_name|default:user.username }}</h1>
-            <p class="text-center text-muted">Manage your resume information below.</p>
+            <!--<p class="text-center text-muted">Manage your resume information below.</p>-->
+
+            <!-- Quick Actions Section -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center text-primary">Quick Actions</h5>
+                    <p class="card-text text-center text-muted">Get started quickly with the options below.</p>
+                    <div class="d-flex justify-content-center flex-wrap gap-3">
+                        <button class="btn btn-primary" onclick="getPage('/templates/frontend/modals/ai_add_resume_modal', popup);">
+                            <i class="fas fa-file-alt me-2"></i>Create Resume
+                        </button>
+                        <button class="btn btn-secondary" onclick="getPage('/templates/frontend/modals/ai_cover_letter_modal', popup);">
+                            <i class="fas fa-envelope me-2"></i>Create Cover Letter
+                        </button>
+                        <button class="btn btn-success" onclick="expandSectionAndScroll('resumes');">
+                            <i class="fas fa-download me-2"></i>Download Resume
+                        </button>
+                        <button class="btn btn-danger" onclick="expandSectionAndScroll('coverLetters');">
+                            <i class="fas fa-download me-2"></i>Download Cover Letter
+                        </button>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="accordion" id="resumeAccordion">
                 <!-- Personal Information -->
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingPersonalInfo">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalInfo" aria-expanded="true" aria-controls="personalInfo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#personalInfo" aria-expanded="false" aria-controls="personalInfo">
                             Personal Information
                         </button>
                     </h2>
-                    <div id="personalInfo" class="accordion-collapse collapse show" aria-labelledby="headingPersonalInfo" data-bs-parent="#resumeAccordion">
+                    <div id="personalInfo" class="accordion-collapse collapse" aria-labelledby="headingPersonalInfo" data-bs-parent="#resumeAccordion">
                         <div class="accordion-body">
                             <table class="table table-bordered table-striped">
                                 <thead class="table-light">
@@ -233,7 +256,7 @@ Account Dashboard
                                         <th>Purpose</th>
                                         <th>Created Date</th>
                                         <th>
-                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_add_cover_letter_modal', popup);">Add</button>
+                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_cover_letter_modal', popup);">Add</button>
                                         </th>
                                     </tr>
                                 </thead>
@@ -283,10 +306,17 @@ Account Dashboard
 
 {% block scripts %}
 <script src="{% static 'js/dashboard.js' %}"></script>
-<script src="{% static 'js/resume_form.js' %}"></script>
+<script src="{% static 'js/form_functions.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         fetchAllData();
+
+        const accordion = document.getElementById('resumeAccordion');
+
+        accordion.addEventListener('shown.bs.collapse', function (event) {
+            const expandedItem = event.target; // The element that was just expanded
+            expandedItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
     });
 </script>
 {% endblock %}

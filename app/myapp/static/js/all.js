@@ -114,6 +114,7 @@ function submitFormAjax(formId, successCallback = null, errorCallback = null, lo
                 }
             } else {
                 if (errorCallback && typeof errorCallback === 'function') {
+                    console.error('Error:', data);
                     errorCallback(data); // Call the error callback
                 } else {
                     console.error('Error:', data);

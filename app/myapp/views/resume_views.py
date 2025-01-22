@@ -42,10 +42,9 @@ def ai_add_resume_modal(request):
 
     resume_description = request.POST.get("resume_description")
 
-    print(f"Received request to add resume. Description: {resume_description}")
-
     if not resume_description:
         return JsonResponse({ "error": "A resume_description must be provided" })
+
 
     # Define the AI's functions
     ai_tools = [
@@ -58,14 +57,12 @@ def ai_add_resume_modal(request):
         add_resume_project
     ]
 
-    print("AI tools defined")
 
     # Initalize the AI chat
     genai.configure(api_key=GEMINI_API_KEY)
     model = genai.GenerativeModel(model_name=GEMINI_MODEL, tools=ai_tools)
     chat = model.start_chat(enable_automatic_function_calling=True)
 
-    print("AI chat initialized")
 
     # Purpose and Name
     next_command = f"""
@@ -83,7 +80,6 @@ def ai_add_resume_modal(request):
     """
     response = chat.send_message(next_command)
 
-    print("Resume name and purpose set")
 
     # Get user info
     user_info = get_data(EntityType.USER)
@@ -93,7 +89,6 @@ def ai_add_resume_modal(request):
     user_projects = get_data(EntityType.PROJECTS)
     user_certifications = get_data(EntityType.CERTIFICATIONS)
 
-    print("User information gathered")
 
     # Summary
     next_command = f"""
@@ -121,45 +116,32 @@ def ai_add_resume_modal(request):
     """
     response = chat.send_message(next_command)
 
-    print("Resume summary set")
 
     # Skills, Certifications, and Education
+
     next_command = "Call the 'set_resume_skills' function to choose the skills for this resume, keeping in mind the purpose they described earlier."
     response = chat.send_message(next_command)
-
-    print("Resume skills set")
 
     next_command = "Call the 'set_resume_certifications' function to choose the certifications for this resume, keeping in mind the purpose they described earlier."
     response = chat.send_message(next_command)
 
-    print("Resume certifications set")
-
     next_command = "Call the 'set_resume_education' function to choose the education entries for this resume, keeping in mind the purpose they described earlier."
     response = chat.send_message(next_command)
 
-    print("Resume education set")
 
     # Work Experience and Projects
 
     next_command = "Make a list of work experience ids that you believe should be included in this resume, keeping in mind the purpose they described earlier. Do not call a function."
     response = chat.send_message(next_command)
 
-    print("Resume work experiences selected")
-
     next_command = "If you did not choose any work experiences just reply 'OK'. If you did choose any work experiences, for each of the work experience ids you just listed, call the 'add_resume_work_experience' function one at a time to add it to this resume and give it a description, keeping in mind the purpose they described earlier."
     response = chat.send_message(next_command)
-
-    print("Resume work experiences set")
 
     next_command = "Make a list of project ids that you believe should be included in this resume, keeping in mind the purpose they described earlier. Do not call a function."
     response = chat.send_message(next_command)
 
-    print("Resume projects selected")
-
     next_command = "If you did not choose any projects just reply 'OK'. If you did choose any projects, for each of the project ids you just listed, call the 'add_resume_project' function one at a time to add it to this resume and give it a description, keeping in mind the purpose they described earlier."
     response = chat.send_message(next_command)
-
-    print("Resume projects set")
 
     return ai_add_resume_modal_create_resume(request)
 
@@ -326,6 +308,7 @@ def resume_delete(request):
 
 @login_required
 def add_resume_modal(request):
+    print(f"Resume modal request body: {request.body}")
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
 

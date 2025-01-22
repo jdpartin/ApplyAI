@@ -1,4 +1,4 @@
-<form method="post" class="p-4 rounded shadow-sm bg-white" id="ai_add_cover_letter_modal" action="/templates/frontend/modals/ai_add_cover_letter_modal/">
+<form method="post" class="p-4 rounded shadow-sm bg-white" id="ai_cover_letter_modal" action="/templates/frontend/modals/ai_cover_letter_modal/">
 
     {% csrf_token %}
 
@@ -15,6 +15,6 @@
         <textarea id="coverLetterDescription" class="form-control" rows="5" placeholder="Describe the cover letter's purpose or paste a job description here..." name="cover_letter_description"></textarea>
     </div>
 
-    <button type="button" class="btn btn-primary w-100" onclick="submit_ai_add_cover_letter_form();">Submit</button>
+    <button type="button" class="btn btn-primary w-100" onclick="AI_submitCreateCoverLetterForm();">Submit</button>
 
 </form>

@@ -1,4 +1,54 @@
+
+// Cover Letter Forms
+
+function submitCreateCoverLetterForm() {
+
+    function success(resp) {
+        popup(false);
+        fetchCoverLetterInfo();
+    }
+
+    function failure(resp) {
+
+        fetchCoverLetterInfo();
+    }
+
+    submitFormAjax('cover_letter_modal', success, failure, 'Saving cover letter...');
+}
+
+function AI_submitCreateCoverLetterForm() {
+    function success(resp) {
+        popup(false);
+        fetchCoverLetterInfo();
+    }
+
+    function failure(resp) {
+
+        fetchCoverLetterInfo();
+    }
+
+    submitFormAjax('ai_cover_letter_modal', success, failure, 'Creating cover letter...');
+}
+
+
+
+// Resume Forms
+
 async function submitCreateResumeForm() {
+    
+    function success(resp) {
+        console.log("Resume created successfully:", resp);
+        window.alert("Resume created successfully.");
+        popup(false);
+        toggleLoading(false);
+    }
+
+    function failure(resp) {
+        console.error("Error creating resume:", resp);
+        window.alert("Error creating resume: " + resp);
+        toggleLoading(false);
+    }
+
     let resumeData = collectResumeData();
 
     toggleLoading(true, "Creating resume...");
@@ -14,19 +64,10 @@ async function submitCreateResumeForm() {
         });
 
         if (response.ok) {
-            const data = await response.json();
-            console.log("Resume created successfully:", data);
-
-            // Stop loading and close the popup
-            window.alert("Resume created successfully.");
-            toggleLoading(false);
-            popup(false);
+            success(await response.json());
+            
         } else {
-            // Handle server errors
-            let errorResp = await response.text();
-            console.error("Error creating resume:", errorResp);
-            window.alert("Error creating resume: " + errorResp);
-            toggleLoading(false);
+            failure(await response.text())
         }
     } catch (error) {
         // Handle network errors
