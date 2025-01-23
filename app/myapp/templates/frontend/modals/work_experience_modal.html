@@ -1,30 +1,39 @@
-<form  method="post" action="{% url 'work_experience_modal' %}" id="workExperienceForm">
+<form method="post" action="{% url 'work_experience_modal' %}" id="workExperienceForm">
 
     {% csrf_token %}
 
     <h3>Add/Edit Work Experience</h3>
 
+    {% if work_experience.id %}
+    <input type="text" style="display:none;" name="id" value="{{ work_experience.id }}">
+    {% endif %}
+
     <div class="mb-3">
         <label for="jobTitle" class="form-label">Job Title</label>
-        <input type="text" class="form-control" id="jobTitle" name="job_title" value="{{ experience.job_title }}" required>
+        <input type="text" class="form-control" id="jobTitle" name="job_title" value="{{ work_experience.job_title }}" required>
     </div>
     <div class="mb-3">
         <label for="companyName" class="form-label">Company Name</label>
-        <input type="text" class="form-control" id="companyName" name="company_name" value="{{ experience.company_name }}" required>
+        <input type="text" class="form-control" id="companyName" name="company_name" value="{{ work_experience.company_name }}" required>
     </div>
     <div class="mb-3">
         <label for="startDate" class="form-label">Start Date</label>
-        <input type="date" class="form-control" id="startDate" name="start_date" value="{{ experience.start_date }}" required>
+        <input type="date" class="form-control" id="startDate" name="start_date" value="{% if work_experience.start_date %}{{ work_experience.start_date|date:'Y-m-d' }}{% endif %}" required>
     </div>
     <div class="mb-3">
-        <label for="endDate" class="form-label">End Date</label>
-        <input type="date" class="form-control" id="endDate" name="end_date" value="{{ experience.end_date }}">
+        <span id="end_date_span" {% if work_experience and not work_experience.end_date %}style="display:none;" {% endif %}>
+            <label for="endDate" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="endDate" name="end_date" value="{% if work_experience.end_date %}{{ work_experience.end_date|date:'Y-m-d' }}{% endif %}">
+        </span>
+
+        <input type="checkbox" id="currentEmployer" onchange="hideIfChecked(this, 'end_date_span', true);" {% if work_experience and not work_experience.end_date %}checked="checked" {% endif %} />
+        <label for="currentEmployer">Current Employer</label>
     </div>
     <div class="mb-3">
         <label for="jobDescription" class="form-label">Job Description</label>
-        <textarea class="form-control" id="jobDescription" name="job_description">{{ experience.job_description }}</textarea>
+        <textarea class="form-control" id="jobDescription" name="job_description">{{ work_experience.job_description }}</textarea>
     </div>
 
-    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('workExperienceForm', closeCurrentModal);">Save</button>
+    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('workExperienceForm', () => { closeCurrentModal(); fetchWorkExperienceData(); });">Save</button>
 
 </form>

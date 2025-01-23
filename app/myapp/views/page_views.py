@@ -4,18 +4,24 @@ from django.contrib.auth import logout
 from myapp.models import UserInfo, Education, WorkExperience, Skill, Project, Certification
 
 
+# This file is for views that render a frontend page
+
+
 def home(request):
     return render(request, 'frontend/index.html')
+
 
 def sign_in(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     return render(request, 'frontend/sign-in.html')
 
+
 def sign_up(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     return render(request, 'frontend/sign-up.html')
+
 
 @login_required
 def dashboard(request):
@@ -30,6 +36,7 @@ def dashboard(request):
         'certifications': Certification.objects.filter(user=user),
     }
     return render(request, 'frontend/dashboard.html', context)
+
 
 @login_required
 def logout_view(request):

@@ -1,8 +1,12 @@
-<form  method="post" action="{% url 'skill_modal' %}" id="skillForm">
+<form method="post" action="{% url 'skill_modal' %}" id="skillForm">
 
     {% csrf_token %}
 
     <h3>Add/Edit Skill</h3>
+
+    {% if skill.id %}
+    <input type="text" style="display:none;" name="id" value="{{ skill.id }}">
+    {% endif %}
 
     <div class="mb-3">
         <label for="skillName" class="form-label">Skill</label>
@@ -13,6 +17,6 @@
         <input type="text" class="form-control" id="yearsOfExperience" name="years_of_experience" value="{{ skill.years_of_experience }}" required>
     </div>
 
-    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('skillForm', closeCurrentModal);">Save</button>
+    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('skillForm', () => { closeCurrentModal(); fetchSkillData(); });">Save</button>
 
 </form>

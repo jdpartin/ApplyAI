@@ -21,7 +21,7 @@ Account Dashboard
                     <h5 class="card-title text-center text-primary">Quick Actions</h5>
                     <p class="card-text text-center text-muted">Get started quickly with the options below.</p>
                     <div class="d-flex justify-content-center flex-wrap gap-3">
-                        <button class="btn btn-primary" onclick="getPage('/templates/frontend/modals/ai_add_resume_modal', popup);">
+                        <button class="btn btn-primary" onclick="getPage('/templates/frontend/modals/ai_resume_modal', popup);">
                             <i class="fas fa-file-alt me-2"></i>Create Resume
                         </button>
                         <button class="btn btn-secondary" onclick="getPage('/templates/frontend/modals/ai_cover_letter_modal', popup);">
@@ -55,9 +55,6 @@ Account Dashboard
                                         <th>Email</th>
                                         <th>Phone Number</th>
                                         <th>Address</th>
-                                        <th>LinkedIn URL</th>
-                                        <th>GitHub URL</th>
-                                        <th>Portfolio URL</th>
                                     </tr>
                                 </thead>
                                 <tbody id="personalInfoTableBody">
@@ -83,7 +80,9 @@ Account Dashboard
                                     <tr>
                                         <th>School Name</th>
                                         <th>Degree</th>
-                                        <th>Graduation Year</th>
+                                        <th>Subject</th>
+                                        <th>Start</th>
+                                        <th>End</th>
                                         <th>
                                             <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/education_modal', popup);">Add</button>
                                         </th>
@@ -111,7 +110,6 @@ Account Dashboard
                                     <tr>
                                         <th>Job Title</th>
                                         <th>Company Name</th>
-                                        <th>Description</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
                                         <th>
@@ -167,9 +165,9 @@ Account Dashboard
                                 <thead class="table-light">
                                     <tr>
                                         <th>Project Title</th>
-                                        <th>Description</th>
-                                        <th>Technologies Used</th>
                                         <th>Project URL</th>
+                                        <th>Start</th>
+                                        <th>End</th>
                                         <th>
                                             <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/project_modal', popup);">Add</button>
                                         </th>
@@ -228,7 +226,7 @@ Account Dashboard
                                         <th>Purpose</th>
                                         <th>Created Date</th>
                                         <th>
-                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_add_resume_modal', popup);">Add</button>
+                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_resume_modal', popup);">Add</button>
                                         </th>
                                     </tr>
                                 </thead>
@@ -300,7 +298,7 @@ Account Dashboard
     </div>
 </div>
 
-{% include "./chat-bubble.html" %}
+<!--include "./chat-bubble.html"-->
 
 {% endblock %}
 

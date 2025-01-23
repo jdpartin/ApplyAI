@@ -22,10 +22,9 @@ urlpatterns = [
     path('templates/frontend/modals/project_modal/', views.project_modal, name='project_modal'),
     path('templates/frontend/modals/certification_modal/', views.certification_modal, name='certification_modal'),
     path('templates/frontend/modals/resume_modal/', views.resume_modal, name='resume_modal'),
-    path('templates/frontend/modals/ai_add_resume_modal/', views.ai_add_resume_modal, name='ai_add_resume_modal'),
-    path('templates/frontend/modals/add_resume_modal/', views.add_resume_modal, name='add_resume_modal'),
-    path('templates/frontend/modals/ai_cover_letter_modal/', views.ai_cover_letter_modal, name='ai_cover_letter_modal'),
+    path('templates/frontend/modals/ai_resume_modal/', views.ai_resume_modal, name='ai_resume_modal'),
     path('templates/frontend/modals/cover_letter_modal/', views.cover_letter_modal, name='cover_letter_modal'),
+    path('templates/frontend/modals/ai_cover_letter_modal/', views.ai_cover_letter_modal, name='ai_cover_letter_modal'),
 
     # Delete Views
     path('education-delete/', views.education_delete, name='education_delete'),

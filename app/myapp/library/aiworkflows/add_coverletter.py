@@ -1,14 +1,13 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import JsonResponse
 from myapp.models import *
-from enum import Enum
 import google.generativeai as genai
-import json
-from .json_views import *
+from .common import get_data, EntityType
+from django.conf import settings
 
 
-GEMINI_API_KEY = "AIzaSyB2TP2FCbiYgH-wSJcjvRuoiV8GwVWkFiM"
+GEMINI_API_KEY = settings.GEMINI_API_KEY
 GEMINI_MODEL = "gemini-1.5-flash-8b"
 
 CURRENT_REQUEST = None
@@ -21,7 +20,7 @@ COVER_LETTER_DATA = {
 
 
 @login_required
-def ai_cover_letter_modal(request):
+def ai_add_cover_letter_workflow(request):
     if request.method != 'POST':
         return render(request, 'frontend/modals/ai_cover_letter_modal.html')
 
@@ -104,47 +103,8 @@ def ai_cover_letter_modal(request):
     """
     response = chat.send_message(next_command)
 
-    return add_cover_letter(request, COVER_LETTER_DATA) # Strange error in this file where the request body is not accessible to the view
 
-
-
-# User Info Gathering Functions 
-
-class EntityType(Enum):
-    USER = "user"
-    EDUCATION = "education"
-    WORK_EXPERIENCE = "work_experience"
-    SKILLS = "skills"
-    PROJECTS = "projects"
-    CERTIFICATIONS = "certifications"
-    
-def get_data(entity_type: EntityType):
-    """
-    Get data for a specific entity type.
-    Args:
-        entity_type (EntityType): The type of entity to fetch.
-    Returns:
-        dict: Data corresponding to the specified entity type.
-    """
-    global CURRENT_REQUEST
-
-    if entity_type == EntityType.USER:
-        data = user_info_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.EDUCATION:
-        data = education_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.WORK_EXPERIENCE:
-        data = work_experience_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.SKILLS:
-        data = skill_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.PROJECTS:
-        data = project_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.CERTIFICATIONS:
-        data = certification_data(CURRENT_REQUEST)
-    else:
-        raise ValueError(f"Unknown entity type: '{entity_type}'")
-
-    return json.loads(data.content.decode('utf-8'))
-
+    return COVER_LETTER_DATA
 
 
 # AI Tools
@@ -168,66 +128,3 @@ def set_cover_letter_text(text:str):
     """
     global COVER_LETTER_DATA
     COVER_LETTER_DATA['text'] = text
-
-
-
-# Other Views
-
-@login_required
-def cover_letter_delete(request):
-    cover_letter_id = request.GET.get('id')
-
-    if not cover_letter_id:
-        return JsonResponse({"error": "Cover letter ID is required."}, status=400)
-
-    # Ensure the resume belongs to the current user
-    cover_letter = get_object_or_404(CoverLetter, id=cover_letter_id, user=request.user)
-
-    cover_letter.delete()
-
-    return JsonResponse({"message": "Cover letter deleted successfully!", "status": "success"}, status=200)
-
-
-@login_required
-def cover_letter_modal(request):
-    if request.method != 'POST':
-        cover_letter = None
-
-        cover_letter_id = request.GET.get('id')
-        if cover_letter_id:
-            cover_letter = get_object_or_404(request.user.cover_letters, id=cover_letter_id)
-
-        context = {
-            'coverletter': cover_letter
-        }
-
-        return render(request, 'frontend/modals/cover_letter_modal.html', context)
-
-    print("Received a POST request to add a cover letter")
-
-    return add_cover_letter(request, request.POST.dict()) # Strange error in this file where the request body is not accessible to the view
-
-
-@login_required
-def add_cover_letter(request, data=None):
-    try:
-        if not data:
-            data = json.loads(request.body) # Strange error in this file where the request body is not accessible to the view
-
-        cover_letter = CoverLetter.objects.create(
-                user=request.user,
-                name=data.get('name', 'Untitled Cover Letter'),
-                purpose=data.get('purpose', ''),
-                text=data.get('text', ''),
-            )
-
-        cover_letter.save()
-
-        return JsonResponse({'status': 'success', 'message': 'Cover Letter created successfully.', 'cover_letter_id': cover_letter.id})
-
-    except json.JSONDecodeError:
-        return JsonResponse({'status': 'error', 'message': 'Invalid JSON format.'}, status=400)
-    except KeyError as e:
-        return JsonResponse({'status': 'error', 'message': f'Missing key: {e}'}, status=400)
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': f'An error occurred: {str(e)}'}, status=500)

@@ -1,16 +1,13 @@
-import re
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse, HttpRequest
+from django.shortcuts import render
+from django.http import JsonResponse
 from myapp.models import *
-from enum import Enum
 import google.generativeai as genai
-from typing import List, Dict
-import json
-from .json_views import *
+from typing import List
+from .common import get_data, EntityType
+from django.conf import settings
 
 
-GEMINI_API_KEY = "AIzaSyB2TP2FCbiYgH-wSJcjvRuoiV8GwVWkFiM"
+GEMINI_API_KEY = settings.GEMINI_API_KEY
 GEMINI_MODEL = "gemini-1.5-flash-8b"
 CURRENT_REQUEST = None
 
@@ -31,8 +28,7 @@ RESUME_INFO = {
 }
 
 
-@login_required
-def ai_add_resume_modal(request):
+def ai_add_resume_workflow(request):
     if request.method != 'POST':
         return render(request, 'frontend/modals/ai_add_resume_modal.html')
 
@@ -143,45 +139,9 @@ def ai_add_resume_modal(request):
     next_command = "If you did not choose any projects just reply 'OK'. If you did choose any projects, for each of the project ids you just listed, call the 'add_resume_project' function one at a time to add it to this resume and give it a description, keeping in mind the purpose they described earlier."
     response = chat.send_message(next_command)
 
-    return ai_add_resume_modal_create_resume(request)
 
+    return RESUME_INFO
 
-# User Info Gathering Functions 
-
-class EntityType(Enum):
-    USER = "user"
-    EDUCATION = "education"
-    WORK_EXPERIENCE = "work_experience"
-    SKILLS = "skills"
-    PROJECTS = "projects"
-    CERTIFICATIONS = "certifications"
-    
-def get_data(entity_type: EntityType):
-    """
-    Get data for a specific entity type.
-    Args:
-        entity_type (EntityType): The type of entity to fetch.
-    Returns:
-        dict: Data corresponding to the specified entity type.
-    """
-    global CURRENT_REQUEST
-
-    if entity_type == EntityType.USER:
-        data = user_info_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.EDUCATION:
-        data = education_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.WORK_EXPERIENCE:
-        data = work_experience_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.SKILLS:
-        data = skill_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.PROJECTS:
-        data = project_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.CERTIFICATIONS:
-        data = certification_data(CURRENT_REQUEST)
-    else:
-        raise ValueError(f"Unknown entity type: '{entity_type}'")
-
-    return json.loads(data.content.decode('utf-8'))
 
 # AI Functions
 
@@ -256,123 +216,3 @@ def set_resume_name_and_purpose(name: str, purpose: str):
     RESUME_INFO['name'] = name
     RESUME_INFO['purpose'] = purpose
 
-
-
-# Other views
-
-@login_required
-def resume_modal(request):
-    resume = None
-    work_experience_data = {}
-    project_data = {}
-
-    resume_id = request.GET.get('id')
-    if resume_id:
-        resume = get_object_or_404(request.user.resumes, id=resume_id)
-
-        # Prepare tailored work experience data
-        work_experience_data = {
-            rwe.workExperience_id: rwe.tailoredDescription
-            for rwe in resume.resumeworkexperience_set.all()
-        }
-
-        # Prepare tailored project data (if applicable)
-        project_data = {
-            rp.project_id: rp.tailoredDescription
-            for rp in resume.resumeproject_set.all()
-        }
-
-    context = {
-        'user': request.user,
-        'resume': resume,
-        'work_experience_data': work_experience_data,  # Pass tailored descriptions for work experiences
-        'project_data': project_data,  # Pass tailored descriptions for projects
-    }
-    return render(request, 'frontend/modals/resume_modal.html', context)
-
-
-@login_required
-def resume_delete(request):
-    resume_id = request.GET.get('id')
-
-    if not resume_id:
-        return JsonResponse({"error": "Resume ID is required."}, status=400)
-
-    # Ensure the resume belongs to the current user
-    resume = get_object_or_404(Resume, id=resume_id, user=request.user)
-
-    resume.delete()
-
-    return JsonResponse({"message": "Resume deleted successfully!", "status": "success"}, status=200)
-
-
-@login_required
-def add_resume_modal(request):
-    print(f"Resume modal request body: {request.body}")
-    if request.method != 'POST':
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
-
-    return add_resume(request)
-
-@login_required
-def ai_add_resume_modal_create_resume(request):
-    return add_resume(request, RESUME_INFO)
-
-@login_required
-def add_resume(request, data=None):
-    try:
-        # Parse JSON body
-        if not data:
-            data = json.loads(request.body)
-
-        # Create the Resume object
-        resume = Resume.objects.create(
-            user=request.user,
-            name=data.get('name', 'Untitled Resume'),
-            purpose=data.get('purpose', ''),
-            tailoredSummary=data['includePersonalInfo'].get('summary', ''),
-            showPhone=data['includePersonalInfo'].get('phone', False),
-            showEmail=data['includePersonalInfo'].get('email', False),
-            showAddress=data['includePersonalInfo'].get('address', False)
-        )
-
-        # Add related data (Education, WorkExperience, Skills, etc.)
-        # 1. Education
-        education_ids = [item['id'] for item in data.get('educations', [])]
-        educations = Education.objects.filter(id__in=education_ids)
-        resume.educations.add(*educations)
-
-        # 2. Work Experience
-        for work_experience_data in data.get('workExperiences', []):
-            work_experience = get_object_or_404(WorkExperience, id=work_experience_data['id'])
-            resume.workExperiences.add(work_experience, through_defaults={
-                'tailoredDescription': work_experience_data.get('tailoredSummary', '')
-            })
-
-        # 3. Skills
-        skill_ids = [item['id'] for item in data.get('skills', [])]
-        skills = Skill.objects.filter(id__in=skill_ids)
-        resume.skills.add(*skills)
-
-        # 4. Projects
-        for project_data in data.get('projects', []):
-            project = get_object_or_404(Project, id=project_data['id'])
-            resume.projects.add(project, through_defaults={
-                'tailoredDescription': project_data.get('tailoredSummary', '')
-            })
-
-        # 5. Certifications
-        certification_ids = [item['id'] for item in data.get('certifications', [])]
-        certifications = Certification.objects.filter(id__in=certification_ids)
-        resume.certifications.add(*certifications)
-
-        # Save and return success
-        resume.save()
-        return JsonResponse({'status': 'success', 'message': 'Resume created successfully.', 'resume_id': resume.id})
-
-    except json.JSONDecodeError:
-        return JsonResponse({'status': 'error', 'message': 'Invalid JSON format.'}, status=400)
-    except KeyError as e:
-        return JsonResponse({'status': 'error', 'message': f'Missing key: {e}'}, status=400)
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': f'An error occurred: {str(e)}'}, status=500)

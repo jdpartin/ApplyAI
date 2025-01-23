@@ -401,3 +401,7 @@ FodyWeavers.xsd
 
 # Ignore SQLite database files
 db.sqlite3
+/app/myproject/.env
+
+
+.env

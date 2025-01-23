@@ -1,30 +1,18 @@
-from myapp.models import UserInfo, Education, WorkExperience, Skill, Project, Certification
-from myapp.forms import UserInfoForm, EducationForm, WorkExperienceForm, SkillForm, ProjectForm, CertificationForm
-from django.contrib.auth.password_validation import validate_password
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.sessions.backends.db import SessionStore
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
 from django.http import JsonResponse
 import google.generativeai as genai
-from django.urls import reverse
-from enum import Enum
-import requests
 import logging
 import json
 from .json_views import *
+from myapp.library.aiworkflows.common import get_data, EntityType
+from django.conf import settings
 
 
+GEMINI_API_KEY = settings.GEMINI_API_KEY
+GEMINI_MODEL = "gemini-1.5-flash"
 
 logger = logging.getLogger(__name__)
-
-# Normally an API key should never be in the code and checked into version control
-# This is a free API and the key is here for dev simplicity
-GEMINI_API_KEY = "AIzaSyB2TP2FCbiYgH-wSJcjvRuoiV8GwVWkFiM"
-GEMINI_MODEL = "gemini-1.5-flash"
 
 CURRENT_REQUEST = None
 UI_TABLES_TO_REFRESH = []
@@ -104,48 +92,6 @@ def add_chat_to_history(role, text):
     # Trim chat history if it exceeds the maximum length
     if len(CHAT_HISTORY) > MAX_CHAT_HISTORY_LENGTH:
         CHAT_HISTORY = CHAT_HISTORY[-MAX_CHAT_HISTORY_LENGTH:]
-
-
-class EntityType(Enum):
-    USER = "user"
-    EDUCATION = "education"
-    WORK_EXPERIENCE = "work_experience"
-    SKILLS = "skills"
-    PROJECTS = "projects"
-    CERTIFICATIONS = "certifications"
-
-
-# AI Functions
-
-
-def get_data(entity_type: EntityType):
-    """
-    Get data for a specific entity type.
-    Args:
-        entity_type (EntityType): The type of entity to fetch (e.g., EntityType.EDUCATION).
-    Returns:
-        dict: Data corresponding to the specified entity type.
-    """
-    global CURRENT_REQUEST
-
-    if entity_type == EntityType.USER:
-        data = user_info_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.EDUCATION:
-        data = education_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.WORK_EXPERIENCE:
-        data = work_experience_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.SKILLS:
-        data = skill_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.PROJECTS:
-        data = project_data(CURRENT_REQUEST)
-    elif entity_type == EntityType.CERTIFICATIONS:
-        data = certification_data(CURRENT_REQUEST)
-    else:
-        raise ValueError(f"Unknown entity type: '{entity_type}'")
-
-    text_data = json.loads(data.content.decode('utf-8'))
-    add_chat_to_history("model", json.dumps(text_data))
-    return text_data
 
 
 def add_edit_entity(entity_type: EntityType, id: int = None, **kwargs):

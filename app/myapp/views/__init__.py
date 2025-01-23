@@ -5,9 +5,8 @@
 
 # Only include imports for views that should be available at the package level to avoid unnecessary namespace pollution.
 
-from .page_views import *
+from .chat_bubble import chat_bubble_view
+from .delete_views import *
 from .form_views import *
 from .json_views import *
-from .chat_bubble import chat_bubble_view
-from .resume_views import *
-from .cover_letter_views import ai_cover_letter_modal, cover_letter_modal, cover_letter_delete
+from .page_views import *

@@ -4,6 +4,10 @@
 
     <h3>Add/Edit Certification</h3>
 
+    {% if certification.id %}
+    <input type="text" style="display:none;" name="id" value="{{ certification.id }}">
+    {% endif %}
+
     <div class="mb-3">
         <label for="certificationName" class="form-label">Certification Name</label>
         <input type="text" class="form-control" id="certificationName" name="certification_name" value="{{ certification.certification_name }}" required>
@@ -14,21 +18,21 @@
     </div>
     <div class="mb-3">
         <label for="issueDate" class="form-label">Issue Date</label>
-        <input type="date" class="form-control" id="issueDate" name="issue_date" value="{{ certification.issue_date }}" required>
+        <input type="date" class="form-control" id="issueDate" name="issue_date" value="{% if certification.issue_date %}{{ certification.issue_date|date:'Y-m-d' }}{% endif %}" required>
     </div>
     <div class="mb-3">
         <label for="expirationDate" class="form-label">Expiration Date</label>
-        <input type="date" class="form-control" id="expirationDate" name="expiration_date" value="{{ certification.expiration_date }}">
+        <input type="date" class="form-control" id="expirationDate" name="expiration_date" value="{% if certification.expiration_date %}{{ certification.expiration_date|date:'Y-m-d' }}{% endif %}">
     </div>
     <div class="mb-3">
         <label for="credentialId" class="form-label">Credential ID</label>
-        <input type="text" class="form-control" id="credentialId" name="credential_id" value="{{ certification.credential_id }}">
+        <input type="text" class="form-control" id="credentialId" name="credential_id" value="{{ certification.credential_id|default:'' }}">
     </div>
     <div class="mb-3">
         <label for="credentialUrl" class="form-label">Credential URL</label>
-        <input type="url" class="form-control" id="credentialUrl" name="credential_url" value="{{ certification.credential_url }}">
+        <input type="url" class="form-control" id="credentialUrl" name="credential_url" value="{{ certification.credential_url|default:'' }}">
     </div>
 
-    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('certificationForm', closeCurrentModal);">Save</button>
+    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('certificationForm', () => { closeCurrentModal(); fetchCertificationData(); });">Save</button>
 
 </form>

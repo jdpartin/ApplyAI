@@ -19,12 +19,13 @@ function fetchUserInfo() {
                 <td>${data.email}</td>
                 <td>${data.phone_number}</td>
                 <td>${data.address}</td>
-                <td>${data.linkedin_url}</td>
-                <td>${data.github_url}</td>
-                <td>${data.portfolio_url}</td>
             </tr>`;
             tbody.innerHTML = row;
         });
+}
+
+function editUserInfo() {
+    getPage(`/templates/frontend/modals/user_info_modal?`, popup);
 }
 
 function fetchEducationData() {
@@ -36,7 +37,9 @@ function fetchEducationData() {
                 <tr>
                     <td>${edu.school_name}</td>
                     <td>${edu.degree}</td>
-                    <td>${edu.graduation_year}</td>
+                    <td>${edu.field_of_study}</td>
+                    <td>${edu.start_date}</td>
+                    <td>${edu.end_date ? edu.end_date : 'Currently Enrolled'}</td>
                     <td>
                         <button class="btn btn-sm btn-primary" onclick="editEducation(${edu.id})">
                             <i class="fas fa-edit"></i>
@@ -49,6 +52,7 @@ function fetchEducationData() {
             `).join('');
         });
 }
+
 
 function editEducation(id) {
     getPage(`/templates/frontend/modals/education_modal?id=${id}`, popup);
@@ -78,9 +82,8 @@ function fetchWorkExperienceData() {
                 <tr>
                     <td>${exp.job_title}</td>
                     <td>${exp.company_name}</td>
-                    <td>${exp.job_description}</td>
                     <td>${exp.start_date}</td>
-                    <td>${exp.end_date}</td>
+                    <td>${exp.end_date ? exp.end_date : 'Current Employer'}</td>
                     <td>
                         <button class="btn btn-sm btn-primary" onclick="editWorkExperience(${exp.id})">
                             <i class="fas fa-edit"></i>
@@ -162,9 +165,9 @@ function fetchProjectData() {
             tbody.innerHTML = data.map(project => `
                 <tr>
                     <td>${project.project_title}</td>
-                    <td>${project.description}</td>
-                    <td>${project.technologies_used}</td>
                     <td>${project.project_url}</td>
+                    <td>${project.start_date}</td>
+                    <td>${project.end_date ? project.end_date : 'In Progress'}</td>
                     <td>
                         <button class="btn btn-sm btn-primary" onclick="editProject(${project.id})">
                             <i class="fas fa-edit"></i>

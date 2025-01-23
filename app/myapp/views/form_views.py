@@ -10,11 +10,19 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 import json
+from myapp.library.resume import add_resume
+from myapp.library.cover_letter import add_cover_letter
+from myapp.library.aiworkflows import ai_add_resume_workflow
+from myapp.library.aiworkflows import ai_add_cover_letter_workflow
 
+
+# This file is for models that handle form rendering and submissions
+
+
+# User Info
 
 @login_required
 def user_info_modal(request):
-    """Handles User Info modal form submission and rendering."""
     if request.method == 'POST':
         user_info, created = UserInfo.objects.get_or_create(user=request.user)
         form = UserInfoForm(request.POST, instance=user_info)
@@ -42,13 +50,8 @@ def user_info_modal(request):
 
     return render(request, 'frontend/modals/user_info_modal.html')
 
-@login_required
-def resume_modal(request):
-    return render(request, 'frontend/modals/resume_modal.html')
 
-@login_required
-def ai_add_resume_modal(request):
-    return render(request, 'frontend/modals/ai_add_resume_modal.html')
+# Education
 
 @login_required
 def education_modal(request):
@@ -69,6 +72,8 @@ def education_modal(request):
     return render(request, 'frontend/modals/education_modal.html', {'education': education})
 
 
+# Work Experience
+
 @login_required
 def work_experience_modal(request):
     """Handles Work Experience modal form submission and rendering."""
@@ -87,6 +92,8 @@ def work_experience_modal(request):
 
     return render(request, 'frontend/modals/work_experience_modal.html', {'work_experience': work_experience})
 
+
+# Skill
 
 @login_required
 def skill_modal(request):
@@ -107,6 +114,8 @@ def skill_modal(request):
     return render(request, 'frontend/modals/skill_modal.html', {'skill': skill})
 
 
+# Project
+
 @login_required
 def project_modal(request):
     """Handles Project modal form submission and rendering."""
@@ -125,6 +134,8 @@ def project_modal(request):
 
     return render(request, 'frontend/modals/project_modal.html', {'project': project})
 
+
+# Certification
 
 @login_required
 def certification_modal(request):
@@ -145,7 +156,77 @@ def certification_modal(request):
     return render(request, 'frontend/modals/certification_modal.html', {'certification': certification})
 
 
-# Form Submission Handling Views
+# Resume
+
+@login_required
+def resume_modal(request):
+    resume = None
+    work_experience_data = {}
+    project_data = {}
+
+    resume_id = request.GET.get('id')
+    if resume_id:
+        resume = get_object_or_404(request.user.resumes, id=resume_id)
+
+        # Prepare tailored work experience data
+        work_experience_data = {
+            rwe.workExperience_id: rwe.tailoredDescription
+            for rwe in resume.resumeworkexperience_set.all()
+        }
+
+        # Prepare tailored project data (if applicable)
+        project_data = {
+            rp.project_id: rp.tailoredDescription
+            for rp in resume.resumeproject_set.all()
+        }
+
+    context = {
+        'user': request.user,
+        'resume': resume,
+        'work_experience_data': work_experience_data,  # Pass tailored descriptions for work experiences
+        'project_data': project_data,  # Pass tailored descriptions for projects
+    }
+    return render(request, 'frontend/modals/resume_modal.html', context)
+
+
+@login_required
+def ai_resume_modal(request):
+    if request.method == 'POST':
+        return add_resume(request, ai_add_resume_workflow(request))
+
+    return render(request, 'frontend/modals/ai_add_resume_modal.html')
+
+
+# Cover Letter
+
+@login_required
+def cover_letter_modal(request):
+    if request.method == 'POST':
+        return add_cover_letter(request, request.POST.dict())
+
+    cover_letter = None
+
+    cover_letter_id = request.GET.get('id')
+    if cover_letter_id:
+        cover_letter = get_object_or_404(request.user.cover_letters, id=cover_letter_id)
+
+    context = {
+        'coverletter': cover_letter
+    }
+
+    return render(request, 'frontend/modals/cover_letter_modal.html', context)
+
+
+@login_required
+def ai_cover_letter_modal(request):
+    if request.method == 'POST':
+        return add_resume(request, ai_add_cover_letter_workflow(request))
+
+    return render(request, 'frontend/modals/ai_add_cover_letter_modal.html')
+
+
+
+# Form Submission Handling Only
 
 @csrf_exempt
 def signinform(request):
@@ -169,6 +250,7 @@ def signinform(request):
             return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
 
     return JsonResponse({'error': 'Invalid request method. Use POST.'}, status=405)
+
 
 @csrf_exempt
 def signupform(request):

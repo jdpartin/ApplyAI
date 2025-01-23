@@ -4,6 +4,10 @@
 
     <h3>Add/Edit Education</h3>
 
+    {% if education.id %}
+    <input type="text" style="display:none;" name="id" value="{{ education.id }}">
+    {% endif %}
+
     <div class="mb-3">
         <label for="schoolName" class="form-label">School Name</label>
         <input type="text" class="form-control" id="schoolName" name="school_name" value="{{ education.school_name }}">
@@ -18,17 +22,18 @@
     </div>
     <div class="mb-3">
         <label for="startDate" class="form-label">Start Date</label>
-        <input type="date" class="form-control" id="startDate" name="start_date" value="{{ education.start_date }}">
+        <input type="date" class="form-control" id="startDate" name="start_date" value="{% if education.start_date %}{{ education.start_date|date:'Y-m-d' }}{% endif %}">
     </div>
     <div class="mb-3">
-        <label for="endDate" class="form-label">End Date</label>
-        <input type="date" class="form-control" id="endDate" name="end_date" value="{{ education.end_date }}">
-    </div>
-    <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea class="form-control" id="description" name="description">{{ education.description }}</textarea>
+        <span id="end_date_span" {% if education and not education.end_date %}style="display:none;" {% endif %}>
+            <label for="endDate" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="endDate" name="end_date" value="{% if education.end_date %}{{ education.end_date|date:'Y-m-d'}}{% endif %}">
+        </span>
+
+        <input type="checkbox" id="currentlyEnrolled" onchange="hideIfChecked(this, 'end_date_span', true);" {% if education and not education.end_date %}checked="checked" {% endif %} />
+        <label for="currentlyEnrolled">Currently Enrolled</label>
     </div>
 
-    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('educationForm', closeCurrentModal);">Save</button>
+    <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('educationForm', () => { closeCurrentModal(); fetchEducationData(); });">Save</button>
 
 </form>

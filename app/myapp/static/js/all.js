@@ -128,6 +128,21 @@ function submitFormAjax(formId, successCallback = null, errorCallback = null, lo
 }
 
 
+function hideIfChecked(checkbox, id_to_hide, clear_child_input_values=false) {
+    let elemToHide = document.getElementById(id_to_hide);
+
+    if (checkbox.checked) {
+        if (clear_child_input_values) {
+            elemToHide.querySelectorAll('input').forEach(i => i.value = '');
+        }
+        
+        elemToHide.style.display = 'none';
+    } else {
+        elemToHide.style.display = '';
+    }
+}
+
+
 // Loading 
 
 // Global variables
@@ -139,8 +154,8 @@ let closing = false;
 let adsRefreshing = null; // Interval for refreshing ads
 
 // Settings for different account tiers
-let eliminateFalseLoadingDelay = false;
-let removeAds = false;
+let eliminateFalseLoadingDelay = true;
+let removeAds = true;
 
 async function toggleLoading(show, text = '', minLoadTime = 0) {
 
@@ -150,7 +165,7 @@ async function toggleLoading(show, text = '', minLoadTime = 0) {
     const overlay = document.getElementById('loadingOverlay');
     const loadingText = document.getElementById('loadingText');
     const adContainer = document.getElementById('adContainer');
-    const minLoadingDuration = minLoadTime * 1000;
+    let minLoadingDuration = minLoadTime * 1000;
 
     if (eliminateFalseLoadingDelay) {
         minLoadingDuration = 0;
@@ -182,13 +197,15 @@ async function toggleLoading(show, text = '', minLoadTime = 0) {
             }
         }
 
-        setTimeout(() => {
-            if (closeRequested == true) {
-                toggleLoading(false);
-            }
-        }, minLoadingEndTime - Date.now());
+        //setTimeout(() => {
+        //    if (closeRequested == true) {
+        //        toggleLoading(false);
+        //    }
+        //}, minLoadingEndTime - Date.now());
 
-        refreshLoadingAds();
+        if (!removeAds) {
+            refreshLoadingAds();
+        }
 
     } else {
         // ----- Requesting to hide the overlay -----
@@ -202,6 +219,10 @@ async function toggleLoading(show, text = '', minLoadTime = 0) {
                 adContainer.innerHTML = '';
             }
         }
+
+        // Eliminating false delays
+        close();
+        return;
 
         closeRequested = true;
 
