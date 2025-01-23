@@ -3,6 +3,10 @@
 <div class="container">
     {% csrf_token %}
 
+    {% if resume.id %}
+    <input type="text" style="display:none;" name="id" value="{{ resume.id }}">
+    {% endif %}
+
     <div class="text-center mb-4">
         <h1>Resume Builder</h1>
         <p>Customize your resume by selecting the information to include.</p>

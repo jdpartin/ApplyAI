@@ -62,12 +62,12 @@ def ai_add_cover_letter_workflow(request):
     response = chat.send_message(next_command)
 
     # Get user info
-    user_info = get_data(EntityType.USER)
-    user_education = get_data(EntityType.EDUCATION)
-    user_work_experience = get_data(EntityType.WORK_EXPERIENCE)
-    user_skills = get_data(EntityType.SKILLS)
-    user_projects = get_data(EntityType.PROJECTS)
-    user_certifications = get_data(EntityType.CERTIFICATIONS)
+    user_info = get_data(CURRENT_REQUEST, EntityType.USER)
+    user_education = get_data(CURRENT_REQUEST, EntityType.EDUCATION)
+    user_work_experience = get_data(CURRENT_REQUEST, EntityType.WORK_EXPERIENCE)
+    user_skills = get_data(CURRENT_REQUEST, EntityType.SKILLS)
+    user_projects = get_data(CURRENT_REQUEST, EntityType.PROJECTS)
+    user_certifications = get_data(CURRENT_REQUEST, EntityType.CERTIFICATIONS)
 
     # Summary
     next_command = f"""

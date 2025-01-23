@@ -37,15 +37,13 @@ function AI_submitCreateCoverLetterForm() {
 async function submitCreateResumeForm() {
     
     function success(resp) {
-        console.log("Resume created successfully:", resp);
-        window.alert("Resume created successfully.");
         popup(false);
         toggleLoading(false);
     }
 
     function failure(resp) {
-        console.error("Error creating resume:", resp);
-        window.alert("Error creating resume: " + resp);
+        console.log(`Error creating/updating resume: ${resp}`);
+        window.alert("Error creating resume, please try again.");
         toggleLoading(false);
     }
 
@@ -54,7 +52,7 @@ async function submitCreateResumeForm() {
     toggleLoading(true, "Creating resume...");
 
     try {
-        const response = await fetch('/templates/frontend/modals/add_resume_modal/', {
+        const response = await fetch('/templates/frontend/modals/resume_modal/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -92,10 +90,15 @@ function submit_ai_add_resume_form() {
 }
 
 
-
 function collectResumeData() {
     const modal = document.getElementById('popupModal'); // Limit scope to the modal
     const resumeData = {};
+
+    // Collect Resume ID if it exists
+    const idInput = modal.querySelector('[name="id"]');
+    if (idInput) {
+        resumeData.id = parseInt(idInput.value.trim()) || null;
+    }
 
     // Collect Resume Name and Purpose
     resumeData.name = modal.querySelector('#resumeName').value.trim();

@@ -12,7 +12,7 @@ class EntityType(Enum):
     CERTIFICATIONS = "certifications"
     
 
-def get_data(entity_type: EntityType):
+def get_data(request, entity_type: EntityType):
     """
     Get data for a specific entity type.
     Args:
@@ -20,20 +20,18 @@ def get_data(entity_type: EntityType):
     Returns:
         dict: Data corresponding to the specified entity type.
     """
-    global CURRENT_REQUEST
-
     if entity_type == EntityType.USER:
-        data = user_info_data(CURRENT_REQUEST)
+        data = user_info_data(request)
     elif entity_type == EntityType.EDUCATION:
-        data = education_data(CURRENT_REQUEST)
+        data = education_data(request)
     elif entity_type == EntityType.WORK_EXPERIENCE:
-        data = work_experience_data(CURRENT_REQUEST)
+        data = work_experience_data(request)
     elif entity_type == EntityType.SKILLS:
-        data = skill_data(CURRENT_REQUEST)
+        data = skill_data(request)
     elif entity_type == EntityType.PROJECTS:
-        data = project_data(CURRENT_REQUEST)
+        data = project_data(request)
     elif entity_type == EntityType.CERTIFICATIONS:
-        data = certification_data(CURRENT_REQUEST)
+        data = certification_data(request)
     else:
         raise ValueError(f"Unknown entity type: '{entity_type}'")
 

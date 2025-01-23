@@ -3,6 +3,10 @@
 
         {% csrf_token %}
 
+        {% if coverletter.id %}
+        <input type="text" style="display:none;" name="id" value="{{ coverletter.id }}">
+        {% endif %}
+
         <div class="text-center mb-4">
             <h1>Cover Letter Editor</h1>
             <p>Create or edit your cover letter below</p>
@@ -42,6 +46,6 @@
 
         <!-- Submit Button -->
         <button class="btn btn-primary w-100" type="button" onclick="submitCreateCoverLetterForm();">Submit</button>
-    
+
     </form>
 </div>

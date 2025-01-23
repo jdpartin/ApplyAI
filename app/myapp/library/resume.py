@@ -2,25 +2,47 @@ from myapp.models import Resume, Education, Skill, Project, Certification, WorkE
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+import json
 
 
 @login_required
-def add_resume(request, data=None):
+def add_or_update_resume(request, data=None):
     try:
         # Parse JSON body
         if not data:
             data = json.loads(request.body)
 
-        # Create the Resume object
-        resume = Resume.objects.create(
-            user=request.user,
-            name=data.get('name', 'Untitled Resume'),
-            purpose=data.get('purpose', ''),
-            tailoredSummary=data['includePersonalInfo'].get('summary', ''),
-            showPhone=data['includePersonalInfo'].get('phone', False),
-            showEmail=data['includePersonalInfo'].get('email', False),
-            showAddress=data['includePersonalInfo'].get('address', False)
-        )
+        # Check if an ID is provided for updating
+        resume_id = data.get('id')
+        if resume_id:
+            # Fetch the existing resume
+            resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+            # Update the existing resume fields
+            resume.name = data.get('name', resume.name)
+            resume.purpose = data.get('purpose', resume.purpose)
+            resume.tailoredSummary = data['includePersonalInfo'].get('summary', resume.tailoredSummary)
+            resume.showPhone = data['includePersonalInfo'].get('phone', resume.showPhone)
+            resume.showEmail = data['includePersonalInfo'].get('email', resume.showEmail)
+            resume.showAddress = data['includePersonalInfo'].get('address', resume.showAddress)
+        else:
+            # Create a new Resume object
+            resume = Resume.objects.create(
+                user=request.user,
+                name=data.get('name', 'Untitled Resume'),
+                purpose=data.get('purpose', ''),
+                tailoredSummary=data['includePersonalInfo'].get('summary', ''),
+                showPhone=data['includePersonalInfo'].get('phone', False),
+                showEmail=data['includePersonalInfo'].get('email', False),
+                showAddress=data['includePersonalInfo'].get('address', False)
+            )
+
+        # Clear existing related data if updating
+        if resume_id:
+            resume.educations.clear()
+            resume.workExperiences.clear()
+            resume.skills.clear()
+            resume.projects.clear()
+            resume.certifications.clear()
 
         # Add related data (Education, WorkExperience, Skills, etc.)
         # 1. Education
@@ -54,7 +76,7 @@ def add_resume(request, data=None):
 
         # Save and return success
         resume.save()
-        return JsonResponse({'status': 'success', 'message': 'Resume created successfully.', 'resume_id': resume.id})
+        return JsonResponse({'status': 'success', 'message': 'Resume saved successfully.', 'resume_id': resume.id})
 
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Invalid JSON format.'}, status=400)

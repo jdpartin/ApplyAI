@@ -10,8 +10,8 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 import json
-from myapp.library.resume import add_resume
-from myapp.library.cover_letter import add_cover_letter
+from myapp.library.resume import add_or_update_resume
+from myapp.library.cover_letter import add_or_update_cover_letter
 from myapp.library.aiworkflows import ai_add_resume_workflow
 from myapp.library.aiworkflows import ai_add_cover_letter_workflow
 
@@ -160,6 +160,9 @@ def certification_modal(request):
 
 @login_required
 def resume_modal(request):
+    if request.method == 'POST':
+        return add_or_update_resume(request, request.POST.dict())
+
     resume = None
     work_experience_data = {}
     project_data = {}
@@ -192,7 +195,7 @@ def resume_modal(request):
 @login_required
 def ai_resume_modal(request):
     if request.method == 'POST':
-        return add_resume(request, ai_add_resume_workflow(request))
+        return add_or_update_resume(request, ai_add_resume_workflow(request))
 
     return render(request, 'frontend/modals/ai_add_resume_modal.html')
 
@@ -202,7 +205,7 @@ def ai_resume_modal(request):
 @login_required
 def cover_letter_modal(request):
     if request.method == 'POST':
-        return add_cover_letter(request, request.POST.dict())
+        return add_or_update_cover_letter(request, request.POST.dict())
 
     cover_letter = None
 
@@ -220,7 +223,7 @@ def cover_letter_modal(request):
 @login_required
 def ai_cover_letter_modal(request):
     if request.method == 'POST':
-        return add_resume(request, ai_add_cover_letter_workflow(request))
+        return add_or_update_cover_letter(request, ai_add_cover_letter_workflow(request))
 
     return render(request, 'frontend/modals/ai_add_cover_letter_modal.html')
 
