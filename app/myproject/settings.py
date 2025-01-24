@@ -97,12 +97,25 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join('/data', 'db.sqlite3'),  # Save SQLite DB to the persistent disk
+
+ENVIRONMENT_TYPE = config('ENVIRONMENT_TYPE', default='development')
+
+if (ENVIRONMENT_TYPE == "PRODUCTION"):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join('/data', 'db.sqlite3'),  # Save SQLite DB to the persistent disk
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',  # Default location
+        }
+    }
+
 
 print(f"Database path: {DATABASES['default']['NAME']}")
 
