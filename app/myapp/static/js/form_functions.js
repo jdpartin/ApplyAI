@@ -17,14 +17,12 @@ function submitCreateCoverLetterForm() {
 }
 
 function AI_submitCreateCoverLetterForm() {
-    async function success(resp) {
-        const data = await resp.json();
+    function success(data) {
         editCoverLetter(data.cover_letter_id);
         fetchCoverLetterInfo();
     }
 
-    async function failure(resp) {
-        const data = await resp.json();
+    function failure(data) {
         window.alert("Error creating cover letter, please try again.");
         console.log("Error creating cover letter: " + data.error);
         fetchCoverLetterInfo();
@@ -39,19 +37,15 @@ function AI_submitCreateCoverLetterForm() {
 
 async function submitCreateResumeForm() {
     
-    async function success(resp) {
-        const data = await resp.json();
-        editResume(data.resume_id);
+    function success(resp) {
+        editResume();
         toggleLoading(false);
-        fetchResumeInfo();
     }
 
     function failure(resp) {
-        const data = await resp.json();
-        console.log(`Error creating/updating resume: ${data.error}`);
+        console.log(`Error creating/updating resume: ${resp}`);
         window.alert("Error creating resume, please try again.");
         toggleLoading(false);
-        fetchResumeInfo();
     }
 
     let resumeData = collectResumeData();
@@ -84,12 +78,14 @@ async function submitCreateResumeForm() {
 
 
 function submit_ai_add_resume_form() {
-    function success(resp) {
-        popup(false);
+    function success(data) {
+        editResume(data.resume_id);
         fetchResumeInfo();
     }
 
-    function failure(resp) {
+    function failure(data) {
+        window.alert("Error adding resume, please try again");
+        console.log("Error adding resume: " + data.error);
         fetchResumeInfo();
     }
 
