@@ -1,22 +1,28 @@
-
 ---
 
-# **ApplyAI: Your AI-Powered Job Application Assistant** 🚀
+# **ResuSpark: Your AI-Powered Job Application Assistant** 🚀
 
-**ApplyAI** is a cutting-edge web application designed to streamline the job application process using the power of **AI**. With ApplyAI, job seekers can effortlessly find, analyze, and apply to jobs that match their skills and preferences—all from one intuitive platform.
+**ResuSpark** is a cutting-edge web application designed to streamline the job application process using the power of **AI**. With ResuSpark, job seekers can effortlessly manage their resume information, generate tailored cover letters and resumes on demand, and explore features designed to enhance their career growth.
 
 ---
 
 ## **Key Features**
-- **Smart Job Matching**: Leverages AI to match your resume and preferences with the best job opportunities.
-- **Tailored Applications**: Automatically generates personalized cover letters and responses for each job.
-- **Automated Insights**: Analyze job descriptions and your resume to highlight strengths and areas of improvement.
-- **One-Click Apply**: Save time by quickly submitting applications with pre-generated, editable materials.
-- **Customizable Filters**: Search for jobs by salary range, location, and skill relevance.
+
+- **Resume Management**: Easily enter and manage your resume information within the platform.
+- **Tailored Applications**: Automatically generate personalized cover letters and resumes on demand using AI.
+
+---
+
+## **Planned Features**
+
+- **Portfolio Hosting**: Allow users to host their portfolio files on our website and share a link with employers.
+- **AI Job Matching**: Use AI to match users with job opportunities based on their resume information.
+- **Browser Extension**: Provide a browser extension to answer application questions using AI and your resume data.
 
 ---
 
 ## **Technologies Used**
+
 - **Frontend**: Basic HTML, CSS, and JavaScript. Styled with Bootstrap.
 - **Backend**: Python Django for API logic and data processing.
 - **Database**: PostgreSQL for secure and scalable data storage.
@@ -25,18 +31,20 @@
 
 ---
 
-## **Why ApplyAI?**
-Finding the right job can be time-consuming and overwhelming. ApplyAI simplifies the process by combining intelligent job-matching algorithms, personalized application tools, and seamless automation, empowering job seekers to focus on what matters most—their career growth.
+## **Why ResuSpark?**
+
+Finding the right job can be time-consuming and overwhelming. ResuSpark simplifies the process by combining intelligent resume management, personalized application tools, and seamless automation, empowering job seekers to focus on what matters most—their career growth.
 
 ---
 
 ## **Contribute**
-ApplyAI is currently a portfolio project, contributions may be welcomed in the future.
+
+ResuSpark is currently a portfolio project, contributions may be welcomed in the future.
 
 ---
 
 ## **Demo**
-[Link coming soon]
+
+[www.resuspark.com](https://www.resuspark.com)
 
 ---
-
