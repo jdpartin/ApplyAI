@@ -30,20 +30,15 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'applyai-dev.onrender.com',
-    'applyai-app.onrender.com',
-    'applyai.onrender.com',
+    'resuspark.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://applyai-dev.onrender.com',
-    'https://applyai-app.onrender.com',
-    'https://applyai.onrender.com',
-    'https://renderloadingpage.onrender.com/',
+    'https://resuspark.com',
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://applyai.onrender.com",
+    'https://resuspark.com',
 ]
 
 
@@ -154,7 +149,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "myapp/static"]
+STATIC_ROOT =  BASE_DIR / "myapp/static"
+STATICFILES_DIRS = []
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -1,3 +1,21 @@
+
+/* Bootstrap Color Overrides */
+
+/* Example of Bootstrap overrides or custom styles */
+.bg-primary {
+    background-color: #5271ff !important;
+}
+
+.text-primary {
+    color: #5271ff !important;
+}
+
+.btn-primary {
+    background-color: #5271ff !important;
+    border-color: #5271ff !important;
+}
+
+
 #chat-popup.fullscreen {
     top: 0;
     right: 0;
