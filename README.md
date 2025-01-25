@@ -1,6 +1,6 @@
 ---
 
-# **ResuSpark: Your AI-Powered Job Application Assistant** 
+# **ResuSpark: Your AI-Powered Job Application Assistant** 🚀
 
 **ResuSpark** is a cutting-edge web application designed to streamline the job application process using the power of **AI**. With ResuSpark, job seekers can effortlessly manage their resume information, generate tailored cover letters and resumes on demand, and explore features designed to enhance their career growth.
 
