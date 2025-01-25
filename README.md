@@ -1,19 +1,17 @@
----
+# ResuSpark: Your AI-Powered Job Application Assistant 🚀
 
-# **ResuSpark: Your AI-Powered Job Application Assistant** 🚀
-
-**ResuSpark** is a cutting-edge web application designed to streamline the job application process using the power of **AI**. With ResuSpark, job seekers can effortlessly manage their resume information, generate tailored cover letters and resumes on demand, and explore features designed to enhance their career growth.
+ResuSpark is a cutting-edge web application designed to streamline the job application process using the power of AI. With ResuSpark, job seekers can effortlessly manage their resume information, generate tailored cover letters and resumes on demand, and explore features designed to enhance their career growth.
 
 ---
 
-## **Key Features**
+## Key Features
 
 - **Resume Management**: Easily enter and manage your resume information within the platform.
 - **Tailored Applications**: Automatically generate personalized cover letters and resumes on demand using AI.
 
 ---
 
-## **Planned Features**
+## Planned Features
 
 - **Portfolio Hosting**: Allow users to host their portfolio files on our website and share a link with employers.
 - **AI Job Matching**: Use AI to match users with job opportunities based on their resume information.
@@ -21,7 +19,7 @@
 
 ---
 
-## **Technologies Used**
+## Technologies Used
 
 - **Frontend**: Basic HTML, CSS, and JavaScript. Styled with Bootstrap.
 - **Backend**: Python Django for API logic and data processing.
@@ -31,19 +29,19 @@
 
 ---
 
-## **Why ResuSpark?**
+## Why ResuSpark?
 
 Finding the right job can be time-consuming and overwhelming. ResuSpark simplifies the process by combining intelligent resume management, personalized application tools, and seamless automation, empowering job seekers to focus on what matters most—their career growth.
 
 ---
 
-## **Contribute**
+## Contribute
 
-ResuSpark is currently a portfolio project, contributions may be welcomed in the future.
+ResuSpark is currently a portfolio project. Contributions may be welcomed in the future.
 
 ---
 
-## **Demo**
+## Demo
 
 [www.resuspark.com](https://www.resuspark.com)
 
