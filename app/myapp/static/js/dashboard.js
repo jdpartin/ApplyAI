@@ -64,7 +64,6 @@ function deleteEducation(id) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message);
                     fetchEducationData();
                 } else {
                     alert('Failed to delete education.');
@@ -107,7 +106,6 @@ function deleteWorkExperience(id) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message);
                     fetchWorkExperienceData();
                 } else {
                     alert('Failed to delete work experience.');
@@ -148,7 +146,6 @@ function deleteSkill(id) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message);
                     fetchSkillData();
                 } else {
                     alert('Failed to delete skill.');
@@ -191,7 +188,6 @@ function deleteProject(id) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message);
                     fetchProjectData();
                 } else {
                     alert('Failed to delete project.');
@@ -234,7 +230,6 @@ function deleteCertification(id) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message);
                     fetchCertificationData();
                 } else {
                     alert('Failed to delete certification.');
@@ -279,7 +274,6 @@ function deleteResume(id) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message);
                     fetchResumeInfo();
                 } else {
                     alert('Failed to delete resume.');
@@ -355,7 +349,6 @@ function deleteCoverLetter(id) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message);
                     fetchCoverLetterInfo();
                 } else {
                     alert('Failed to delete cover letter.');

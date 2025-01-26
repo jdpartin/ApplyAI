@@ -173,6 +173,18 @@
         </div>
     </div>
 
-    <!-- Submit Button -->
-    <button class="btn btn-primary w-100" type="button" onclick="submitCreateResumeForm();">Submit</button>
+    <div class="d-flex justify-content-between mt-3">
+        <!-- Submit Button -->
+        <button class="btn btn-primary w-50 me-2" type="button" onclick="submitCreateResumeForm();">
+            Submit
+        </button>
+
+        <!-- Download Button -->
+        {% if resume.id %}
+        <button type="button" class="btn btn-success w-50 ms-2" type="button" onclick="downloadCoverLetter({{ resume.id }})">
+            <i class="fas fa-download me-2"></i> Download Resume
+        </button>
+        {% endif %}
+    </div>
+
 </div>
