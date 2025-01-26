@@ -7,6 +7,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ResuSpark{% endblock %}</title>
 
+    {% include "partials/seo_tags.html" %}
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/favicon_io/favicon.ico' %}" type="image/x-icon">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ES2SBTW0VV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-ES2SBTW0VV');
+    </script>
+
     <!-- Bootstrap CSS -->
     <!--
         Note: The 'integrity' and 'crossorigin' attributes are omitted for Bootstrap CDN links in this portfolio project.

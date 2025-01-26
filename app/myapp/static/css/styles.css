@@ -16,6 +16,22 @@
 }
 
 
+/* Table Overflow Styling */
+table {
+    word-wrap: break-word;
+    table-layout: fixed; /* Prevents cells from expanding beyond the container */
+}
+
+th, td {
+    overflow-wrap: break-word; /* Ensures long text breaks */
+    word-wrap: break-word;
+    white-space: normal; /* Prevents text from staying on one line */
+}
+
+
+/* Chat */
+
+
 #chat-popup.fullscreen {
     top: 0;
     right: 0;
