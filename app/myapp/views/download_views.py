@@ -2,8 +2,8 @@ import io
 import json
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
-from .json_views import single_resume_info
-from myapp.library.pdf_workflows import generate_resume
+from .json_views import single_resume_info, single_cover_letter_info
+from myapp.library.pdf_workflows import generate_resume, generate_coverletter
 
 
 # This file is for views that return a path to a file for download
