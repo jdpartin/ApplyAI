@@ -42,7 +42,6 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -102,6 +101,7 @@ if (ENVIRONMENT_TYPE == "PRODUCTION"):
             'NAME': os.path.join('/data', 'db.sqlite3'),  # Save SQLite DB to the persistent disk
         }
     }
+    SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
 
 else:
     DATABASES = {
@@ -110,6 +110,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',  # Default location
         }
     }
+    SECURE_SSL_REDIRECT = False  # Dont redirect HTTP to HTTPS
 
 
 # Password validation

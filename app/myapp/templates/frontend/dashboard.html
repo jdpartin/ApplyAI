@@ -12,7 +12,7 @@ Account Dashboard
 
         <!-- Main Content -->
         <div class="col-lg-9">
-            <h1 class="text-center text-primary mb-4">Welcome, {{ user.first_name|default:user.username }}</h1>
+            <h1 class="text-center text-primary mb-4">Welcome to Your ResuSpark Dashboard!</h1>
             <!--<p class="text-center text-muted">Manage your resume information below.</p>-->
 
             <!-- Quick Actions Section -->
@@ -48,20 +48,22 @@ Account Dashboard
                     </h2>
                     <div id="personalInfo" class="accordion-collapse collapse" aria-labelledby="headingPersonalInfo" data-bs-parent="#resumeAccordion">
                         <div class="accordion-body">
-                            <table class="table table-bordered table-striped">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone Number</th>
-                                        <th>Address</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="personalInfoTableBody">
-                                    <!-- Data will be populated here via AJAX -->
-                                </tbody>
-                            </table>
-                            <button class="btn btn-sm btn-primary" onclick="editUserInfo()">Edit</button>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone Number</th>
+                                            <th>Address</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="personalInfoTableBody">
+                                        <!-- Data will be populated here via AJAX -->
+                                    </tbody>
+                                </table>
+                                <button class="btn btn-sm btn-primary" onclick="editUserInfo()">Edit</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -75,23 +77,25 @@ Account Dashboard
                     </h2>
                     <div id="education" class="accordion-collapse collapse" aria-labelledby="headingEducation" data-bs-parent="#resumeAccordion">
                         <div class="accordion-body">
-                            <table class="table table-bordered table-striped">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>School Name</th>
-                                        <th>Degree</th>
-                                        <th>Subject</th>
-                                        <th>Start</th>
-                                        <th>End</th>
-                                        <th>
-                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/education_modal', popup);">Add</button>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="educationTableBody">
-                                    <!-- Data will be populated here via AJAX -->
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>School Name</th>
+                                            <th>Degree</th>
+                                            <th>Subject</th>
+                                            <th>Start</th>
+                                            <th>End</th>
+                                            <th>
+                                                <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/education_modal', popup);">Add</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="educationTableBody">
+                                        <!-- Data will be populated here via AJAX -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -105,22 +109,24 @@ Account Dashboard
                     </h2>
                     <div id="workExperience" class="accordion-collapse collapse" aria-labelledby="headingWorkExperience" data-bs-parent="#resumeAccordion">
                         <div class="accordion-body">
-                            <table class="table table-bordered table-striped">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Job Title</th>
-                                        <th>Company Name</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
-                                        <th>
-                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/work_experience_modal', popup);">Add</button>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="workExperienceTableBody">
-                                    <!-- Data will be populated here via AJAX -->
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Job Title</th>
+                                            <th>Company Name</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>
+                                                <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/work_experience_modal', popup);">Add</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="workExperienceTableBody">
+                                        <!-- Data will be populated here via AJAX -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -134,20 +140,22 @@ Account Dashboard
                     </h2>
                     <div id="skills" class="accordion-collapse collapse" aria-labelledby="headingSkills" data-bs-parent="#resumeAccordion">
                         <div class="accordion-body">
-                            <table class="table table-bordered table-striped">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Skill</th>
-                                        <th>Years of Experience</th>
-                                        <th>
-                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/skill_modal', popup);">Add</button>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="skillsTableBody">
-                                    <!-- Data will be populated here via AJAX -->
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Skill</th>
+                                            <th>Years of Experience</th>
+                                            <th>
+                                                <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/skill_modal', popup);">Add</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="skillsTableBody">
+                                        <!-- Data will be populated here via AJAX -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -161,22 +169,24 @@ Account Dashboard
                     </h2>
                     <div id="projects" class="accordion-collapse collapse" aria-labelledby="headingProjects" data-bs-parent="#resumeAccordion">
                         <div class="accordion-body">
-                            <table class="table table-bordered table-striped">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Project Title</th>
-                                        <th>Project URL</th>
-                                        <th>Start</th>
-                                        <th>End</th>
-                                        <th>
-                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/project_modal', popup);">Add</button>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="projectsTableBody">
-                                    <!-- Data will be populated here via AJAX -->
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Project Title</th>
+                                            <th>Project URL</th>
+                                            <th>Start</th>
+                                            <th>End</th>
+                                            <th>
+                                                <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/project_modal', popup);">Add</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="projectsTableBody">
+                                        <!-- Data will be populated here via AJAX -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -190,22 +200,24 @@ Account Dashboard
                     </h2>
                     <div id="certifications" class="accordion-collapse collapse" aria-labelledby="headingCertifications" data-bs-parent="#resumeAccordion">
                         <div class="accordion-body">
-                            <table class="table table-bordered table-striped">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Certification Name</th>
-                                        <th>Issuing Organization</th>
-                                        <th>Issue Date</th>
-                                        <th>Expiration Date</th>
-                                        <th>
-                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/certification_modal', popup);">Add</button>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="certificationsTableBody">
-                                    <!-- Data will be populated here via AJAX -->
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Certification Name</th>
+                                            <th>Issuing Organization</th>
+                                            <th>Issue Date</th>
+                                            <th>Expiration Date</th>
+                                            <th>
+                                                <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/certification_modal', popup);">Add</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="certificationsTableBody">
+                                        <!-- Data will be populated here via AJAX -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -219,21 +231,23 @@ Account Dashboard
                     </h2>
                     <div id="resumes" class="accordion-collapse collapse" aria-labelledby="headingResumes" data-bs-parent="#resumeAccordion">
                         <div class="accordion-body">
-                            <table class="table table-bordered table-striped">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Resume Name</th>
-                                        <th>Purpose</th>
-                                        <th>Created Date</th>
-                                        <th>
-                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_resume_modal', popup);">Add</button>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="resumeTableBody">
-                                    <!-- Data will be populated here via AJAX -->
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Resume Name</th>
+                                            <th>Purpose</th>
+                                            <th>Created Date</th>
+                                            <th>
+                                                <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_resume_modal', popup);">Add</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resumeTableBody">
+                                        <!-- Data will be populated here via AJAX -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -247,21 +261,23 @@ Account Dashboard
                     </h2>
                     <div id="coverLetters" class="accordion-collapse collapse" aria-labelledby="headingCoverLetters" data-bs-parent="#resumeAccordion">
                         <div class="accordion-body">
-                            <table class="table table-bordered table-striped">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Cover Letter Name</th>
-                                        <th>Purpose</th>
-                                        <th>Created Date</th>
-                                        <th>
-                                            <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_cover_letter_modal', popup);">Add</button>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="coverLetterTableBody">
-                                    <!-- Data will be populated here via AJAX -->
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Cover Letter Name</th>
+                                            <th>Purpose</th>
+                                            <th>Created Date</th>
+                                            <th>
+                                                <button class="btn btn-sm btn-primary" onclick="getPage('/templates/frontend/modals/ai_cover_letter_modal', popup);">Add</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="coverLetterTableBody">
+                                        <!-- Data will be populated here via AJAX -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
