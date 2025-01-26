@@ -35,6 +35,10 @@ urlpatterns = [
     path('resume-delete/', views.resume_delete, name='resume_delete'),
     path('cover-letter-delete/', views.cover_letter_delete, name='cover_letter_delete'),
 
+    # Download Views
+    path('download-resume/', views.download_resume, name='download_resume'),
+    path('download-cover-letter/', views.download_cover_letter, name='download_cover_letter'),
+
     # JSON Data Views
     path('user-info-json/', views.user_info_data, name='user_info_json'),
     path('education-json/', views.education_data, name='education_json'),
@@ -43,7 +47,9 @@ urlpatterns = [
     path('project-json/', views.project_data, name='project_json'),
     path('certification-json/', views.certification_data, name='certification_json'),
     path('resume-json/', views.resume_info, name='resume_json'),
-    path('cover-letter-json/', views.cover_letter_info, name='cover-letter_json'),
+    path('single-resume-json/', views.single_resume_info, name='single_resume_json'),
+    path('cover-letter-json/', views.cover_letter_info, name='cover_letter_json'),
+    path('single-cover-letter-json/', views.single_cover_letter_info, name='single_cover_letter_json'),
 
     # Chat bubble
     path('chat-bubble/', views.chat_bubble_view, name='chat_bubble'),
