@@ -289,8 +289,35 @@ function deleteResume(id) {
 }
 
 function downloadResume(id) {
-    window.location.href = `/resume-download/?id=${id}`;
+    fetch(`/download-resume/?id=${id}`, { method: 'GET' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to download resume: ${response.statusText}`);
+            }
+            return response.blob(); // Convert the response to a Blob
+        })
+        .then(blob => {
+            // Create a URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Create an anchor element to trigger the download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resume.pdf'; // Optional: Set a custom filename
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            // Revoke the object URL after the download
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('Error downloading the file:', error);
+            alert('An error occurred while downloading the resume. Please try again.');
+        });
 }
+
+
 
 function fetchCoverLetterInfo() {
     fetch('/cover-letter-json/')
@@ -338,8 +365,35 @@ function deleteCoverLetter(id) {
 }
 
 function downloadCoverLetter(id) {
-    window.location.href = `/cover-letter-download/?id=${id}`;
+    fetch(`/download-cover-letter/?id=${id}`, { method: 'GET' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to download cover letter: ${response.statusText}`);
+            }
+            return response.blob(); // Convert the response to a Blob
+        })
+        .then(blob => {
+            // Create a URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Create an anchor element to trigger the download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'cover_letter.pdf'; // Optional: Set a custom filename
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            // Revoke the object URL after the download
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('Error downloading the file:', error);
+            alert('An error occurred while downloading the cover letter. Please try again.');
+        });
 }
+
+
 
 function expandSectionAndScroll(sectionId) {
     const section = document.getElementById(sectionId);

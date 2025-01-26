@@ -10,3 +10,4 @@ from .delete_views import *
 from .form_views import *
 from .json_views import *
 from .page_views import *
+from .download_views import *

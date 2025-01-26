@@ -112,8 +112,6 @@ else:
     }
 
 
-print(f"Database path: {DATABASES['default']['NAME']}")
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

@@ -74,9 +74,118 @@ def resume_info(request):
     return JsonResponse(list(resumes), safe=False)
 
 
+@login_required
+def single_resume_info(request, resume_id=False):
+    if not resume_id:
+        resume_id = request.GET.get('id')
+
+    if not resume_id:
+        return JsonResponse({'error': 'Resume ID is required'}, status=400)
+
+    resume = get_object_or_404(request.user.resumes, id=resume_id)
+
+    # Prepare tailored work experience data
+    work_experience_data = {
+        rwe.workExperience_id: rwe.tailoredDescription
+        for rwe in resume.resumeworkexperience_set.all()
+    }
+
+    # Prepare tailored project data (if applicable)
+    project_data = {
+        rp.project_id: rp.tailoredDescription
+        for rp in resume.resumeproject_set.all()
+    }
+
+    # Construct JSON response
+    resume_info = {
+        "name": resume.name,
+        "purpose": resume.purpose,
+        "includePersonalInfo": {
+            "name": request.user.first_name + " " + request.user.last_name,
+            "summary": resume.tailoredSummary,
+            "phone": request.user.user_info.phone_number if resume.showPhone else None,
+            "email": request.user.email if resume.showEmail else None,
+            "address": request.user.user_info.address if resume.showAddress else None,
+        },
+        "educations": [
+            {
+                "degree": edu.degree,
+                "field_of_study": edu.field_of_study,
+                "school_name": edu.school_name,
+                "start_date": edu.start_date.strftime('%Y-%m-%d'),
+                "end_date": edu.end_date.strftime('%Y-%m-%d') if edu.end_date else None,
+            }
+            for edu in resume.educations.all()
+        ],
+        "workExperiences": [
+            {
+                "title": work.job_title,
+                "company": work.company_name,
+                "description": work_experience_data.get(work.id) or work.job_description,
+                "start_date": work.start_date.strftime('%Y-%m-%d'),
+                "end_date": work.end_date.strftime('%Y-%m-%d') if work.end_date else None,
+            }
+            for work in resume.workExperiences.all()
+        ],
+        "skills": [
+            {
+                "name": skill.skill_name,
+                "years_of_experience": skill.years_of_experience,
+            }
+            for skill in resume.skills.all()
+        ],
+        "projects": [
+            {
+                "title": project.project_title,
+                "description": project_data.get(project.id) or project.description,
+                "technologies_used": project.technologies_used,
+                "url": project.project_url,
+                "start_date": project.start_date.strftime('%Y-%m-%d') if project.start_date else None,
+                "end_date": project.end_date.strftime('%Y-%m-%d') if project.end_date else None,
+            }
+            for project in resume.projects.all()
+        ],
+        "certifications": [
+            {
+                "title": cert.certification_name,
+                "issuer": cert.issuing_organization,
+                "issue_date": cert.issue_date.strftime('%Y-%m-%d'),
+                "expiration_date": cert.expiration_date.strftime('%Y-%m-%d') if cert.expiration_date else None,
+                "credential_id": cert.credential_id,
+                "credential_url": cert.credential_url,
+            }
+            for cert in resume.certifications.all()
+        ],
+    }
+
+    return JsonResponse(resume_info)
+
+
+
 # Cover Letter
 
 @login_required
 def cover_letter_info(request):
     cover_letters = CoverLetter.objects.filter(user=request.user).values('id', 'name', 'purpose', 'created_date')
     return JsonResponse(list(cover_letters), safe=False)
+
+
+@login_required
+def single_cover_letter_info(request, coverletter_id=False):
+    if not coverletter_id:
+        coverletter_id = request.GET.get('id')
+
+    if not coverletter_id:
+        return JsonResponse({'error': 'Cover Letter ID is required'}, status=400)
+
+    coverletter = get_object_or_404(request.user.cover_letters, id=coverletter_id)
+
+    # Convert the cover letter to a dictionary
+    coverletter_data = {
+        'id': coverletter.id,
+        'name': coverletter.name,
+        'purpose': coverletter.purpose,
+        'text': coverletter.text,
+    }
+
+    return JsonResponse(coverletter_data, safe=False)

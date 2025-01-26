@@ -6,7 +6,6 @@ from typing import List
 from .common import get_data, EntityType
 from django.conf import settings
 
-
 GEMINI_API_KEY = settings.GEMINI_API_KEY
 GEMINI_MODEL = "gemini-1.5-flash-8b"
 CURRENT_REQUEST = None
@@ -27,124 +26,113 @@ RESUME_INFO = {
     "certifications": []
 }
 
-
 def ai_add_resume_workflow(request):
     if request.method != 'POST':
         return render(request, 'frontend/modals/ai_add_resume_modal.html')
 
     global CURRENT_REQUEST
-
     CURRENT_REQUEST = request
 
     resume_description = request.POST.get("resume_description")
-
     if not resume_description:
-        return JsonResponse({ "error": "A resume_description must be provided" })
+        return JsonResponse({"error": "A resume_description must be provided"})
 
-
-    # Define the AI's functions
-    ai_tools = [
+    # Configure AI Model
+    genai.configure(api_key=GEMINI_API_KEY)
+    model = genai.GenerativeModel(model_name=GEMINI_MODEL, tools=[
         set_resume_name_and_purpose,
         set_resume_summary,
         set_resume_certifications,
         set_resume_skills,
         set_resume_education,
         add_resume_work_experience,
-        add_resume_project
-    ]
-
-
-    # Initalize the AI chat
-    genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel(model_name=GEMINI_MODEL, tools=ai_tools)
+        add_resume_project,
+    ])
     chat = model.start_chat(enable_automatic_function_calling=True)
 
+    # Step 1: Set Resume Name and Purpose
+    response = chat.send_message(f"""
+        This is an automated process to create a resume tailored to the following description:
+        {resume_description}
 
-    # Purpose and Name
-    next_command = f"""
-        This is an automated process to walk you through creating a resume. 
-        Follow resume best practices. 
-        Do not hallucinate information. 
-        Do not call a function you are not explicitly asked to call. 
+        Follow resume best practices. Do not hallucinate information or call unnecessary functions. 
+        Start by calling the 'set_resume_name_and_purpose' function to set the resume's name and purpose.
+    """)
 
-        This is a description of the purpose of the resume. It could also be a job description, 
-        in that case you should assume the resume's purpose is to be tailored to that job:
-
-        {resume_description} 
-
-        Call the 'set_resume_name_and_purpose' function to define the name and purpose of this resume.
-    """
-    response = chat.send_message(next_command)
-
-
-    # Get user info
+    # Step 2: Generate Summary
     user_info = get_data(CURRENT_REQUEST, EntityType.USER)
-    user_education = get_data(CURRENT_REQUEST, EntityType.EDUCATION)
-    user_work_experience = get_data(CURRENT_REQUEST, EntityType.WORK_EXPERIENCE)
     user_skills = get_data(CURRENT_REQUEST, EntityType.SKILLS)
-    user_projects = get_data(CURRENT_REQUEST, EntityType.PROJECTS)
+    user_work_experience = get_data(CURRENT_REQUEST, EntityType.WORK_EXPERIENCE)
+    user_education = get_data(CURRENT_REQUEST, EntityType.EDUCATION)
     user_certifications = get_data(CURRENT_REQUEST, EntityType.CERTIFICATIONS)
 
+    response = chat.send_message(f"""
+        Here is the user's comprehensive information to write a tailored professional summary:
 
-    # Summary
-    next_command = f"""
-        Here is all the information you need to know about the person you are completing this resume for. 
+        Personal Information:
+        {user_info}
 
-        Personal Information: 
-        {user_info} 
-
-        Education: 
-        {user_education} 
-
-        Work Experience: 
-        {user_work_experience}
-
-        Skills: 
+        Relevant Skills:
         {user_skills}
 
-        Projects: 
-        {user_projects} 
+        Work Experience:
+        {user_work_experience}
 
-        Certifications: 
-        {user_certifications} 
+        Education:
+        {user_education}
 
-        Call the 'set_resume_summary' function to create a professional summary for this resume, keeping in mind the purpose they described earlier.
-    """
-    response = chat.send_message(next_command)
+        Certifications:
+        {user_certifications}
 
+        The resume's purpose is: "{resume_description}". Use this data to call the 'set_resume_summary' function and write a concise, impactful summary tailored to the resume's purpose.
+    """)
 
-    # Skills, Certifications, and Education
+    # Step 3: Choose Skills, Certifications, and Education
+    response = chat.send_message(f"""
+        Based on the resume's purpose and the user's details, select the most relevant entries:
 
-    next_command = "Call the 'set_resume_skills' function to choose the skills for this resume, keeping in mind the purpose they described earlier."
-    response = chat.send_message(next_command)
+        Skills:
+        {user_skills}
 
-    next_command = "Call the 'set_resume_certifications' function to choose the certifications for this resume, keeping in mind the purpose they described earlier."
-    response = chat.send_message(next_command)
+        Certifications:
+        {user_certifications}
 
-    next_command = "Call the 'set_resume_education' function to choose the education entries for this resume, keeping in mind the purpose they described earlier."
-    response = chat.send_message(next_command)
+        Education:
+        {user_education}
 
+        Follow these steps:
+        1. Call 'set_resume_skills' to set the skills most relevant to the resume's purpose.
+        2. Call 'set_resume_certifications' to include certifications.
+        3. Call 'set_resume_education' to select education entries.
+    """)
 
-    # Work Experience and Projects
+    # Step 4: Tailor Work Experience
+    response = chat.send_message(f"""
+        Here is the user's work experience:
+        {user_work_experience}
 
-    next_command = "Make a list of work experience ids that you believe should be included in this resume, keeping in mind the purpose they described earlier. Do not call a function."
-    response = chat.send_message(next_command)
+        Tailor the work experience for the resume's purpose:
+        1. Identify IDs of relevant work experiences.
+        2. For each selected ID, write a concise, tailored description in bullet points.
+        3. Call 'add_resume_work_experience' for each entry with its ID and tailored description.
+    """)
 
-    next_command = "If you did not choose any work experiences just reply 'OK'. If you did choose any work experiences, for each of the work experience ids you just listed, call the 'add_resume_work_experience' function one at a time to add it to this resume and give it a description, keeping in mind the purpose they described earlier."
-    response = chat.send_message(next_command)
+    # Step 5: Tailor Projects
+    user_projects = get_data(CURRENT_REQUEST, EntityType.PROJECTS)
+    response = chat.send_message(f"""
+        Here are the user's projects:
+        {user_projects}
 
-    next_command = "Make a list of project ids that you believe should be included in this resume, keeping in mind the purpose they described earlier. Do not call a function."
-    response = chat.send_message(next_command)
+        Tailor the projects for the resume's purpose:
+        1. Identify IDs of relevant projects.
+        2. For each selected ID, write a concise, tailored description in bullet points.
+        3. Call 'add_resume_project' for each entry with its ID and tailored description.
+    """)
 
-    next_command = "If you did not choose any projects just reply 'OK'. If you did choose any projects, for each of the project ids you just listed, call the 'add_resume_project' function one at a time to add it to this resume and give it a description, keeping in mind the purpose they described earlier."
-    response = chat.send_message(next_command)
-
-
+    # Return Final RESUME_INFO
     return RESUME_INFO
 
-
 # AI Functions
-
 def add_resume_project(id: int, description: str):
     """
     Adds a single project entry to the resume being created.
@@ -153,9 +141,7 @@ def add_resume_project(id: int, description: str):
         description: The tailored description for the project.
     """
     global RESUME_INFO
-    # Add the project entry to the list of projects
     RESUME_INFO.setdefault('projects', []).append({"id": id, "description": description})
-
 
 def add_resume_work_experience(id: int, description: str):
     """
@@ -165,9 +151,7 @@ def add_resume_work_experience(id: int, description: str):
         description: The tailored description for the work experience.
     """
     global RESUME_INFO
-    # Add the work experience entry to the list of work experiences
     RESUME_INFO.setdefault('workExperiences', []).append({"id": id, "description": description})
-
 
 def set_resume_certifications(ids: List[int]):
     """
@@ -215,4 +199,3 @@ def set_resume_name_and_purpose(name: str, purpose: str):
     global RESUME_INFO
     RESUME_INFO['name'] = name
     RESUME_INFO['purpose'] = purpose
-
