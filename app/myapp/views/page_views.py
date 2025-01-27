@@ -11,6 +11,10 @@ def home(request):
     return render(request, 'frontend/index.html')
 
 
+def resuspark_job_application_tips(request):
+    return render(request, 'frontend/resuspark-job-application-tips.html')
+
+
 def sign_in(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
