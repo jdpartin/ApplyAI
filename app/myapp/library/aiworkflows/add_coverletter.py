@@ -20,7 +20,7 @@ COVER_LETTER_DATA = {
 @login_required
 def ai_add_cover_letter_workflow(request):
     if request.method != 'POST':
-        return render(request, 'frontend/modals/ai_cover_letter_modal.html')
+        return JsonResponse({"error": "Invalid request type, must be POST"})
 
     global CURRENT_REQUEST
 
@@ -96,19 +96,37 @@ def ai_add_cover_letter_workflow(request):
 
     # Step 3: Generate Cover Letter Text
     next_command = f"""
-        Based on the plan you created, write the cover letter.
-        - Do not include any placeholders such as [Hiring Manager Name], [Platform where you saw the ad], etc. Instead, write language that avoids placeholders.
+        Based on the plan you created, write the coverletter in this format:
+
+        Dear Hiring Manager,
+
+        [Body of the letter]
+
+        Sincerely,
+        [Applicant information]
+
+        - Do not include any placeholders such as [Hiring Manager Name], [Platform where you saw the ad], etc.
         - Use professional but common language. Avoid overly formal or rarely used words.
         - Use only information sourced from the provided data. Do not hallucinate or fabricate any information.
         - Keep the cover letter concise and within 2-5 paragraphs.
         - Maintain alignment with the purpose described earlier.
 
-        After completing the draft, review your output to ensure it meets these requirements before calling the 'set_cover_letter_text' function.
+        Reply with a draft of the coverletter, do not call a function.
     """
     response = chat.send_message(next_command)
 
-    # Step 4: Validate and Handle Placeholders
-    validate_and_rewrite_cover_letter(chat)
+    next_command = f"""
+        Review your draft and ensure it meets all of the following criteria:
+        
+        - Do not include any placeholders such as [Hiring Manager Name], [Platform where you saw the ad], etc.
+        - Use professional but common language. Avoid overly formal or rarely used words.
+        - Use only information sourced from the provided data. Do not hallucinate or fabricate any information.
+        - Keep the cover letter concise and within 2-5 paragraphs.
+        - Maintain alignment with the purpose described earlier.
+
+        Call the function 'set_cover_letter_text' and pass the final draft as the text parameter.
+    """
+    response = chat.send_message(next_command)
 
     return COVER_LETTER_DATA
 
@@ -135,10 +153,14 @@ def set_cover_letter_name_and_purpose(name:str, purpose:str):
     """
     Sets the name and purpose of the cover letter you are currently creating.
     Args:
-        name: The name of this cover letter
-        purpose: A very brief description of what this cover letter will be used for
+        name: The name of this cover letter, keep it very short.
+        purpose: A very brief description of what this cover letter will be used for, 1-2 sentences.
     """
     global COVER_LETTER_DATA
+
+    if not name or not purpose:
+        raise ValueError("Name and Purpose are required")
+
     COVER_LETTER_DATA['name'] = name
     COVER_LETTER_DATA['purpose'] = purpose
 
@@ -149,4 +171,8 @@ def set_cover_letter_text(text:str):
         text: The body of the cover letter, the actual cover letter itself.
     """
     global COVER_LETTER_DATA
+
+    if not text:
+        raise ValueError("Text is required")
+
     COVER_LETTER_DATA['text'] = text
