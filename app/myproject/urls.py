@@ -13,6 +13,7 @@ urlpatterns = [
     path('signinform/', views.signinform, name='signinform'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('logout/', views.logout_view, name='logout'),
+    path('resuspark-job-application-tips/', views.resuspark_job_application_tips, name='resuspark-job-application-tips'),
 
     # Form Views
     path('templates/frontend/modals/user_info_modal/', views.user_info_modal, name='user_info_modal'),
