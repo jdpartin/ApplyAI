@@ -418,12 +418,26 @@ def ai_add_resume_workflow(request):
     # Summary
     send_message(f"""
             We will now create a professional summary for this resume. 
-            Look back over the chat history, consider the user's education, work experience, certifications, and skills.
-            Use common language, avoid words that are uncommon.
-            Follow resume best practices and remain professional.
-            Keep in mind the purpose of the resume and tailor the summary to it.
 
-            Call the function 'set_professional_summary' and psas the professional summary of the resume.
+            - Do not include any placeholders such as [Hiring Manager Name], [Platform where you saw the ad], etc.
+            - Use professional but common language. Avoid overly formal or rarely used words.
+            - Use only information sourced from the provided data. Do not hallucinate or fabricate any information.
+            - Maintain alignment with the purpose described earlier.
+            - Include relevant ATS keywords while maintaining natural language.
+
+            Reply with a rough draft of the summary. Do not call a function.
+        """)
+
+    send_message(f"""
+            Review your summary to ensure it meets the requirements.
+
+            - Do not include any placeholders such as [Hiring Manager Name], [Platform where you saw the ad], etc.
+            - Use professional but common language. Avoid overly formal or rarely used words.
+            - Use only information sourced from the provided data. Do not hallucinate or fabricate any information.
+            - Maintain alignment with the purpose described earlier.
+            - Include relevant ATS keywords while maintaining natural language.
+
+            Call the function 'set_professional_summary' and pass the final draft professional summary of the resume.
         """,
         mandatory_function_calls=[
             'set_professional_summary'
