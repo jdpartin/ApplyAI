@@ -9,7 +9,8 @@ function submitCreateCoverLetterForm() {
     }
 
     function failure(resp) {
-
+        console.log(`Error creating/updating cover letter: ${resp.error}`);
+        window.alert("Error saving cover letter, please try again.");
         fetchCoverLetterInfo();
     }
 
@@ -38,14 +39,16 @@ function AI_submitCreateCoverLetterForm() {
 async function submitCreateResumeForm() {
     
     function success(resp) {
-        editResume();
+        popup(false);
         toggleLoading(false);
+        fetchResumeInfo();
     }
 
     function failure(resp) {
         console.log(`Error creating/updating resume: ${resp}`);
-        window.alert("Error creating resume, please try again.");
+        window.alert("Error saving resume, please try again.");
         toggleLoading(false);
+        fetchResumeInfo();
     }
 
     let resumeData = collectResumeData();

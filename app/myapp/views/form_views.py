@@ -12,8 +12,9 @@ from django.contrib.auth.password_validation import validate_password
 import json
 from myapp.library.resume import add_or_update_resume
 from myapp.library.cover_letter import add_or_update_cover_letter
-from myapp.library.aiworkflows import ai_add_resume_workflow
-from myapp.library.aiworkflows import ai_add_cover_letter_workflow
+from myapp.library.aiworkflows import ai_add_resume_workflow, ai_add_cover_letter_workflow
+from myapp.models import Resume, ResumeWorkExperience, ResumeProject
+
 
 
 # This file is for models that handle form rendering and submissions
@@ -157,39 +158,75 @@ def certification_modal(request):
 
 
 # Resume
-
 @login_required
 def resume_modal(request):
-    if request.method == 'POST':
-        return add_or_update_resume(request, request.POST.dict())
+    print("Resume modal called")
+    try:
+        if request.method == 'POST':
+            print("Processing POST request")
+            return add_or_update_resume(request, request.POST.dict())
 
-    resume = None
-    work_experience_data = {}
-    project_data = {}
+        resume = None
+        work_experience_data = {}
+        project_data = {}
 
-    resume_id = request.GET.get('id')
-    if resume_id:
-        resume = get_object_or_404(request.user.resumes, id=resume_id)
+        resume_id = request.GET.get('id')
+        print(f"Resume ID from GET: {resume_id}")
 
-        # Prepare tailored work experience data
-        work_experience_data = {
-            rwe.workExperience_id: rwe.tailoredDescription
-            for rwe in resume.resumeworkexperience_set.all()
+        if resume_id and resume_id != 'undefined':
+            try:
+                resume_id = int(resume_id)
+                print(f"Validated Resume ID: {resume_id}")
+
+                resume = get_object_or_404(request.user.resumes, id=resume_id)
+                print(f"Fetched Resume: {resume}")
+
+                # Prepare tailored work experience data
+                work_experience_data = {
+                    rwe.workExperience.id: rwe.tailoredDescription  # Use the ID of the related WorkExperience
+                    for rwe in ResumeWorkExperience.objects.filter(resume=resume)
+                }
+                print(f"Work Experience Data: {work_experience_data}")
+
+                # Prepare tailored project data (if applicable)
+                project_data = {
+                    rp.project.id: rp.tailoredDescription  # Use the ID of the related Project
+                    for rp in ResumeProject.objects.filter(resume=resume)
+                }
+                print(f"Project Data: {project_data}")
+            except ValueError:
+                print("Invalid Resume ID format in GET request.")
+                return JsonResponse({'status': 'error', 'message': 'Invalid Resume ID.'}, status=400)
+            except Exception as e:
+                print(f"Error fetching resume or related data: {e}")
+                return JsonResponse({'status': 'error', 'message': f"Error: {e}"}, status=500)
+        else:
+            print("No valid Resume ID provided, fetching non-tailored descriptions.")
+            # Fetch non-tailored descriptions for work experiences and projects
+            work_experience_data = {
+                we.id: we.job_description
+                for we in request.user.work_experiences.all()
+            }
+            print(f"Non-Tailored Work Experience Data: {work_experience_data}")
+
+            project_data = {
+                p.id: p.description
+                for p in request.user.projects.all()
+            }
+            print(f"Non-Tailored Project Data: {project_data}")
+
+        context = {
+            'user': request.user,
+            'resume': resume,
+            'work_experience_data': work_experience_data,  # Pass tailored or non-tailored descriptions for work experiences
+            'project_data': project_data,  # Pass tailored or non-tailored descriptions for projects
         }
+        print(f"Context prepared: {context}")
+        return render(request, 'frontend/modals/resume_modal.html', context)
 
-        # Prepare tailored project data (if applicable)
-        project_data = {
-            rp.project_id: rp.tailoredDescription
-            for rp in resume.resumeproject_set.all()
-        }
-
-    context = {
-        'user': request.user,
-        'resume': resume,
-        'work_experience_data': work_experience_data,  # Pass tailored descriptions for work experiences
-        'project_data': project_data,  # Pass tailored descriptions for projects
-    }
-    return render(request, 'frontend/modals/resume_modal.html', context)
+    except Exception as e:
+        print(f"Unhandled exception in resume_modal: {e}")
+        return JsonResponse({'status': 'error', 'message': f"An error occurred: {e}"}, status=500)
 
 
 @login_required
