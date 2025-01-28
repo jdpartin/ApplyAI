@@ -4,6 +4,7 @@ from enum import Enum
 
 
 class EntityType(Enum):
+    CONSOLIDATED_DATA = "consolidated_data"
     USER = "user"
     EDUCATION = "education"
     WORK_EXPERIENCE = "work_experience"
@@ -20,7 +21,9 @@ def get_data(request, entity_type: EntityType):
     Returns:
         dict: Data corresponding to the specified entity type.
     """
-    if entity_type == EntityType.USER:
+    if entity_type == EntityType.CONSOLIDATED_DATA:
+        data = consolidated_user_data(request)
+    elif entity_type == EntityType.USER:
         data = user_info_data(request)
     elif entity_type == EntityType.EDUCATION:
         data = education_data(request)

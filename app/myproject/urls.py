@@ -41,6 +41,7 @@ urlpatterns = [
     path('download-cover-letter/', views.download_cover_letter, name='download_cover_letter'),
 
     # JSON Data Views
+    path('consolidated-user-data-json/', views.consolidated_user_data, name='consolidated_user_data_json'),
     path('user-info-json/', views.user_info_data, name='user_info_json'),
     path('education-json/', views.education_data, name='education_json'),
     path('work-experience-json/', views.work_experience_data, name='work_experience_json'),

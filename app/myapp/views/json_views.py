@@ -7,6 +7,41 @@ from django.shortcuts import get_object_or_404
 # This file is for views that return JSON data
 
 
+# Consolidated User Data
+
+@login_required
+def consolidated_user_data(request):
+    # Fetch user info
+    user_info = UserInfo.objects.filter(user=request.user).first()
+    user_info_data = {
+        "email": request.user.email,
+        "first_name": request.user.first_name,
+        "last_name": request.user.last_name,
+        "phone_number": user_info.phone_number if user_info else None,
+        "address": user_info.address if user_info else None,
+        "summary": user_info.summary if user_info else None,
+    } if user_info else {}
+
+    # Fetch related data
+    educations = list(Education.objects.filter(user=request.user).values())
+    work_experiences = list(WorkExperience.objects.filter(user=request.user).values())
+    skills = list(Skill.objects.filter(user=request.user).values())
+    projects = list(Project.objects.filter(user=request.user).values())
+    certifications = list(Certification.objects.filter(user=request.user).values())
+
+    # Combine all data into a single JSON object
+    consolidated_data = {
+        "user_info": user_info_data,
+        "educations": educations,
+        "work_experiences": work_experiences,
+        "skills": skills,
+        "projects": projects,
+        "certifications": certifications,
+    }
+
+    return JsonResponse(consolidated_data, safe=False)
+
+
 # User Info
 
 @login_required
