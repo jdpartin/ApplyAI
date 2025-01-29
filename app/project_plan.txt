@@ -1,0 +1,72 @@
+Project Plan: AI-Powered Job Matching and Resume Optimization
+
+Objective: Build a platform that generates AI-tailored resumes, evaluates job compatibility using ATS, and matches users with high-fit jobs.
+
+Phases and Tasks
+
+Phase 1: Research and Preparation
+Research suitable ATS APIs (e.g., Sovren, RChilli, Affinda) and job search APIs (e.g., Adzuna, Jooble).
+Choose the tech stack for integration (e.g., Python for backend, React for frontend).
+Define data schema for:
+User profiles and general resumes.
+Job postings and ATS match scores.
+Tailored resumes.
+
+We will use the Adzuna job search API https://developer.adzuna.com/ for beta. Backup Option: Jooble API
+
+We will use the Sovren ATS API for beta.
+Alternative ATS APIs
+RChilli:
+Affordable, with a free trial available.
+Provides parsing and matching but may lack Sovren’s advanced configurability.
+Affinda:
+Free tier available (500 documents/month).
+Great for parsing but limited matching capabilities compared to Sovren.
+Textkernel:
+Enterprise-level, robust matching and parsing, but lacks a free tier.
+
+
+Phase 2: Job Title and Search Integration
+Use AI to analyze user input (resume + career goals) to generate job titles.
+Integrate a job search API to fetch jobs based on the AI-generated titles.
+Implement filters for user preferences (e.g., location, salary, remote options).
+
+Phase 3: General Resume ATS Screening
+Parse user resumes using an ATS API.
+Run ATS match evaluation for each job fetched in Phase 2.
+Store jobs with ATS match scores above a threshold (e.g., 70%).
+
+Phase 4: AI Resume Tailoring
+Use AI to generate tailored resumes for jobs with high scores from Phase 3.
+Refine resumes using feedback from ATS evaluation (e.g., missing keywords).
+Store tailored resumes for each job posting.
+
+Phase 5: Tailored Resume ATS Screening
+Re-run ATS match evaluation for each tailored resume.
+Filter and rank jobs based on the final ATS scores (e.g., 90%+ only).
+
+Phase 6: User Output and Feedback
+Present the final list of high-match jobs to users:
+Include job title, company, location, salary, and ATS match score.
+Provide an option to download tailored resumes for each job.
+Allow users to apply directly via the job board links.
+Gather user feedback for improvements.
+
+Timeline
+Week 1–2: Research APIs, finalize tech stack, and design data schema.
+Week 3–4: Implement job title generation and job search API integration.
+Week 5–6: Develop general resume ATS screening and filtering logic.
+Week 7–8: Implement AI resume tailoring and ATS refinement.
+Week 9–10: Build user interface for job recommendations and tailored resumes.
+Week 11–12: Test, optimize, and launch MVP.
+
+Optional Features for Future Updates
+Job application tracking dashboard.
+AI-powered interview preparation (questions + feedback).
+Multi-language support for international job seekers.
+Premium subscription for unlimited ATS evaluations.
+Notes:
+
+Keep the UI simple and user-friendly.
+Focus on automation to minimize user input (e.g., one-click matching and tailoring).
+Ensure compliance with API terms and privacy laws (e.g., GDPR).

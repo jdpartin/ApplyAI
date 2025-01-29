@@ -158,3 +158,5 @@ STATICFILES_DIRS = []
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 GEMINI_API_KEY = config('GEMINI_API_KEY', default='fallback-api-key')
+ADZUNA_APP_ID = config('ADZUNA_APP_ID')
+ADZUNA_APP_KEY = config('ADZUNA_APP_KEY')

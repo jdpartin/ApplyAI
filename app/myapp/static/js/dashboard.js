@@ -264,9 +264,6 @@ function fetchResumeInfo() {
         });
 }
 
-function editResume(id) {
-    getPage(`/templates/frontend/modals/resume_modal?id=${id}`, popup);
-}
 
 function deleteResume(id) {
     if (confirm('Are you sure you want to delete this resume?')) {
@@ -339,9 +336,6 @@ function fetchCoverLetterInfo() {
         });
 }
 
-function editCoverLetter(id) {
-    getPage(`/templates/frontend/modals/cover_letter_modal?id=${id}`, popup);
-}
 
 function deleteCoverLetter(id) {
     if (confirm('Are you sure you want to delete this cover letter?')) {

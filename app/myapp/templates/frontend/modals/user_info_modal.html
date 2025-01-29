@@ -25,8 +25,8 @@
         <textarea class="form-control" id="address" name="address">{{ user.user_info.address }}</textarea>
     </div>
     <div class="mb-3">
-        <label for="summary" class="form-label">Additional Information</label>
-        <textarea class="form-control" id="summary" name="summary" placeholder="Put anything else you want the AI to know here...">{{ user.user_info.summary }}</textarea>
+        <label for="summary" class="form-label">Career Goals</label>
+        <textarea class="form-control" id="summary" name="summary" placeholder="Put your career goals or anything else you want the AI to know here...">{{ user.user_info.summary }}</textarea>
     </div>
 
     <button type="button" class="btn btn-primary w-100" onclick="submitFormAjax('userInfoForm', () => { closeCurrentModal(); fetchUserInfo(); });">Save</button>

@@ -1,9 +1,10 @@
-from myapp.views.json_views import *
+from myapp.views.view_utils import json_utils
 import json
 from enum import Enum
 
 
 class EntityType(Enum):
+    CONSOLIDATED_DATA = "consolidated_data"
     USER = "user"
     EDUCATION = "education"
     WORK_EXPERIENCE = "work_experience"
@@ -20,19 +21,25 @@ def get_data(request, entity_type: EntityType):
     Returns:
         dict: Data corresponding to the specified entity type.
     """
-    if entity_type == EntityType.USER:
-        data = user_info_data(request)
-    elif entity_type == EntityType.EDUCATION:
-        data = education_data(request)
-    elif entity_type == EntityType.WORK_EXPERIENCE:
-        data = work_experience_data(request)
-    elif entity_type == EntityType.SKILLS:
-        data = skill_data(request)
-    elif entity_type == EntityType.PROJECTS:
-        data = project_data(request)
-    elif entity_type == EntityType.CERTIFICATIONS:
-        data = certification_data(request)
-    else:
-        raise ValueError(f"Unknown entity type: '{entity_type}'")
+    try:
+        if entity_type == EntityType.CONSOLIDATED_DATA:
+            data = json_utils.consolidated_user_data(request)
+        elif entity_type == EntityType.USER:
+            data = json_utils.user_info_data(request)
+        elif entity_type == EntityType.EDUCATION:
+            data = json_utils.education_data(request)
+        elif entity_type == EntityType.WORK_EXPERIENCE:
+            data = json_utils.work_experience_data(request)
+        elif entity_type == EntityType.SKILLS:
+            data = json_utils.skill_data(request)
+        elif entity_type == EntityType.PROJECTS:
+            data = json_utils.project_data(request)
+        elif entity_type == EntityType.CERTIFICATIONS:
+            data = json_utils.certification_data(request)
+        else:
+            raise ValueError(f"Unknown entity type: '{entity_type}'")
+
+    except Exception as e:
+        print(e)
 
     return json.loads(data.content.decode('utf-8'))

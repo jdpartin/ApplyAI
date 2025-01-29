@@ -7,7 +7,7 @@ class UserInfo(models.Model):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
 
-    summary = models.TextField(blank=True, null=True)
+    summary = models.TextField(blank=True, null=True) # Currently being used as career goals and additional info
 
     def __str__(self):
         return self.user.username
