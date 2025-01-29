@@ -5,6 +5,8 @@ from myapp.models import *
 import google.generativeai as genai
 from .common import get_data, EntityType
 from django.conf import settings
+import json
+
 
 GEMINI_API_KEY = settings.GEMINI_API_KEY
 GEMINI_MODEL = "gemini-1.5-flash-8b"
@@ -22,14 +24,28 @@ def ai_add_cover_letter_workflow(request):
     if request.method != 'POST':
         return JsonResponse({"error": "Invalid request type, must be POST"})
 
+    print("Add coverletter called")
+
     global CURRENT_REQUEST
 
     CURRENT_REQUEST = request
 
     cover_letter_description = request.POST.get("cover_letter_description")
 
+    # If request.POST is empty or cover_letter_description is not found, check the JSON body
     if not cover_letter_description:
-        return JsonResponse({ "error": "A cover_letter_description must be provided" })
+        try:
+            body = json.loads(request.body)
+            cover_letter_description = body.get("cover_letter_description")
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+
+    print(cover_letter_description)
+
+    # Check if cover_letter_description is still missing
+    if not cover_letter_description:
+        return JsonResponse({"error": "cover_letter_description is missing"}, status=400)
+
 
     # Define the AI's functions
     ai_tools = [

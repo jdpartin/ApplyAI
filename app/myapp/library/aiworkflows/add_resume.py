@@ -46,8 +46,19 @@ def ai_add_resume_workflow(request):
     global CHAT, ADDITIONAL_INFO, CURRENT_REQUEST, RESUME_INFO
 
     resume_description = request.POST.get("resume_description")
+
+    # If request.POST is empty or resume_description is not found, check the JSON body
     if not resume_description:
-        return JsonResponse({"error": "A resume description must be provided"})
+        try:
+            body = json.loads(request.body)
+            resume_description = body.get("resume_description")
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+
+    # Check if resume_description is still missing
+    if not resume_description:
+        return JsonResponse({"error": "resume_description is missing"}, status=400)
+
 
     ADDITIONAL_INFO["resume_description"] = resume_description
     CURRENT_REQUEST = request
@@ -80,7 +91,7 @@ def ai_add_resume_workflow(request):
 
         response = None
 
-        print("SYSTEM: " + message)
+        # print("SYSTEM: " + message)
 
         try:
             response = CHAT.send_message(message)
@@ -89,7 +100,7 @@ def ai_add_resume_workflow(request):
             print(f"Error during message processing: {e}")
             response = CHAT.send_message(f"An error occurred: {e}. Please ensure your response meets the requirements and retry.")
 
-        print("AI: " + response.text)
+        # print("AI: " + response.text)
 
         for function_name in mandatory_function_calls:
             if not function_name in FUNCTIONS_CALLED:

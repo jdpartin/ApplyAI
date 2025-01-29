@@ -22,10 +22,10 @@ def ai_generate_jobsearchstring_workflow(request):
     ai_tools = [
         set_job_search_string
     ]
-
+    
     ai_manager = GeminiApiManager(tools=ai_tools)
 
-    consolidated_user_data = get_data(request, EntityType.CONSOLIDATED_DATA)
+    user_data = get_data(request, EntityType.CONSOLIDATED_DATA)
 
     prompt = f"""
         You are an expert career advisor. Your task is to generate an optimized job search string that combines job titles and key skills based on the user's resume and career goals. 
@@ -33,7 +33,7 @@ def ai_generate_jobsearchstring_workflow(request):
         Input:
         Here is the consolidated data for the user. The summary should be seen as a career description/additional info section.
 
-        {consolidated_user_data}
+        {user_data}
 
         Output:
         Create a search string optimized for job search APIs like Adzuna. The search string should:

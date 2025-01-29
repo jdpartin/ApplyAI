@@ -1,0 +1,254 @@
+{% extends "frontend/base.html" %}
+
+{% load static %}
+
+{% block title %}
+AI Job Search | ResuSpark
+{% endblock %}
+
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">AI-Powered Job Search (beta)</h2>
+    <h4>Please enjoy a free preview of this beta feature. Let us know what you think on our new <a href="/contact-us">contact</a> form</h4>
+    <p>We are aware of some issues with low quality resume and cover letter generation for job listings, 
+    while we work to resolve this we recommend creating your tailored documents from the dashboard by copying the job description from the application website</p>
+
+    {% csrf_token %}
+
+    <!-- Job Search Input -->
+    <div class="card p-4 shadow-sm">
+        <div class="mb-3">
+            <label for="search-term" class="form-label">Search Term</label>
+            <input type="text" class="form-control" id="search-term" placeholder="e.g., Software Developer">
+        </div>
+
+        <div class="mb-3">
+            <label for="jobCriteria" class="form-label">Anything to look for?</label>
+            <textarea class="form-control" id="jobCriteria" rows="3" placeholder="Tell our AI what to look for here, you can also tell our AI to exclude certain jobs..."></textarea>
+        </div>
+
+        <!-- Filters Section -->
+        <h5 class="mb-3">Filters</h5>
+
+        <div class="row">
+            <!-- Location -->
+            <div class="col-md-4 mb-3">
+                <label for="location" class="form-label">Preferred Location</label>
+                <input type="text" id="location" class="form-control" placeholder="City, State, or Remote">
+            </div>
+
+            <!-- Salary -->
+            <div class="col-md-4 mb-3">
+                <label for="salary-min" class="form-label">Minimum Salary</label>
+                <input type="number" class="form-control" id="salary-min" placeholder="e.g., 50000">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="salary-max" class="form-label">Maximum Salary</label>
+                <input type="number" class="form-control" id="salary-max" placeholder="e.g., 150000">
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Job Type -->
+            <div class="col-md-4 mb-3">
+                <label for="jobType" class="form-label">Job Type</label>
+                <select id="jobType" class="form-select">
+                    <option value="">Any</option>
+                    <option value="Full-Time">Full-Time</option>
+                    <option value="Part-Time">Part-Time</option>
+                    <option value="Contract">Contract</option>
+                </select>
+            </div>
+
+            <!-- Remote Option -->
+            <div class="col-md-4 mb-3">
+                <label for="remote" class="form-label">Remote Work</label>
+                <select id="remote" class="form-select">
+                    <option value="">No Preference</option>
+                    <option value="Yes">Remote Only</option>
+                    <option value="No">On-Site Only</option>
+                    <option value="Hybrid">Hybrid</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Search Button -->
+        <button class="btn btn-primary w-100 mt-3" onclick="generateSearchString()">Search Jobs</button>
+    </div>
+
+    <!-- Results Section -->
+    <div class="mt-4">
+        <h4>Job Results</h4>
+        <p id="searchStringOutput" class="text-muted"></p>
+        <div id="jobResults" class="row"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function generateSearchString() {
+        let searchTerm = $("#search-term").val().trim();
+        let criteriaText = $("#jobCriteria").val().trim();
+        let location = $("#location").val().trim();
+        let salaryMin = $("#salary-min").val();
+        let salaryMax = $("#salary-max").val();
+        let jobType = $("#jobType").val();
+        let remote = $("#remote").val();
+
+        let filterString = "Search for jobs that match: ";
+        if (searchTerm) filterString += `Search term: ${searchTerm}. `;
+        if (criteriaText) filterString += criteriaText + ". ";
+        if (location) filterString += `The job should be in ${location}. `;
+        if (salaryMin) filterString += `The salary must be greater than $${salaryMin}. `;
+        if (salaryMax) filterString += `The salary must be less than $${salaryMax}. `;
+        if (jobType) filterString += `Job type should be ${jobType}. `;
+        if (remote) filterString += `Remote work preference: ${remote}.`;
+
+        $("#searchStringOutput").text(filterString);
+
+        // Prepare request data
+        let requestData = {
+            custom_filters: { filterString },
+            search_string: { searchTerm }
+        };
+
+        toggleLoading(true, "Searching for jobs... Our AI will review each job listing and assign a match score")
+
+        // Send request to Django backend
+        fetch("/job-search-json/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken()  // Ensure CSRF token is sent
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                displayJobResults(data.jobs);
+                toggleLoading(false);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                $("#jobResults").html("<p class='text-danger'>Error fetching jobs. Please try again.</p>");
+                toggleLoading(false);
+            });
+    }
+
+    function displayJobResults(jobs) {
+        if (!jobs.length) {
+            $("#jobResults").html("<p class='text-muted'>No jobs found matching your criteria.</p>");
+            return;
+        }
+
+        let jobResultsHTML = jobs.map(job => `
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 mb-3" data-job='${JSON.stringify(job).replace(/'/g, "&#39;").replace(/"/g, "&quot;")}'>
+                    <h5>${job.title}</h5>
+                    <p><strong>Location:</strong> ${job.location}</p>
+                    <p><strong>Salary:</strong> ${job.salary_min ? `$${job.salary_min}` : 'N/A'} - 
+                                      ${job.salary_max ? `$${job.salary_max}` : 'N/A'}</p>
+                    <p><strong>Match:</strong> ${job.relevance_score}%</p>
+                    <button class="btn btn-sm btn-success" onclick="viewDetails(this)">More Info</button>
+                </div>
+            </div>
+        `).join('');
+
+        $("#jobResults").html(jobResultsHTML);
+    }
+
+    function viewDetails(button) {
+        // Get the job data from the closest card's data-job attribute
+        let jobData_raw = button.closest('.card').dataset.job;
+        let jobData = JSON.parse(jobData_raw);
+
+        // Generate HTML content for the popup
+        let jobHtml = `
+            <div class="p-3" id="jobInfoPopUp">
+                <h3>${jobData.title}</h3>
+                <h5 class="text-muted">${jobData.company || 'Unknown Company'}</h5>
+                <p><strong>Location:</strong> ${jobData.location || 'Unknown Location'}</p>
+                <p><strong>Salary:</strong> ${jobData.salary_min ? `$${jobData.salary_min}` : 'N/A'} - 
+                                          ${jobData.salary_max ? `$${jobData.salary_max}` : 'N/A'}</p>
+                <p><strong>Match Score:</strong> ${jobData.relevance_score}%</p>
+                <p>${jobData.description || 'No description available.'}</p>
+                <a href="${jobData.redirect_url}" target="_blank" class="btn btn-success w-100 mb-3">Apply Now</a>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-primary flex-fill me-2" onclick="generateJobResume('${jobData.title}', '${jobData.company}')">Generate Resume</button>
+                    <button class="btn btn-secondary flex-fill" onclick="generateJobCoverLetter('${jobData.title}', '${jobData.company}')">Generate Cover Letter</button>
+                </div>
+                <div id="JobDataRaw" style="display:none;">${jobData_raw}</div>
+            </div>
+        `;
+
+        // Call the popup function with the generated HTML
+        popup(jobHtml);
+    }
+
+    function generateJobResume() {
+
+        let job = JSON.parse(document.getElementById('JobDataRaw').innerHTML);
+
+        let requestData = {
+            resume_description: job.description
+        };
+
+        toggleLoading(true, "Creating resume with AI...");
+
+        fetch("/templates/frontend/modals/ai_resume_modal/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken()  // Ensure CSRF token is sent
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                editResume(data.resume_id);
+                toggleLoading(false);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                window.alert("Error creating resume");
+                toggleLoading(false);
+            });
+    }
+
+    function generateJobCoverLetter() {
+
+        let job = JSON.parse(document.getElementById('JobDataRaw').innerHTML);
+
+        let requestData = {
+            cover_letter_description: job.description
+        };
+
+        toggleLoading(true, "Creating cover letter with AI...");
+
+        fetch("/templates/frontend/modals/ai_cover_letter_modal/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken()  // Ensure CSRF token is sent
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                editCoverLetter(data.cover_letter_id);
+                toggleLoading(false);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                window.alert("Error creating cover letter");
+                toggleLoading(false);
+            });
+    }
+</script>
+{% endblock %}

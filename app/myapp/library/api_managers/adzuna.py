@@ -5,6 +5,7 @@ APP_ID = settings.ADZUNA_APP_ID
 APP_KEY = settings.ADZUNA_APP_KEY
 
 class AdzunaAPIManager:
+
     def __init__(self, country: str = "us"):
         """
         Initialize the Adzuna API Manager.
@@ -14,6 +15,8 @@ class AdzunaAPIManager:
         self.base_url = f"https://api.adzuna.com/v1/api/jobs/{country}/search/"
         self.app_id = APP_ID
         self.app_key = APP_KEY
+
+
 
     def search_jobs(self, query: str, location: str = "", results_per_page: int = 10, page: int = 1) -> dict:
         """
@@ -29,18 +32,23 @@ class AdzunaAPIManager:
         params = {
             "app_id": self.app_id,
             "app_key": self.app_key,
-            "what": query,
-            "where": location,
+            # "what": query,
+            "what": "Software Developer",
+            # "where": location,
+            "where": "United States",
             "results_per_page": results_per_page
         }
 
         try:
             response = requests.get(url, params=params)
             response.raise_for_status()
+
             return response.json()
         except requests.exceptions.RequestException as e:
             print(f"Error during Adzuna API request: {e}")
             return {"error": str(e)}
+
+
 
     def extract_job_data(self, api_response: dict) -> list:
         """
@@ -50,18 +58,26 @@ class AdzunaAPIManager:
         :return: A list of dictionaries containing job details.
         """
         jobs = []
-        if "results" in api_response:
+        if "results" in api_response and isinstance(api_response["results"], list):
             for job in api_response["results"]:
                 jobs.append({
-                    "title": job.get("title"),
-                    "company": job.get("company", {}).get("display_name"),
-                    "location": job.get("location", {}).get("display_name"),
-                    "salary_min": job.get("salary_min"),
-                    "salary_max": job.get("salary_max"),
-                    "description": job.get("description"),
-                    "redirect_url": job.get("redirect_url")
+                    "title": job.get("title", "No title provided"),
+                    "company": job.get("company", {}).get("display_name", "Unknown company"),
+                    "location": job.get("location", {}).get("display_name", "Unknown location"),
+                    "latitude": job.get("location", {}).get("latitude"),
+                    "longitude": job.get("location", {}).get("longitude"),
+                    "category": job.get("category", {}).get("label", "Unknown category"),
+                    "salary_min": job.get("salary_min", "Salary not provided"),
+                    "salary_max": job.get("salary_max", "Salary not provided"),
+                    "salary_is_predicted": "Yes" if job.get("salary_is_predicted") == "1" else "No",
+                    "description": job.get("description", "")[:300] + "..." if len(job.get("description", "")) > 300 else job.get("description"),
+                    "redirect_url": job.get("redirect_url", "#"),
+                    "created": job.get("created", "Unknown date")
                 })
+        else:
+            print("No results found in the API response.")
         return jobs
+
 
 # Example usage:
 # adzuna = AdzunaAPIManager()
