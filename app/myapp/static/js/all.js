@@ -78,6 +78,10 @@ function getPage(url, callback, showLoading = false, loadingMessage = '') {
         });
 }
 
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
 function submitFormAjax(formId, successCallback = null, errorCallback = null, loadingMessage = '', minLoadTime = 0) {
     const form = document.getElementById(formId);
 
@@ -271,4 +275,15 @@ async function loadMockAds() {
         ad.textContent = `Ad Slot ${i + 1}`;
         adContainer.appendChild(ad);
     }
+}
+
+
+
+function editCoverLetter(id) {
+    getPage(`/templates/frontend/modals/cover_letter_modal?id=${id}`, popup);
+}
+
+
+function editResume(id) {
+    getPage(`/templates/frontend/modals/resume_modal?id=${id}`, popup);
 }

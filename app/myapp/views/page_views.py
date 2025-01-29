@@ -10,6 +10,9 @@ from myapp.models import UserInfo, Education, WorkExperience, Skill, Project, Ce
 def home(request):
     return render(request, 'frontend/index.html')
 
+def contact_us(request):
+    return render(request, 'frontend/contact-us.html')
+
 
 def resuspark_job_application_tips(request):
     return render(request, 'frontend/resuspark-job-application-tips.html')
@@ -25,6 +28,12 @@ def sign_up(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     return render(request, 'frontend/sign-up.html')
+
+
+
+@login_required
+def job_search(request):
+    return render(request, 'frontend/job-search.html')
 
 
 @login_required
